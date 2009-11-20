@@ -1,23 +1,22 @@
 #include "ModuleFactory.hpp"
 
-#include "../observers/ASubject.hpp"
-#include "../observers/ModuleReleasedObserver.hpp"
-
-Module* ModuleFactory::Instance() {
-	Module *m;
-	if (free.empty())
-		m = new Module();
-	else {
-		m = free.front();
-		free.pop_front();
-	}
-	return m;
+ModuleFactory::~ModuleFactory() {
+	std::list<Module*>::iterator i;
+	for (i = free.begin(); i != free.end(); i++)
+		delete *i;
 }
 
-void ModuleFactory::Update(ASubject *subject) {
-	if (subject == moduleReleased) {
-		Module *m = dynamic_cast<Module*>(subject);
-		free.push_back(m);
-		return;
+Module* ModuleFactory::Instance() {
+	Module *module;
+	if (free.empty())
+		module = new Module();
+	else {
+		module = free.front();
+		free.pop_front();
 	}
+	return module;
+}
+
+void ModuleFactory::Release(Module *module) {
+	free.push_back(module);
 }
