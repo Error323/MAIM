@@ -9,7 +9,7 @@ Module* ModuleFactory::Instance() {
 		m = new Module();
 	else {
 		m = free.front();
-		m.pop_front();
+		free.pop_front();
 	}
 	return m;
 }
