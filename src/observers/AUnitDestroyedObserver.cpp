@@ -6,4 +6,5 @@
 void AUnitDestroyedObserver::Update(ASubject *subject) {
 	AUnitDestroyedSubject *uds = dynamic_cast<AUnitDestroyedSubject*>(subject);
 	UnitDestroyed(uds->unit);
+	uds->Detach(this);
 }
