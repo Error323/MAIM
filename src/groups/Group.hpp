@@ -4,16 +4,14 @@
 #include <list>
 #include <stack>
 
-#include "../observers/AObserver.hpp"
+#include "../observers/AUnitDestroyedObserver.hpp"
 
-class UnitDestroyedObserver;
-class ASubject;
 class AModule;
 
-class Group: AObserver {
+class Group: AUnitDestroyedObserver {
 	public:
-		Group(UnitDestroyedObserver *_ud): unitDestroyed(_ud){}
-		~Group();
+		Group(){}
+		~Group(){}
 
 		void AddUnit(int unit);
 		void Update(); // called by engine update()
@@ -26,9 +24,9 @@ class Group: AObserver {
 		std::list<int> units;
 		std::list<AModule*> modules;
 		std::stack<AModule*> moduleStack;
-		UnitDestroyedObserver *unitDestroyed;
 
-		void Update(ASubject *subject);
+		// implementation
+		void UnitDestroyed(int unit);
 };
 
 #endif

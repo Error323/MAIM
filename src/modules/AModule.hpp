@@ -4,12 +4,9 @@
 #include <list>
 #include <stack>
 
-#include "../observers/AObserver.hpp"
+#include "../observers/AUnitDestroyedObserver.hpp"
 
-class UnitDestroyedObserver;
-class ASubject;
-
-class AModule: public AObserver {
+class AModule: public AUnitDestroyedObserver {
 	public:
 		virtual ~AModule();
 
@@ -21,14 +18,14 @@ class AModule: public AObserver {
 		void SetStack(std::stack<AModule*> &moduleStack);
 
 	protected:
-		AModule(UnitDestroyedObserver *_ud): unitDestroyed(_ud) {}
+		AModule();
 		std::stack<AModule*> *moduleStack;
 		std::list<int> units;
 
 	private:
-		UnitDestroyedObserver *unitDestroyed;
 
-		void Update(ASubject *subject);
+		// Implementation
+		void UnitDestroyed(int unit);
 };
 
 #endif

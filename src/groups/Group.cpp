@@ -1,7 +1,5 @@
 #include "Group.hpp"
 
-#include "../observers/ASubject.hpp"
-#include "../observers/UnitDestroyedObserver.hpp"
 #include "../modules/AModule.hpp"
 
 void Group::Release() {
@@ -49,12 +47,8 @@ void Group::Update() {
 		moduleStack.pop();
 }
 
-void Group::Update(ASubject *subject) {
-	if (subject == unitDestroyed) {
-		int unit = unitDestroyed->GetUnitId();
-		units.remove(unit);
-		if (units.empty())
-			Release();
-		return;
-	}
+void Group::UnitDestroyed(int unit) {
+	units.remove(unit);
+	if (units.empty())
+		Release();
 }
