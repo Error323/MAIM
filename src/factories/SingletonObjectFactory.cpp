@@ -1,14 +1,17 @@
 #include "SingletonObjectFactory.hpp"
 
-Object *SingletonObjectFactory::object = NULL;
+std::map<int,Object*> SingletonObjectFactory::objects;
 
 SingletonObjectFactory::~SingletonObjectFactory() {
-	if (object != NULL)
-		delete object;
+	std::map<int,Object*>::iterator i;
+	for (i = objects.begin(); i != objects.end(); i++)
+		delete i->second;
+	objects.clear();
 }
 
-Object* SingletonObjectFactory::Instance() {
-	if (object == NULL)
-		object = new Object();
-	return object;
+Object* SingletonObjectFactory::Instance(int i) {
+	if (objects.find(i) == objects.end())
+		objects[i] = new Object();
+
+	return objects[i];
 }
