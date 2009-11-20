@@ -1,5 +1,6 @@
 #include "ReusableObjectFactory.hpp"
 
+template <class Object>
 std::list<Object*> ReusableObjectFactory::free;
 
 ReusableObjectFactory::~ReusableObjectFactory() {

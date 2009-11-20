@@ -1,5 +1,6 @@
 #include "SingletonObjectFactory.hpp"
 
+template <class Object>
 std::map<int,Object*> SingletonObjectFactory::objects;
 
 SingletonObjectFactory::~SingletonObjectFactory() {

@@ -4,14 +4,13 @@
 #include <list>
 #include <stack>
 
-#include "./modules/ModuleHolder.hpp"
 #include "./observers/AObserver.hpp"
 
 class UnitDestroyedObserver;
 class ASubject;
 class AModule;
 
-class Group: ModuleHolder, AObserver {
+class Group: AObserver {
 	public:
 		Group(UnitDestroyedObserver *_ud): unitDestroyed(_ud);
 		~Group();
