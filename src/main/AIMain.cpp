@@ -10,11 +10,11 @@ AIMain::~AIMain() {
 
 
 void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
-	aih->Init(gcb); aiInstance = aiInstances++;
+	aiInstance = aiInstances++;
 }
 
 void AIMain::ReleaseAI() {
-	aih->Release(); aiInstances--;
+	aiInstances--;
 }
 
 

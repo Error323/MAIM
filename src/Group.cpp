@@ -1,7 +1,7 @@
 #include "Group.hpp"
 
 #include "./observers/ASubject.hpp"
-#include "./observers/UnitDestroyed.hpp"
+#include "./observers/UnitDestroyedObserver.hpp"
 
 Group::Release() {
 	std::list<AModule*>::iterator i;

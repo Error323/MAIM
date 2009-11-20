@@ -1,5 +1,5 @@
-#ifndef MAI_GROUP
-#define MAI_GROUP
+#ifndef GROUP
+#define GROUP
 
 #include <list>
 #include <stack>
@@ -7,12 +7,13 @@
 #include "./modules/ModuleHolder.hpp"
 #include "./observers/AObserver.hpp"
 
-class UnitDestroyed;
+class UnitDestroyedObserver;
 class ASubject;
+class AModule;
 
 class Group: ModuleHolder, AObserver {
 	public:
-		Group(UnitDestroyed *_ud): unitDestroyed(_ud);
+		Group(UnitDestroyedObserver *_ud): unitDestroyed(_ud);
 		~Group();
 
 		void AddUnit(int unit);
@@ -26,7 +27,7 @@ class Group: ModuleHolder, AObserver {
 		std::list<int> units;
 		std::list<AModule*> modules;
 		std::stack<AModule*> moduleStack;
-		UnitDestroyed *unitDestroyed;
+		UnitDestroyedObserver *unitDestroyed;
 
 		void Update(ASubject *subject);
 };

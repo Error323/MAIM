@@ -1,9 +1,9 @@
 #include "AModule.hpp"
 
 #include "../observers/ASubject.hpp"
-#include "../observers/UnitDestroyed.hpp"
+#include "../observers/UnitDestroyedObserver.hpp"
 
-~AModule::AModule() {
+AModule::~AModule() {
 	unitDestroyed->Detach(this);
 }
 

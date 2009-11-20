@@ -1,12 +1,12 @@
-#ifndef MAI_AMODULE
-#define MAI_AMODULE
+#ifndef AMODULE
+#define AMODULE
 
 #include <list>
 #include <stack>
 
 #include "../observers/AObserver.hpp"
 
-class UnitDestroyed;
+class UnitDestroyedObserver;
 class ASubject;
 
 class AModule: public AObserver {
@@ -21,12 +21,12 @@ class AModule: public AObserver {
 		void SetStack(std::stack<AModule*> &moduleStack);
 
 	protected:
-		AModule(UnitDestroyed *_ud): unitDestroyed(_ud);
+		AModule(UnitDestroyedObserver *_ud): unitDestroyed(_ud) {}
 		std::stack<AModule*> *moduleStack;
 		std::list<int> units;
 
 	private:
-		UnitDestroyed *unitDestroyed;
+		UnitDestroyedObserver *unitDestroyed;
 
 		void Update(ASubject *subject);
 };
