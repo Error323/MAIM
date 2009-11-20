@@ -6,7 +6,7 @@
 class UnitDestroyedObserver: public ASubject {
 	public:
 		UnitDestroyedObserver() {}
-		~UnitDestroyedObserver();
+		~UnitDestroyedObserver() {}
 
 		void UnitDestroyed(int unit);
 

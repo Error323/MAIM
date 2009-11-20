@@ -1,5 +1,5 @@
-#ifndef CREDITS_HDR
-#define CREDITS_HDR
+#ifndef CREDITS
+#define CREDITS
 
 #include "./Exports.hpp"
 
