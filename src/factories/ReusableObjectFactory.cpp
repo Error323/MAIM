@@ -1,5 +1,7 @@
 #include "ReusableObjectFactory.hpp"
 
+std::list<Object*> ReusableObjectFactory::free;
+
 ReusableObjectFactory::~ReusableObjectFactory() {
 	std::list<Object*>::iterator i;
 	for (i = free.begin(); i != free.end(); i++)

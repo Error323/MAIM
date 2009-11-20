@@ -13,7 +13,7 @@ class ReusableObjectFactory {
 		static void Release(Object*);
 	
 	private:
-		std::list<Module*> free;
+		static std::list<Object*> free;
 };
 
 #endif

@@ -4,13 +4,13 @@
 template<class Object>
 class SingletonObjectFactory {
 	public:
-		SingletonObjectFactory();
+		SingletonObjectFactory(){}
 		~SingletonObjectFactory();
 
 		static Object* Instance();
 	
 	private:
-		Object *object;
+		static Object *object;
 };
 
 #endif

@@ -1,8 +1,6 @@
 #include "SingletonObjectFactory.hpp"
 
-SingletonObjectFactory::SingletonObjectFactory() {
-	object = NULL;
-}
+Object *SingletonObjectFactory::object = NULL;
 
 SingletonObjectFactory::~SingletonObjectFactory() {
 	if (object != NULL)
