@@ -3,17 +3,16 @@
 
 #include <list>
 
-template <class Object>
-class ReusableObjectFactory {
-	public:
-		ReusableObjectFactory(){}
-		~ReusableObjectFactory();
+template<class Object> class ReusableObjectFactory {
+public:
+	ReusableObjectFactory() {}
+	~ReusableObjectFactory();
 
-		static Object* Instance();
-		static void Release(Object*);
-	
-	private:
-		static std::list<Object*> free;
+	static Object* Instance();
+	static void Release(Object*);
+ 
+private:
+	static std::list<Object*> free;
 };
 
 #endif

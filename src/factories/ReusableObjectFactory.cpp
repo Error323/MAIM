@@ -1,17 +1,17 @@
 #include "ReusableObjectFactory.hpp"
 
-template <class Object>
-std::list<Object*> ReusableObjectFactory::free;
+template<class Object> std::list<Object*>   ReusableObjectFactory<Object>::free;
 
-ReusableObjectFactory::~ReusableObjectFactory() {
-	std::list<Object*>::iterator i;
+template<class Object> ReusableObjectFactory<Object>::~ReusableObjectFactory() {
+	typename std::list<Object*>::iterator i;
 	for (i = free.begin(); i != free.end(); i++)
 		delete *i;
 	free.clear();
 }
+ 
+template<class Object> Object* ReusableObjectFactory<Object>::Instance() {
+	Object* object;
 
-Object* ReusableObjectFactory::Instance() {
-	Object *object;
 	if (free.empty())
 		object = new Object();
 	else {
@@ -20,7 +20,7 @@ Object* ReusableObjectFactory::Instance() {
 	}
 	return object;
 }
-
-void ReusableObjectFactory::Release(Object *object) {
+ 
+template<class Object> void ReusableObjectFactory<Object>::Release(Object* object) {
 	free.push_back(object);
 }
