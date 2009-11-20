@@ -1,8 +1,8 @@
 #include "Group.hpp"
 
-#include "./observers/ASubject.hpp"
-#include "./observers/UnitDestroyedObserver.hpp"
-#include "./modules/AModule.hpp"
+#include "../observers/ASubject.hpp"
+#include "../observers/UnitDestroyedObserver.hpp"
+#include "../modules/AModule.hpp"
 
 void Group::Release() {
 	std::list<AModule*>::iterator i;

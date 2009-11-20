@@ -4,7 +4,7 @@
 #include <list>
 #include <stack>
 
-#include "./observers/AObserver.hpp"
+#include "../observers/AObserver.hpp"
 
 class UnitDestroyedObserver;
 class ASubject;
