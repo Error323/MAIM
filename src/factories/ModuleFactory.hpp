@@ -16,7 +16,7 @@ class ModuleFactory: AObserver {
 		ModuleFactory(ModuleReleasedObserver* mro): moduleReleased(mro) {}
 		~ModuleFactory(){}
 
-		Module* Instance();
+		static Module* Instance();
 	
 	private:
 		std::list<Module*> free;
