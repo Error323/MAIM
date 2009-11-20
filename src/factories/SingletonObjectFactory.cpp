@@ -3,15 +3,13 @@
 template <class Object>
 std::map<int,Object*> SingletonObjectFactory<Object>::objects;
 
-/*
 template <class Object>
-SingletonObjectFactory<Object>::~SingletonObjectFactory<Object>() {
-	std::map<int,Object*>::iterator i;
+SingletonObjectFactory<Object>::~SingletonObjectFactory() {
+	typename std::map<int,Object*>::iterator i;
 	for (i = objects.begin(); i != objects.end(); i++)
 		delete i->second;
 	objects.clear();
 }
-*/
 
 template <class Object>
 Object* SingletonObjectFactory<Object>::Instance(int i) {
