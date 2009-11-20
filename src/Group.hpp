@@ -12,7 +12,7 @@ class AModule;
 
 class Group: AObserver {
 	public:
-		Group(UnitDestroyedObserver *_ud): unitDestroyed(_ud);
+		Group(UnitDestroyedObserver *_ud): unitDestroyed(_ud){}
 		~Group();
 
 		void AddUnit(int unit);

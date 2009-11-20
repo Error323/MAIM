@@ -1,16 +1,18 @@
 #include "ReusableObjectFactory.hpp"
 
 template <class Object>
-std::list<Object*> ReusableObjectFactory::free;
+std::list<Object*> ReusableObjectFactory<Object>::free;
 
-ReusableObjectFactory::~ReusableObjectFactory() {
+template <class Object>
+ReusableObjectFactory<Object>::~ReusableObjectFactory() {
 	std::list<Object*>::iterator i;
 	for (i = free.begin(); i != free.end(); i++)
 		delete *i;
 	free.clear();
 }
 
-Object* ReusableObjectFactory::Instance() {
+template <class Object>
+Object* ReusableObjectFactory<Object>::Instance() {
 	Object *object;
 	if (free.empty())
 		object = new Object();
@@ -21,6 +23,7 @@ Object* ReusableObjectFactory::Instance() {
 	return object;
 }
 
-void ReusableObjectFactory::Release(Object *object) {
+template <class Object>
+void ReusableObjectFactory<Object>::Release(Object *object) {
 	free.push_back(object);
 }

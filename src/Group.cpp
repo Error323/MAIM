@@ -2,8 +2,9 @@
 
 #include "./observers/ASubject.hpp"
 #include "./observers/UnitDestroyedObserver.hpp"
+#include "./modules/AModule.hpp"
 
-Group::Release() {
+void Group::Release() {
 	std::list<AModule*>::iterator i;
 	for (i = modules.begin(); i != modules.end(); i++)
 		(*i)->Release(); // make available in factory again
@@ -44,7 +45,7 @@ void Group::Update() {
 	}
 
 	// Module::Update() returns true when done
-	while(!modeStack.empty() && moduleStack.top()->Update())
+	while(!moduleStack.empty() && moduleStack.top()->Update())
 		moduleStack.pop();
 }
 

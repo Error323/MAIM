@@ -7,7 +7,7 @@ template<class Object>
 class SingletonObjectFactory {
 	public:
 		SingletonObjectFactory(){}
-		~SingletonObjectFactory();
+		~SingletonObjectFactory(){}
 
 		static Object* Instance(int i = -1);
 	
