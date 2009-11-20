@@ -12,7 +12,7 @@ class SingletonObjectFactory {
 		static Object* Instance(int i = 0);
 	
 	private:
-		static std::map<int,Object> objects;
+		static std::map<int,Object*> objects;
 };
 
 #endif
