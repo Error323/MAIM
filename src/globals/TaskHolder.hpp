@@ -5,10 +5,7 @@
 #include <map>
 
 enum taskType {
-	BUILD_FACTORY, 
-	BUILD_DEFENSE, 
-	BUILD_ENERGY, 
-	BUILD_METAL,
+	BUILD,
 	SCOUT,
 	ATTACK
 };
