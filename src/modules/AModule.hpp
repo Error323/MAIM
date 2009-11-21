@@ -3,8 +3,11 @@
 
 #include <list>
 #include <stack>
+#include <string>
 
 #include "../observers/AUnitDestroyedObserver.hpp"
+
+class Group;
 
 class AModule: public AUnitDestroyedObserver {
 	public:
@@ -15,15 +18,15 @@ class AModule: public AUnitDestroyedObserver {
 		virtual bool Update() = 0;
 		virtual bool CanRun() = 0;
 
-		void SetStack(std::stack<AModule*> &moduleStack);
+		void SetGroup(Group *group);
 
 	protected:
 		AModule();
-		std::stack<AModule*> *moduleStack;
-		std::list<int> units;
+		Group *group; // the group to which the module belongs
+		std::list<int> units; // subset of group units
+		std::string name; // name of this mod
 
 	private:
-
 		// Implementation
 		void UnitDestroyed(int unit);
 };

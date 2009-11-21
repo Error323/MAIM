@@ -1,12 +1,10 @@
 #include "AModule.hpp"
 
+#include "../groups/Group.hpp"
 #include "../observers/AUnitDestroyedObserver.hpp"
 
-AModule::~AModule() {
-}
-
-void AModule::SetStack(std::stack<AModule*> &moduleStack) {
-	this->moduleStack = &moduleStack;
+void AModule::SetGroup(Group *group) {
+	this->group = group;
 }
 
 void AModule::UnitDestroyed(int unit) {

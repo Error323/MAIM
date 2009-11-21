@@ -8,7 +8,7 @@
 
 class AModule;
 
-class Group: AUnitDestroyedObserver {
+class Group: public AUnitDestroyedObserver {
 	public:
 		Group(){}
 		~Group(){}
@@ -17,8 +17,8 @@ class Group: AUnitDestroyedObserver {
 		void Update(); // called by engine update()
 		void Release(); // Release the group
 
-		void AddModule(AModule *module); // ModuleHolder override
-		void RemoveModule(AModule *module); // ModuleHolder override
+		void AddModule(AModule *module);
+		void RemoveModule(AModule *module);
 		
 	private:
 		std::list<int> units;

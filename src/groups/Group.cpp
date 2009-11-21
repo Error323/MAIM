@@ -21,8 +21,8 @@ void Group::AddUnit(int unit) {
 
 // Make sure to add modules in this order: emergencies, reactives, proactives
 void Group::AddModule(AModule *module) {
-	module->Filter(units); // Determines which units are good for this module
-	module->SetStack(moduleStack); // Allows the stack to be filled with this module
+	module->SetGroup(this); // Allows access to this group from within the module
+	module->Filter(units); // Determines which units are suited for this module
 	modules.push_back(module); // Allows the group to select the module
 }
 
