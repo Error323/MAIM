@@ -31,12 +31,16 @@ void Group::RemoveModule(AModule *module) {
 	module->Release();
 }
 
+void Group::PushModule(AModule *module) {
+	moduleStack.push(module);
+}
+
 void Group::Update() {
 	if (moduleStack.empty()) {
 		std::list<AModule*>::iterator i;
 		for (i = modules.begin(); i != modules.end(); i++) {
 			if ((*i)->CanRun()) {
-				moduleStack.push(*i);
+				PushModule(*i);
 				break;
 			}
 		}

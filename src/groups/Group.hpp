@@ -5,6 +5,7 @@
 #include <stack>
 
 #include "../observers/AUnitDestroyedObserver.hpp"
+#include "System/float3.h"
 
 class AModule;
 
@@ -13,12 +14,15 @@ class Group: public AUnitDestroyedObserver {
 		Group(){}
 		~Group(){}
 
-		void AddUnit(int unit);
+		void AddUnit(int);
 		void Update(); // called by engine update()
 		void Release(); // Release the group
 
-		void AddModule(AModule *module);
-		void RemoveModule(AModule *module);
+		void AddModule(AModule*);
+		void RemoveModule(AModule*);
+		void PushModule(AModule*);
+
+		float3 GetPos();
 		
 	private:
 		std::list<int> units;
