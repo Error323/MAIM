@@ -1,14 +1,10 @@
 #ifndef ECO_STATE
 #define ECO_STATE
 
-#include <multimap>
-
 #include "ExternalAI/IAICallback.h"
 
 class UnitType;
 class Group;
-
-enum buildType {BUILD_FACTORY, BUILD_DEFENSE, BUILD_ENERGY, BUILD_METAL};
 
 class EcoState {
 	public:
@@ -26,15 +22,6 @@ class EcoState {
 		 * The Update() function calculates the current economic state
 		 */
 		void Update();
-
-		/**
-		 * Determine wether a build in progress can be assisted
-		 * 
-		 * @param Group*, the group which may be able to assist
-		 * @param buildType, the sort of build
-		 * @return Group*, the group it can assist or NULL
-		 */
-		Group* CanAssistBuild(Group*, buildType);
 
 		/**
 		 * Determine whether a factory can be assisted
@@ -81,9 +68,6 @@ class EcoState {
 		std::list<Group*> nanotowers;
 		std::list<Group*> metalextractors;
 		std::list<Group*> metalmakers;
-
-		/** The groups that are building on a certain buildType */
-		std::multimap<buildType, Group*> building;
 
 		/** Spring callback function handle */
 		IAICallback *cb;
