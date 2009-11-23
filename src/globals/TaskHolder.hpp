@@ -5,21 +5,20 @@
 #include <map>
 #include <iostream>
 
-#include "ExternalAI/IAICallback.h"
-
 enum taskType { BUILD, ATTACK };
 enum buildTaskType { FACTORY, METAL, ENERGY, DEFENSE };
 
 class Group;
 class AttackTask;
 class BuildTask;
+class AIHelper;
 
 class TaskHolder {
 	public:
 		TaskHolder(){}
 		~TaskHolder(){}
 
-		void Init(IAICallback*);
+		void Init(AIHelper*);
 
 		/**
 		 * Add a build task to the taskholder
@@ -74,6 +73,9 @@ class TaskHolder {
 
 		/** Attack tasks */
 		std::list<AttackTask*> attacktasks;
+
+		/** AIHelper reference */
+		AIHelper *aih;
 };
 
 struct BuildTask {
@@ -100,8 +102,8 @@ struct BuildTask {
 	/** The position where the build will take place */
 	float3 pos;
 
-	/** IAICallback reference */
-	IAICallback *cb;
+	/** AIHelper reference */
+	AIHelper *aih;
 
 	/** The toString() function */
 	friend std::ostream& operator<<(std::ostream&, const BuildTask&);
@@ -119,8 +121,8 @@ struct AttackTask {
 	/** The assisters of the attack */
 	std::list<Group*> assisters;
 
-	/** IAICallback reference */
-	IAICallback *cb;
+	/** AIHelper reference */
+	AIHelper *aih;
 
 	/** The toString() function */
 	friend std::ostream& operator<<(std::ostream&, const AttackTask&);

@@ -3,17 +3,17 @@
 
 #include <list>
 
-#include "ExternalAI/IAICallback.h"
 #include "System/float3.h"
 
 class Group;
+class AIHelper;
 
 class GameMap {
 	public:
 		GameMap(){}
 		~GameMap(){}
 
-		void Init(IAICallback*);
+		void Init(AIHelper*);
 
 		float3 GetClosestOpenMetalSpot(Group*);
 		Group* GetClosestUpgradableMetalSpot(Group*);
@@ -43,6 +43,8 @@ class GameMap {
 		std::list<float3> energyfeatures;
 		std::map<int, Group*> takenmetalspots;
 		std::map<int, Group*> upgradedmetalspots;
+
+		AIHelper *aih;
 };
 
 #endif

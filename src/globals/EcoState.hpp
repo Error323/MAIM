@@ -3,8 +3,6 @@
 
 #include <list>
 
-#include "ExternalAI/IAICallback.h"
-
 class UnitType;
 class Group;
 class AIHelper;
