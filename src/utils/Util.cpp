@@ -26,10 +26,9 @@ namespace util {
 		return (std::string(dst));
 	}
 
-	template<typename T>
-	float average(std::list<T> &list) {
+	float average(std::list<float> &list) {
 		float sum = 0.0f;
-		typename std::list<T>::iterator i;
+		std::list<float>::iterator i;
 		for (i = list.begin(); i != list.end(); i++)
 			sum += *i;
 

@@ -86,5 +86,5 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 
 void AIMain::Update() {
-	aih->ecostate->Update();
+	//aih->ecostate->Update();
 }
