@@ -20,11 +20,13 @@ class AModule: public AUnitDestroyedObserver {
 
 		void SetGroup(Group *group);
 
+		unsigned categories;
+
 	protected:
 		AModule();
 		Group *group; // the group to which the module belongs
 		std::list<int> units; // subset of group units
-		std::string name; // name of this mod
+		std::string name; // name of this module
 
 	private:
 		// Implementation

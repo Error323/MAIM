@@ -24,7 +24,7 @@ class GameMap {
 		float GetAmountOfMetal();
 
 		bool HasMetalSpots();
-		bool IsGeoPossible();
+		bool HasGeoSpots();
 		bool HasMetalFeatures();
 		bool HasEnergyFeatures();
 
