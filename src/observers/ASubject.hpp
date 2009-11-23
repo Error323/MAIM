@@ -7,14 +7,14 @@ class AObserver;
 
 class ASubject {
 	public:
-		virtual ~ASubject();
+		virtual ~ASubject() {}
 
 		virtual void Attach(AObserver*);
 		virtual void Detach(AObserver*);
 		virtual void Notify();
 
 	protected:
-		ASubject();
+		ASubject() {}
 
 	private:
 		std::list<AObserver*> observers;
