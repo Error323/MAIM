@@ -1,4 +1,8 @@
 #include "./AIMain.hpp"
+#include "./AIHelper.hpp"
+
+#include "../factories/ReusableObjectFactory.hpp"
+#include "../globals/EcoState.hpp"
 
 unsigned int AIMain::aiInstances = 0;
 
@@ -11,10 +15,15 @@ AIMain::~AIMain() {
 
 void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
 	aiInstance = aiInstances++;
+	aih = new AIHelper();
+	aih->Init(gcb, team);
+
+	aih->ecostate->Init(aih);
 }
 
 void AIMain::ReleaseAI() {
 	aiInstances--;
+	aih->Release();
 }
 
 
@@ -77,4 +86,5 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 
 void AIMain::Update() {
+	aih->ecostate->Update();
 }

@@ -4,6 +4,7 @@
 #include "ExternalAI/IGlobalAI.h"
 #include "ExternalAI/IGlobalAICallback.h"
 
+class AIHelper;
 class AIMain: public IGlobalAI {
 public:
 	AIMain();
@@ -34,6 +35,7 @@ public:
 private:
 	unsigned int aiInstance;
 	static unsigned int aiInstances;
+	AIHelper *aih;
 };
 
 #endif

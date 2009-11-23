@@ -1,16 +1,16 @@
 #include "EcoState.hpp"
 
+#include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
 #include "../groups/Group.hpp"
 
-void EcoState::Init(IAICallback *cb, int history) {
-	this->cb = cb;
-	this->history = history;
+void EcoState::Init(AIHelper* aih) {
+	this->aih = aih;
 	Update();
 }
 
 void EcoState::Update() {
-	if (histMNow.size() > history) {
+	if (histMNow.size() > 10) {
 		histMNow.pop_front();
 		histENow.pop_front();
 		histMIncome.pop_front();
@@ -19,12 +19,12 @@ void EcoState::Update() {
 		histEUsage.pop_front();
 	}
 
-	histMNow.push_back(cb->GetMetal());
-	histENow.push_back(cb->GetEnergy());
-	histMIncome.push_back(cb->GetMetalIncome());
-	histEIncome.push_back(cb->GetEnergyIncome());
-	histMUsage.push_back(cb->GetMetalUsage());
-	histEUsage.push_back(cb->GetEnergyUsage());
+	histMNow.push_back(aih->rcb->GetMetal());
+	histENow.push_back(aih->rcb->GetEnergy());
+	histMIncome.push_back(aih->rcb->GetMetalIncome());
+	histEIncome.push_back(aih->rcb->GetEnergyIncome());
+	histMUsage.push_back(aih->rcb->GetMetalUsage());
+	histEUsage.push_back(aih->rcb->GetEnergyUsage());
 
 	mNow = util::average(histMNow);
 	eNow = util::average(histENow);
@@ -32,8 +32,8 @@ void EcoState::Update() {
 	eIncome = util::average(histEIncome);
 	mUsage = util::average(histMUsage);
 	eUsage = util::average(histEUsage);
-	mStorage = cb->GetMetalStorage();
-	eStorage = cb->GetEnergyStorage();
+	mStorage = aih->rcb->GetMetalStorage();
+	eStorage = aih->rcb->GetEnergyStorage();
 
 	mStalling = (mNow/mStorage) < 0.1f && mIncome < mUsage;
 	eStalling = (eNow/eStorage) < 0.1f && eIncome < eUsage;

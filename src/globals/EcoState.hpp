@@ -7,6 +7,7 @@
 
 class UnitType;
 class Group;
+class AIHelper;
 
 class EcoState {
 	public:
@@ -16,11 +17,10 @@ class EcoState {
 		/**
 		 * The semi constructor, sets reference to IAICallback
 		 *
-		 * @param IAICallback, the spring callback handle
-		 * @param int, the history for {e,m}Now, {e,m}Income, {e,m}Usage
+		 * @param AIHelper, the global instances holder
 		 * over which is averaged
 		 */
-		void Init(IAICallback*, int);
+		void Init(AIHelper*);
 
 		/**
 		 * The Update() function calculates the current economic state
@@ -71,7 +71,6 @@ class EcoState {
 		bool mStalling, eStalling;
 		bool mExceeding, eExceeding;
 
-		int history;
 
 		std::list<Group*> factories;
 		std::list<Group*> workers;
@@ -79,8 +78,7 @@ class EcoState {
 		std::list<Group*> metalextractors;
 		std::list<Group*> metalmakers;
 
-		/** Spring callback function handle */
-		IAICallback *cb;
+		AIHelper *aih;
 };
 
 #endif
