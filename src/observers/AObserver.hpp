@@ -5,11 +5,11 @@ class ASubject;
 
 class AObserver {
 	public:
-		virtual ~AObserver();
+		virtual ~AObserver() {}
 		virtual void Update(ASubject *subject) = 0;
 
 	protected:
-		AObserver();
+		AObserver() {}
 };
 
 #endif

@@ -2,11 +2,11 @@
 
 #include "AObserver.hpp"
 
-void ASubject::Attach(AObserver *observer) {
+void ASubject::Attach(AObserver* observer) {
 	observers.push_back(observer);
 }
 
-void ASubject::Detach(AObserver *observer) {
+void ASubject::Detach(AObserver* observer) {
 	observers.remove(observer);
 }
 
