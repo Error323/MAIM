@@ -38,7 +38,7 @@ std::string Logger::GetLogName() const {
 		ss << "]";
 
 	std::string relName = ss.str();
-	std::string absName = GetAbsFileName(cb, relName);
+	std::string absName = util::GetAbsFileName(cb, relName);
 	std::cout << "Logging to " << absName << std::endl;
 	return absName;
 }

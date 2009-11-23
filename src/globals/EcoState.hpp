@@ -1,6 +1,8 @@
 #ifndef ECO_STATE
 #define ECO_STATE
 
+#include <list>
+
 #include "ExternalAI/IAICallback.h"
 
 class UnitType;
@@ -15,8 +17,10 @@ class EcoState {
 		 * The semi constructor, sets reference to IAICallback
 		 *
 		 * @param IAICallback, the spring callback handle
+		 * @param int, the history for {e,m}Now, {e,m}Income, {e,m}Usage
+		 * over which is averaged
 		 */
-		void Init(IAICallback*);
+		void Init(IAICallback*, int);
 
 		/**
 		 * The Update() function calculates the current economic state
@@ -40,28 +44,34 @@ class EcoState {
 		 */
 		bool CanAffordToBuild(Group*, UnitType*);
 
-		bool IsStallingMetal();
-		bool IsStallingEnergy();
-		bool IsExceedingMetal();
-		bool IsExceedingEnergy();
+		bool IsStallingMetal() { return mStalling; }
+		bool IsStallingEnergy() { return eStalling; }
+		bool IsExceedingMetal() { return mExceeding; }
+		bool IsExceedingEnergy() { return eExceeding; }
 
-		float GetMetalNow();
-		float GetEnergyNow();
-		float GetMetalStorage();
-		float GetEnergyStorage();
-		float GetMetalIncome();
-		float GetEnergyIncome();
-		float GetMetalUsage();
-		float GetEnergyUsage();
+		float GetMetalNow() { return mNow; }
+		float GetEnergyNow() { return eNow; }
+		float GetMetalStorage() { return mStorage; }
+		float GetEnergyStorage() { return eStorage; }
+		float GetMetalIncome() { return mIncome; }
+		float GetEnergyIncome() { return eIncome; }
+		float GetMetalUsage() { return mUsage; }
+		float GetEnergyUsage() { return eUsage; }
 
 	private:
+		std::list<float> histMNow, histENow;
+		std::list<float> histMIncome, histEIncome;
+		std::list<float> histMUsage, histEUsage;
+
+		float mStorage, eStorage;
 		float mNow, eNow;
 		float mIncome, eIncome;
 		float mUsage, eUsage;
-		float mStorage, eStorage;
 
 		bool mStalling, eStalling;
 		bool mExceeding, eExceeding;
+
+		int history;
 
 		std::list<Group*> factories;
 		std::list<Group*> workers;
