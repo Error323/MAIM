@@ -239,7 +239,7 @@ void AIUnitDefHandler::WriteLog() {
 			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_AIR) { msg << "\t\tMASK_MOVEDATA_TC_AIR   = 1\n"; }
 		}
 
-		msg << "\tActivated Modules:\n";
+		msg << "\n\tActivated Modules:\n";
 		std::list<AModule*>::const_iterator j;
 		for (j = aiUnitDef->modules.begin(); j != aiUnitDef->modules.end(); j++)
 			msg << "\t\t" << (*j)->GetName() << "\n";
