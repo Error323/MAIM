@@ -1,19 +1,22 @@
 #include "Group.hpp"
 
 #include "../modules/AModule.hpp"
+#include "../units/AIUnit.hpp"
+#include "../factories/ReusableObjectFactory.hpp"
 
 void Group::Release() {
 	std::list<AModule*>::iterator i;
 	for (i = modules.begin(); i != modules.end(); i++)
-		(*i)->Release(); // make available in factory again
+		(*i)->Release();
 	modules.clear();
 	units.clear();
 	while(!moduleStack.empty())
 		moduleStack.pop();
+	ReusableObjectFactory<Group>::Release(this);
 }
 
-void Group::AddUnit(int unit) {
-	units.push_back(unit);
+void Group::AddUnit(AIUnit* unit) {
+	units[unit->GetID()] = unit;
 	std::list<AModule*>::iterator i;
 	for (i = modules.begin(); i != modules.end(); i++)
 		(*i)->Filter(units);
@@ -52,7 +55,7 @@ void Group::Update() {
 }
 
 void Group::UnitDestroyed(int unit) {
-	units.remove(unit);
+	units.erase(unit);
 	if (units.empty())
 		Release();
 }
