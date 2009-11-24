@@ -22,6 +22,7 @@ class AModule: public AUnitDestroyedObserver {
 
 		void SetGroup(Group *group);
 		bool IsSuited(unsigned, unsigned, unsigned, unsigned);
+		std::string GetName();
 
 	protected:
 		AModule();

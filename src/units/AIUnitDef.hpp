@@ -2,6 +2,7 @@
 #define AI_UNITDEF_HDR
 
 #include <set>
+#include <list>
 
 #include "Sim/Misc/GlobalConstants.h"
 #include "Sim/Weapons/WeaponDef.h"
@@ -9,6 +10,8 @@
 #include "Sim/MoveTypes/MoveInfo.h"
 
 #include "../main/DConstants.hpp"
+
+class AModule;
 
 // note: MOBILE and STATIC are mutually exclusive
 // todo: make the MOBILE property its own bitmask?
@@ -104,6 +107,7 @@ public:
 
 	void SetUnitDef(const UnitDef* def) { sprUnitDef = def; }
 	void SetDGunWeaponDef(const UnitDef::UnitDefWeapon* def) { dgunWeaponDef = def; }
+	void CalcModules();
 
 	float GetBuildDist() const { return (GetDef()->buildDistance); }
 	float GetMaxSpeed() const { return (GetDef()->speed); }
@@ -189,6 +193,8 @@ public:
 	float nExtractsMetal;        // normalized extraction depth (unused)
 
 	std::set<int> buildOptionUDIDs;
+	std::list<AModule*> modules;
+	static std::list<AModule*> allmodules;
 
 private:
 	const UnitDef* sprUnitDef;

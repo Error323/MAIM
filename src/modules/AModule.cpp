@@ -19,3 +19,7 @@ bool AModule::IsSuited(unsigned unitTypeMasks, unsigned unitTerrainMasks, unsign
 void AModule::UnitDestroyed(int unit) {
 	units.erase(unit);
 }
+
+std::string AModule::GetName() {
+	return name;
+}

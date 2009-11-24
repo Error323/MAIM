@@ -11,6 +11,7 @@
 #include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
+#include "../modules/AModule.hpp"
 
 AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 	unitDefIDSets.push_back(&mobileBuilderUnitDefIDs);
@@ -139,6 +140,15 @@ AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 
 		aiUnitDef->isSpecialBuilder = isSpecialBuilder;
 	}
+
+	// third pass: calculate the fitting modules for each unit
+	for (int id = 1; id <= aih->rcb->GetNumUnitDefs(); id++) {
+		if (sprUnitDefsByID[id] == NULL) {
+			continue;
+		}
+		AIUnitDef* aiUnitDef = const_cast<AIUnitDef*>(aiUnitDefsByID[id]);
+		aiUnitDef->CalcModules();
+	}
 }
 
 AIUnitDefHandler::~AIUnitDefHandler() {
@@ -162,7 +172,10 @@ void AIUnitDefHandler::WriteLog() {
 
 		const AIUnitDef* aiUnitDef = aiUnitDefsByID[id];
 
-		msg << "UnitDef ID: " << id << ", name: " << (sprUnitDefsByID[id]->name) << "\n";
+		msg << "UnitDef ID: " << id;
+		msg << ", name: " << (sprUnitDefsByID[id]->name);
+		msg << ", humanName: " << (sprUnitDefsByID[id]->humanName) << "\n";
+
 		msg << "\t(normalized) ";
 		msg << "bld. time: " << aiUnitDef->nBuildTime << ", ";
 		msg << "mtl. cost: " << aiUnitDef->nMetalCost << ", ";
@@ -225,6 +238,11 @@ void AIUnitDefHandler::WriteLog() {
 			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_MXD) { msg << "\t\tMASK_MOVEDATA_TC_MXD   = 1\n"; }
 			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_AIR) { msg << "\t\tMASK_MOVEDATA_TC_AIR   = 1\n"; }
 		}
+
+		msg << "\tActivated Modules:\n";
+		std::list<AModule*>::const_iterator j;
+		for (j = aiUnitDef->modules.begin(); j != aiUnitDef->modules.end(); j++)
+			msg << "\t\t" << (*j)->GetName() << "\n";
 
 		msg << "\n";
 	}
