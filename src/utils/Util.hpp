@@ -2,6 +2,7 @@
 #define UTIL
 
 #include <list>
+#include <set>
 
 class IAICallback;
 
@@ -20,6 +21,30 @@ namespace util {
 	 * @return bool, A \subseteq B
 	 */
 	bool IsBinarySubset(unsigned A, unsigned B);
+
+	template<typename T> std::set<T> IntersectSets(const std::set<T>& s1, const std::set<T>& s2) {
+		typename std::set<T> r;
+		typename std::set<T>::const_iterator sit;
+
+		for (sit = s1.begin(); sit != s1.end(); sit++) {
+			if (s2.find(*sit) != s2.end()) {
+				r.insert(*sit);
+			}
+		}
+
+		return r;
+	}
+
+	template<typename T> std::set<T> UnionSets(const std::set<T>& s1, const std::set<T>& s2) {
+		typename std::set<T> r;
+		typename std::set<T>::const_iterator sit;
+
+		for (sit = s1.begin(); sit != s1.end(); sit++) { r.insert(*sit); }
+		for (sit = s2.begin(); sit != s2.end(); sit++) { r.insert(*sit); }
+
+		return r;
+	}
+
 }
 
 #endif
