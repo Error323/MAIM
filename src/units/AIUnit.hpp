@@ -39,6 +39,7 @@ public:
 	bool CanGiveCommand(int) const;
 	int GiveCommand(Command*);
 	int TryGiveCommand(Command*);
+	int GetCommandQueueSize();
 
 	float GetPositionETA(const float3&);
 	void Move(const float3&);

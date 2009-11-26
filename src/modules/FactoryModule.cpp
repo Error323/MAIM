@@ -3,8 +3,8 @@
 #include "../main/AIHelper.hpp"
 #include "../units/AIUnit.hpp"
 #include "../units/AIUnitDef.hpp"
-
 #include "../globals/EcoState.hpp"
+#include "../factories/ReusableObjectFactory.hpp"
 
 void FactoryModule::Init(AIHelper* aih) {
 	this->aih = aih;
@@ -25,13 +25,13 @@ void FactoryModule::Filter(std::map<int, AIUnit*> &allunits) {
 	for (i = allunits.begin(); i != allunits.end(); i++) {
 		const AIUnitDef* aud = i->second->GetUnitDef();
 
-		if (IsSuited(aud->typeMask, terrainMask, weaponMask, boMoveDataMask))
+		if (IsSuited(aud->typeMask, aud->terrainMask, aud->weaponMask, aud->boMoveDataMask))
 			units[i->first] = i->second;
 	}
 }
 
 bool FactoryModule::CanRun() {
-	bool stalling = aih->ecostate->IsStallingMetal() || ai->ecostate->IsStallingEnergy();
+	bool stalling = aih->ecostate->IsStallingMetal() || aih->ecostate->IsStallingEnergy();
 	if (!waiting.empty() && !stalling)
 		return true;
 

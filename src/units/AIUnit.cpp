@@ -138,6 +138,10 @@ int AIUnit::TryGiveCommand(Command* c) {
 	return -100;
 }
 
+int AIUnit::GetCommandQueueSize() {
+	return aih->rcb->GetCurrentUnitCommands(id)->size();
+}
+
 void AIUnit::Stop() { Command c; c.id = CMD_STOP; GiveCommand(&c); limboTime = 0; }
 void AIUnit::Wait(bool w) { Command c; c.id = CMD_WAIT; GiveCommand(&c); waiting = w; }
 void AIUnit::Move(const float3& goal) {

@@ -37,11 +37,11 @@ class AModule: public AUnitDestroyedObserver {
 		unsigned moduleWeaponMasks;
 		unsigned moduleMoveMasks;
 
+		AIHelper* aih;
+
 	private:
 		// Implementation
 		void UnitDestroyed(int unit);
-
-		AIHelper* aih;
 };
 
 #endif

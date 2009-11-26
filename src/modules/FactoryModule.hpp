@@ -13,10 +13,12 @@ class AIHelper;
 
 class FactoryModule: public AModule {
 	public:
-		FactoryModule(): name("FactoryModule"){}
+		FactoryModule() {
+			name = "FactoryModule";
+		}
 		~FactoryModule(){}
 
-		void Init(AIHelper*, std::string);
+		void Init(AIHelper*);
 		void Release();
 		void Filter(std::map<int, AIUnit*>&);
 		bool Update();
