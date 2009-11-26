@@ -11,11 +11,7 @@
 
 #include "./AIUnit.hpp"
 #include "./AIUnitDef.hpp"
-
-/// FIXME: temporary make-it-compile measure
-struct AIHelper {
-	IAICallback* rcb;
-};
+#include "../main/AIHelper.hpp"
 
 void AIUnit::SetActiveState(bool wantActive) {
 	if (CanGiveCommand(CMD_ONOFF)) {
@@ -30,7 +26,8 @@ void AIUnit::SetActiveState(bool wantActive) {
 	}
 }
 
-void AIUnit::Init() {
+void AIUnit::Init(AIHelper* aih) {
+	this->aih = aih;
 	currCmdID = 0;
 
 	age = 0;

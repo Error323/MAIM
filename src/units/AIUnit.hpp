@@ -18,7 +18,7 @@ public:
 		aih(h) {
 	}
 
-	void Init();
+	void Init(AIHelper*);
 	void Update();
 
 	bool GetActiveState() const { return active; }

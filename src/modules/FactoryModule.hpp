@@ -23,10 +23,6 @@ class FactoryModule: public AModule {
 		void Filter(std::map<int, AIUnit*>&);
 		bool Update();
 		bool CanRun();
-
-	private:
-		std::list<int> waiting;
-
 };
 
 #endif

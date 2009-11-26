@@ -3,7 +3,6 @@
 #include "../main/AIHelper.hpp"
 #include "../units/AIUnit.hpp"
 #include "../units/AIUnitDef.hpp"
-#include "../globals/EcoState.hpp"
 #include "../factories/ReusableObjectFactory.hpp"
 
 void FactoryModule::Init(AIHelper* aih) {
@@ -31,13 +30,6 @@ void FactoryModule::Filter(std::map<int, AIUnit*> &allunits) {
 }
 
 bool FactoryModule::CanRun() {
-	bool stalling = aih->ecostate->IsStallingMetal() || aih->ecostate->IsStallingEnergy();
-	if (!waiting.empty() && !stalling)
-		return true;
-
-	if (waiting.empty() && stalling)
-		return true;
-
 	std::map<int, AIUnit*>::iterator i;
 	for (i = units.begin(); i != units.end(); i++)
 		if (i->second->GetCommandQueueSize() <= MIN_QUEUE)
@@ -47,9 +39,22 @@ bool FactoryModule::CanRun() {
 }
 
 bool FactoryModule::Update() {
-	// if we are stalling, put a wait on the factories
-	// else make sure factories aren't waiting
-	// foreach factory that has a command queue <= MIN_QUEUE, fill it up to MAX_QUEUE
+	// Fill up the factories that have a queue <= MIN_QUEUE
+	std::map<int, AIUnit*>::iterator i;
+	for (i = units.begin(); i != units.end(); i++) {
+		int queueSize = i->second->GetCommandQueueSize();
+		if (queueSize <= MIN_QUEUE) {
+			for (int j = 0; j < (MAX_QUEUE-queueSize); j++) {
+				// First see if we have enough eco workers, if not
+				// build an eco worker
+				//
+				// i->second->Build(WORKER, bool enqueue = true);
+				//
+				// Else, using globals/Intel.hpp we determine the offensive to build
+				// i->second->Build(aih->intel->GetOffensive(), bool enqueue = true);
+			}
+		}
+	}
 	
 	// We are always done when all factory queues are filled up again
 	return true;
