@@ -1,5 +1,4 @@
 #include <cassert>
-#include <string>
 #include <cstring>
 
 #include "ExternalAI/IAICallback.h"

@@ -8,8 +8,9 @@ class IAICheats;
 class Logger;
 class Timer;
 
-class EcoState;
 class AIUnitDefHandler;
+class EcoState;
+class GameMap;
 
 struct AIHelper {
 public:
@@ -19,7 +20,8 @@ public:
 		logger(0),
 		timer(0),
 		aiunitdefhandler(0),
-		ecostate(0){}
+		ecostate(0),
+		gamemap(0){}
 
 	int team;
 
@@ -34,6 +36,7 @@ public:
 
 	AIUnitDefHandler* aiunitdefhandler;
 	EcoState*         ecostate;
+	GameMap*          gamemap;
 };
 
 #endif

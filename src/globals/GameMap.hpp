@@ -5,6 +5,9 @@
 
 #include "System/float3.h"
 
+// heightVariance(Altair_Crossing.smf)
+#define KBOT_VEH_THRESHOLD 43.97f
+
 class Group;
 class AIHelper;
 
@@ -15,36 +18,51 @@ class GameMap {
 
 		void Init(AIHelper*);
 
+		/** @return float3, ZeroVector when there are no candidates */
 		float3 GetClosestOpenMetalSpot(Group*);
-		Group* GetClosestUpgradableMetalSpot(Group*);
 
-		float GetHeightVariance();
-		float GetAmountOfWater();
-		float GetAmountOfLand();
-		float GetAmountOfMetal();
+		/** @return int, unit id of the upgradeable mex, -1 if there are no candidates */
+		int GetClosestUpgradableMetalSpot(Group*);
 
-		bool HasMetalSpots();
-		bool HasGeoSpots();
-		bool HasMetalFeatures();
-		bool HasEnergyFeatures();
+		/** @return float, height variance */
+		float GetHeightVariance() { return heightVariance; }
 
-		std::list<float3>& GetGeoSpots();
-		std::list<float3>& GetMetalFeatures();
-		std::list<float3>& GetEnergyFeatures();
+		/** @return float, amount of water in [0, 1] */
+		float GetAmountOfWater() { return waterAmount; }
+
+		/** @return float, amount of land in [0, 1] */
+		float GetAmountOfLand() { return 1.0f-waterAmount; }
+
+		/** @return float, amount of drainable metal in [0, 1] */
+		float GetAmountOfMetal() { return metalAmount; }
+
+		bool HasMetalSpots() { return metalAmount > 0.0f; }
+		bool HasGeoSpots() { return geospots.size() > 0; }
+		bool HasMetalFeatures() { return metalfeatures.size() > 0; }
+		bool HasEnergyFeatures() { return energyfeatures.size() > 0; }
+
+		bool IsKbotMap() { return heightVariance > KBOT_VEH_THRESHOLD; }
+		bool IsVehicleMap() { return !IsKbotMap(); }
+
+		std::list<float3>& GetGeoSpots() { return geospots; }
+		std::list<float3>& GetMetalFeatures() { return metalfeatures; }
+		std::list<float3>& GetEnergyFeatures() { return energyfeatures; }
 	
 	private:
 		float heightVariance;
 		float waterAmount;
-		float landAmount;
 		float metalAmount;
 
 		std::list<float3> geospots;
 		std::list<float3> metalfeatures;
 		std::list<float3> energyfeatures;
-		std::map<int, Group*> takenmetalspots;
-		std::map<int, Group*> upgradedmetalspots;
+		std::list<float3> metalspots;
 
 		AIHelper *aih;
+
+		void CalcMetalSpots();
+		void CalcMapHeightFeatures();
+		void CalcGeoSpots();
 };
 
 #endif

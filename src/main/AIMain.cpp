@@ -3,6 +3,7 @@
 
 #include "../factories/ReusableObjectFactory.hpp"
 #include "../globals/EcoState.hpp"
+#include "../globals/GameMap.hpp"
 
 unsigned int AIMain::aiInstances = 0;
 
@@ -19,6 +20,7 @@ void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
 	aih->Init(gcb, team);
 
 	aih->ecostate->Init(aih);
+	aih->gamemap->Init(aih);
 }
 
 void AIMain::ReleaseAI() {

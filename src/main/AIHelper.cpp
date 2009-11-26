@@ -6,8 +6,9 @@
 
 #include "../utils/Logger.hpp"
 #include "../utils/Timer.hpp"
-#include "../globals/EcoState.hpp"
 #include "../units/AIUnitDefHandler.hpp"
+#include "../globals/EcoState.hpp"
+#include "../globals/GameMap.hpp"
 
 void AIHelper::Init(IGlobalAICallback* gcb, int i) {
 	rcb  = gcb->GetAICallback();
@@ -19,6 +20,7 @@ void AIHelper::Init(IGlobalAICallback* gcb, int i) {
 
 	aiunitdefhandler = new AIUnitDefHandler(this);
 	ecostate         = new EcoState();
+	gamemap          = new GameMap();
 
 	logger->OpenLog(logger->GetLogName() + "[log].txt");
 	timer->OpenLog(logger->GetLogName() + "[timings].txt");

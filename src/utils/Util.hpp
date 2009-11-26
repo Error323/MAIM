@@ -3,6 +3,7 @@
 
 #include <list>
 #include <set>
+#include <string>
 
 class IAICallback;
 
