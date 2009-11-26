@@ -14,7 +14,7 @@ class AIHelper;
 
 class AModule: public AUnitDestroyedObserver {
 	public:
-		virtual ~AModule();
+		virtual ~AModule(){}
 
 		virtual void Init(AIHelper*) = 0;
 		virtual void Release() = 0;
@@ -27,7 +27,7 @@ class AModule: public AUnitDestroyedObserver {
 		std::string GetName();
 
 	protected:
-		AModule();
+		AModule(){}
 		Group *group; // the group to which the module belongs
 		std::map<int, AIUnit*> units; // subset of group units
 		std::string name; // name of this module

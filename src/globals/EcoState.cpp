@@ -3,14 +3,24 @@
 #include "ExternalAI/IAICallback.h"
 #include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
+#include "../utils/Logger.hpp"
 #include "../groups/Group.hpp"
 
 void EcoState::Init(AIHelper* aih) {
 	this->aih = aih;
+	float sumw = 0.0f;
 	for (int i = 0; i < HISTORY; i++) {
-		float w = util::Gauss(float(i), 5.0f)/util::Gauss(0.0f,5.0f);
+		float w = util::Gauss(float(i), 5.0f);
+		sumw += w;
 		weights.push_back(w);
 	}
+
+	std::list<float>::iterator w;
+	for (w = weights.begin(); w != weights.end(); w++) {
+		*w /= sumw;
+		LOG_DEBUG(aih->logger, "EcoState::Init W("<<*w<<")")
+	}
+
 	Update();
 }
 
