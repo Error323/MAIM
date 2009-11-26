@@ -33,8 +33,6 @@ class GameMap {
 		/** @return float, amount of land in [0, 1] */
 		float GetAmountOfLand() { return 1.0f-waterAmount; }
 
-		/** @return float, amount of drainable metal in [0, 1] */
-		float GetAmountOfMetal() { return metalAmount; }
 
 		bool HasMetalSpots() { return metalAmount > 0.0f; }
 		bool HasGeoSpots() { return geospots.size() > 0; }
@@ -43,6 +41,7 @@ class GameMap {
 
 		bool IsKbotMap() { return heightVariance > KBOT_VEH_THRESHOLD; }
 		bool IsVehicleMap() { return !IsKbotMap(); }
+		bool IsMetalMap() { return metalAmount > 0.0f; }
 
 		std::list<float3>& GetGeoSpots() { return geospots; }
 		std::list<float3>& GetMetalFeatures() { return metalfeatures; }

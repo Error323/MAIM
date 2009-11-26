@@ -5,7 +5,6 @@
 #include <map>
 
 #include "../main/AIHelper.hpp"
-#include "../utils/Util.hpp"
 #include "../groups/Group.hpp"
 
 #include "Sim/Units/UnitDef.h"
@@ -16,6 +15,7 @@ void GameMap::Init(AIHelper *aih) {
 
 	heightVariance = 0.0f;
 	waterAmount    = 0.0f;
+	metalAmount    = 0.0f;
 
 	CalcMapHeightFeatures();
 	CalcMetalSpots();
@@ -91,6 +91,8 @@ void GameMap::CalcMetalSpots() {
 
 		// No more mex spots
 		if (!mexSpotFound) break;
+
+		metalAmount += metalmap[bestZ*Z+bestX];
 
 		// "Erase" metal under the bestX bestZ radius
 		for (int i = -R; i <= R; i++) {
