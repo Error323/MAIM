@@ -26,13 +26,13 @@ namespace util {
 		return (std::string(dst));
 	}
 
-	float average(std::list<float> &list) {
+	float WeightedAverage(std::list<float> &V, std::list<float> &W) {
 		float sum = 0.0f;
-		std::list<float>::iterator i;
-		for (i = list.begin(); i != list.end(); i++)
-			sum += *i;
+		std::list<float>::iterator v, w;
+		for (w = W.begin(), v = V.begin(); v != V.end() && w != W.end(); w++, v++)
+			sum += (*w) * (*v);
 
-		return sum / list.size();
+		return sum / V.size();
 	}
 
 	bool IsBinarySubset(unsigned A, unsigned B) {
@@ -51,5 +51,11 @@ namespace util {
 		c = ((c >> S[3]) & B[3]) + (c & B[3]);
 		c = ((c >> S[4]) & B[4]) + (c & B[4]);
 		return c;
+	}
+
+	float Gauss(float x, float sigma, float mu) {
+		float a = 1.0f / (sigma * sqrt(2*M_PI));
+		float b = exp( -( pow(x-mu, 2) / (2*(pow(sigma,2))) ) );
+		return a * b;
 	}
 }

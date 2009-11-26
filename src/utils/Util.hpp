@@ -9,7 +9,9 @@ class IAICallback;
 namespace util {
 	std::string GetAbsFileName(IAICallback*, const std::string&, bool readonly = false);
 
-	float average(std::list<float> &list);
+	float WeightedAverage(std::list<float>&, std::list<float>&);
+
+	float Gauss(float x, float sigma, float mu = 0.0f);
 
 	unsigned int CountOneBits(unsigned int n);
 

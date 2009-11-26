@@ -7,32 +7,37 @@
 
 void EcoState::Init(AIHelper* aih) {
 	this->aih = aih;
+	for (int i = 0; i < HISTORY; i++) {
+		float w = util::Gauss(float(i), 5.0f)/util::Gauss(0.0f,5.0f);
+		weights.push_back(w);
+	}
 	Update();
 }
 
 void EcoState::Update() {
-	if (histMNow.size() > 10) {
-		histMNow.pop_front();
-		histENow.pop_front();
-		histMIncome.pop_front();
-		histEIncome.pop_front();
-		histMUsage.pop_front();
-		histEUsage.pop_front();
+	if (histMNow.size() > HISTORY) {
+		histMNow.pop_back();
+		histENow.pop_back();
+		histMIncome.pop_back();
+		histEIncome.pop_back();
+		histMUsage.pop_back();
+		histEUsage.pop_back();
 	}
 
-	histMNow.push_back(aih->rcb->GetMetal());
-	histENow.push_back(aih->rcb->GetEnergy());
-	histMIncome.push_back(aih->rcb->GetMetalIncome());
-	histEIncome.push_back(aih->rcb->GetEnergyIncome());
-	histMUsage.push_back(aih->rcb->GetMetalUsage());
-	histEUsage.push_back(aih->rcb->GetEnergyUsage());
+	histMNow.push_front(aih->rcb->GetMetal());
+	histENow.push_front(aih->rcb->GetEnergy());
+	histMIncome.push_front(aih->rcb->GetMetalIncome());
+	histEIncome.push_front(aih->rcb->GetEnergyIncome());
+	histMUsage.push_front(aih->rcb->GetMetalUsage());
+	histEUsage.push_front(aih->rcb->GetEnergyUsage());
 
-	mNow = util::average(histMNow);
-	eNow = util::average(histENow);
-	mIncome = util::average(histMIncome);
-	eIncome = util::average(histEIncome);
-	mUsage = util::average(histMUsage);
-	eUsage = util::average(histEUsage);
+	mNow = util::WeightedAverage(histMNow, weights);
+	eNow = util::WeightedAverage(histENow, weights);
+	mIncome = util::WeightedAverage(histMIncome, weights);
+	eIncome = util::WeightedAverage(histEIncome, weights);
+	mUsage = util::WeightedAverage(histMUsage, weights);
+	eUsage = util::WeightedAverage(histEUsage, weights);
+
 	mStorage = aih->rcb->GetMetalStorage();
 	eStorage = aih->rcb->GetEnergyStorage();
 

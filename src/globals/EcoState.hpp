@@ -3,6 +3,8 @@
 
 #include <list>
 
+#define HISTORY 10
+
 class UnitType;
 class Group;
 class AIHelper;
@@ -60,6 +62,7 @@ class EcoState {
 		std::list<float> histMNow, histENow;
 		std::list<float> histMIncome, histEIncome;
 		std::list<float> histMUsage, histEUsage;
+		std::list<float> weights;
 
 		float mStorage, eStorage;
 		float mNow, eNow;
