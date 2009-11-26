@@ -10,11 +10,13 @@
 
 class Group;
 class AIUnit;
+class AIHelper;
 
 class AModule: public AUnitDestroyedObserver {
 	public:
 		virtual ~AModule();
 
+		virtual void Init(AIHelper*) = 0;
 		virtual void Release() = 0;
 		virtual void Filter(std::map<int,AIUnit*>&) = 0;
 		virtual bool Update() = 0;
@@ -38,6 +40,8 @@ class AModule: public AUnitDestroyedObserver {
 	private:
 		// Implementation
 		void UnitDestroyed(int unit);
+
+		AIHelper* aih;
 };
 
 #endif
