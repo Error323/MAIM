@@ -27,12 +27,12 @@ namespace util {
 	}
 
 	float WeightedAverage(std::list<float> &V, std::list<float> &W) {
-		float sum = 0.0f;
+		float wavg = 0.0f;
 		std::list<float>::iterator v, w;
 		for (w = W.begin(), v = V.begin(); v != V.end() && w != W.end(); w++, v++)
-			sum += (*w) * (*v);
+			wavg += (*w) * (*v);
 
-		return sum / V.size();
+		return wavg;
 	}
 
 	bool IsBinarySubset(unsigned A, unsigned B) {

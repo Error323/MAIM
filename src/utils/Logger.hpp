@@ -52,8 +52,8 @@ private:
 	IAICallback *cb;
 };
 
-#define LOG_BASIC(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), utils::LOG_BASIC); }
-#define LOG_DEBUG(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), utils::LOG_DEBUG); }
-#define LOG_ERROR(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), utils::LOG_ERROR); }
+#define LOG_BASIC(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), LOG_BASIC); }
+#define LOG_DEBUG(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), LOG_DEBUG); }
+#define LOG_ERROR(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), LOG_ERROR); }
 
 #endif
