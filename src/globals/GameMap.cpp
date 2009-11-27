@@ -53,9 +53,21 @@ void GameMap::CalcMetalSpots() {
 	unsigned char metalmap[X*Z];
 
 	// Copy metalmap to mutable metalmap
-	for (int z = 0; z < Z; z++)
-		for (int x = 0; x < X; x++)
-			metalmap[z*X+x] = mm[(z*2)*(X*2)+(x*2)];
+	for (int z = 0; z < Z; z++) {
+		for (int x = 0; x < X; x++) {
+			float sum = 0.0f;
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					int zz = z*2+i; int xx = x*2+j;
+					if (zz < 0 || zz > (Z*2-1) || xx < 0 || xx > (X*2-1))
+						continue;
+					sum += mm[zz*(X*2)+xx];
+				}
+			}
+
+			metalmap[z*X+x] = int(round(sum/9.0f));
+		}
+	}
 
 	while (true) {
 		float highestSaturation = 0.0f;
@@ -65,7 +77,7 @@ void GameMap::CalcMetalSpots() {
 		// Using a greedy approach, find the best metalspot
 		for (int z = 0; z < Z; z++) {
 			for (int x = 0; x < X; x++) {
-				if (metalmap[z*X+x] > 64) {
+				if (metalmap[z*X+x] > 32) {
 					mexSpotFound = true;
 					float saturation = 0.0f;
 					for (int i = -R; i <= R; i++) {
