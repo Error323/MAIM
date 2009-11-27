@@ -7,11 +7,11 @@ struct lua_State;
 class LuaModule: public AModule {
 public:
 	LuaModule();
-	~LuaModule();
+	~LuaModule() {}
 
 	void Init(AIHelper* h) { aih = h; }
-	void Release() {}
-	bool Load(const std::string&);
+	void Release();
+	bool LoadState(const std::string&);
 
 	std::string GetName();
 
@@ -23,6 +23,8 @@ public:
 	bool HaveGetName() const { return haveGetName; }
 	bool HaveCanRun() const { return haveCanRun; }
 	bool HaveUpdate() const { return haveUpdate; }
+
+	lua_State* GetLuaState() const { return luaState; }
 
 private:
 	bool isValid;
