@@ -43,13 +43,13 @@ bool LuaModule::Load(const std::string& luaScript) {
 				lua_pushcfunction(luaState, LuaAICallBackHandler::EcoStateIsStallingMetal);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingMetal"] = func
-				assert(lua_gettop(luaState) == 1);
+				assert(lua_gettop(luaState) == 3);
 
 				lua_pushstring(luaState, "IsStallingEnergy");
 				lua_pushcfunction(luaState, LuaAICallBackHandler::EcoStateIsStallingEnergy);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
-				assert(lua_gettop(luaState) == 1);
+				assert(lua_gettop(luaState) == 3);
 			lua_settable(luaState, -3); // AI["EcoState"] = EcoState
 			assert(lua_gettop(luaState) == 1);
 
@@ -61,13 +61,13 @@ bool LuaModule::Load(const std::string& luaScript) {
 				lua_pushcfunction(luaState, LuaAICallBackHandler::GameMapGetAmountOfLand);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfLand"] = func
-				assert(lua_gettop(luaState) == 1);
+				assert(lua_gettop(luaState) == 3);
 
 				lua_pushstring(luaState, "GetAmountOfWater");
 				lua_pushcfunction(luaState, LuaAICallBackHandler::GameMapGetAmountOfWater);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
-				assert(lua_gettop(luaState) == 1);
+				assert(lua_gettop(luaState) == 3);
 			lua_settable(luaState, -3); // AI["GameMap"] = GameMap
 			assert(lua_gettop(luaState) == 1);
 
