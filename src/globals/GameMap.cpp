@@ -10,6 +10,8 @@
 #include "Sim/Units/UnitDef.h"
 #include "ExternalAI/IAICallback.h"
 
+#define METAL_THRESHOLD 32
+
 void GameMap::Init(AIHelper *aih) {
 	this->aih = aih;
 
@@ -47,7 +49,7 @@ float3 GameMap::GetClosestOpenMetalSpot(Group* group) {
 void GameMap::CalcMetalSpots() {
 	int X = int(aih->rcb->GetMapWidth()/4);
 	int Z = int(aih->rcb->GetMapHeight()/4);
-	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f))+1;
+	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f));
 	unsigned char metalmap[X*Z];
 
 	// Calculate circular stamp
@@ -76,7 +78,7 @@ void GameMap::CalcMetalSpots() {
 			}
 
 			metalmap[z*X+x] = int(round(sum/9.0f));
-			if (metalmap[z*X+x] >= 32) {
+			if (metalmap[z*X+x] >= METAL_THRESHOLD) {
 				M.push_back(z);
 				M.push_back(x);
 			}
@@ -91,20 +93,19 @@ void GameMap::CalcMetalSpots() {
 		// Using a greedy approach, find the best metalspot
 		for (size_t i = 0; i < M.size(); i+=2) {
 			int z = M[i]; int x = M[i+1];
-			if (metalmap[z*X+x] < 32)
-				continue;
-			mexSpotFound = true;
-			float saturation = 0.0f;
+			float saturation = 0.0f; float sum = 0.0f;
 			for (size_t c = 0; c < circle.size(); c+=2) {
 				int zz = circle[c]+z; int xx = circle[c+1]+x;
 				if (xx < 0 || xx > X-1 || zz < 0 || zz > Z-1)
 					continue;
 				float r = sqrt(circle[c]*circle[c] + circle[c+1]*circle[c+1]);
-				saturation += (metalmap[zz*X+xx] * (1.0f / (r+1.0f)));
+				saturation += metalmap[zz*X+xx] * (1.0f / (r+1.0f));
+				sum += metalmap[zz*X+xx];
 			}
-			if (saturation > highestSaturation) {
+			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*M_PI*R*R)) {
 				bestX = x; bestZ = z;
 				highestSaturation = saturation;
+				mexSpotFound = true;
 			}
 		}
 
@@ -129,7 +130,7 @@ void GameMap::CalcMetalSpots() {
 		metalspots.push_back(metalspot);
 
 		// Debug
-		// aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+		aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
 	}
 }
 
