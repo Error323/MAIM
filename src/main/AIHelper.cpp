@@ -6,6 +6,7 @@
 
 #include "../utils/Logger.hpp"
 #include "../utils/Timer.hpp"
+#include "../lua/LuaModuleLoader.hpp"
 #include "../units/AIUnitDefHandler.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
@@ -18,13 +19,18 @@ void AIHelper::Init(IGlobalAICallback* gcb, int i) {
 	logger           = new Logger(rcb);
 	timer            = new Timer();
 
-	aiunitdefhandler = new AIUnitDefHandler(this);
-	ecostate         = new EcoState();
-	gamemap          = new GameMap();
+	luaModuleLoader  = new LuaModuleLoader(this);
+
+	aiUnitDefHandler = new AIUnitDefHandler(this);
+	ecoState         = new EcoState();
+	gameMap          = new GameMap();
 
 	logger->OpenLog(logger->GetLogName() + "[log].txt");
 	timer->OpenLog(logger->GetLogName() + "[timings].txt");
-	aiunitdefhandler->OpenLog(logger->GetLogName() + "[unitdefs].txt");
+	aiUnitDefHandler->OpenLog(logger->GetLogName() + "[unitdefs].txt");
+
+	ecoState->Init(this);
+	gameMap->Init(this);
 }
 
 void AIHelper::Release() {
@@ -34,12 +40,15 @@ void AIHelper::Release() {
 	timer->WriteLog();
 	timer->CloseLog();
 
-	aiunitdefhandler->WriteLog();
-	aiunitdefhandler->CloseLog();
+	aiUnitDefHandler->WriteLog();
+	aiUnitDefHandler->CloseLog();
 
 	delete logger;
 	delete timer;
 
-	delete aiunitdefhandler;
-	delete ecostate;
+	delete luaModuleLoader;
+
+	delete aiUnitDefHandler;
+	delete ecoState;
+	delete gameMap;
 }

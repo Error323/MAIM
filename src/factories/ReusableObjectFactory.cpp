@@ -21,6 +21,7 @@ Object* ReusableObjectFactory<Object>::Instance() {
 		object = free.front();
 		free.pop_front();
 	}
+
 	return object;
 }
  

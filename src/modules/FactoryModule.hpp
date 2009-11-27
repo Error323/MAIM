@@ -1,5 +1,5 @@
-#ifndef FACTORY_MODULE
-#define FACTORY_MODULE
+#ifndef FACTORY_MODULE_HDR
+#define FACTORY_MODULE_HDR
 
 #include <string>
 #include <map>
@@ -9,7 +9,7 @@
 #define MIN_QUEUE 2
 #define MAX_QUEUE 5
 
-class AIHelper;
+struct AIHelper;
 
 class FactoryModule: public AModule {
 	public:

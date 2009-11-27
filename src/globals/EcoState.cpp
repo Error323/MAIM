@@ -9,10 +9,10 @@
 void EcoState::Init(AIHelper* aih) {
 	this->aih = aih;
 
-	// Create a gaussian distribution over the HISTORY
+	// Create a Gaussian distribution over the HISTORY
 	float sumw = 0.0f;
 	for (int i = 0; i < HISTORY; i++) {
-		float w = util::Gauss(float(i), 5.0f);
+		float w = util::GaussDens(float(i), 0.0f, 5.0f);
 		sumw += w;
 		weights.push_back(w);
 	}

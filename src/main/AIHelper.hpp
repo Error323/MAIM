@@ -8,6 +8,7 @@ class IAICheats;
 class Logger;
 class Timer;
 
+class LuaModuleLoader;
 class AIUnitDefHandler;
 class EcoState;
 class GameMap;
@@ -19,9 +20,10 @@ public:
 		ccb(0),
 		logger(0),
 		timer(0),
-		aiunitdefhandler(0),
-		ecostate(0),
-		gamemap(0){}
+		luaModuleLoader(0),
+		aiUnitDefHandler(0),
+		ecoState(0),
+		gameMap(0) {}
 
 	int team;
 
@@ -34,9 +36,11 @@ public:
 	Logger*           logger;
 	Timer*            timer;
 
-	AIUnitDefHandler* aiunitdefhandler;
-	EcoState*         ecostate;
-	GameMap*          gamemap;
+	LuaModuleLoader*  luaModuleLoader;
+
+	AIUnitDefHandler* aiUnitDefHandler;
+	EcoState*         ecoState;
+	GameMap*          gameMap;
 };
 
 #endif

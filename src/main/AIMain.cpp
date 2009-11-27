@@ -1,5 +1,6 @@
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
+#include "../lua/LuaAICallBackHandler.hpp"
 
 #include "../factories/ReusableObjectFactory.hpp"
 #include "../globals/EcoState.hpp"
@@ -18,9 +19,6 @@ void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
 	aiInstance = aiInstances++;
 	aih = new AIHelper();
 	aih->Init(gcb, team);
-
-	aih->ecostate->Init(aih);
-	aih->gamemap->Init(aih);
 }
 
 void AIMain::ReleaseAI() {
@@ -31,47 +29,62 @@ void AIMain::ReleaseAI() {
 
 
 void AIMain::UnitCreated(int unitID, int builderUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::UnitFinished(int unitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::UnitIdle(int unitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::UnitDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::EnemyDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::UnitMoveFailed(int unitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 
 void AIMain::EnemyEnterLOS(int enemyUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::EnemyLeaveLOS(int enemyUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::EnemyEnterRadar(int enemyUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::EnemyLeaveRadar(int enemyUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 void AIMain::EnemyDestroyed(int enemyUnitID, int attackerUnitID) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 
 void AIMain::GotChatMsg(const char* msg, int playerNum) {
+	LuaAICallBackHandler::SetHelper(aih);
 }
 
 int AIMain::HandleEvent(int msgID, const void* msgData) {
+	LuaAICallBackHandler::SetHelper(aih);
+
 	switch (msgID) {
 		case AI_EVENT_UNITGIVEN: {
 			const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
@@ -88,5 +101,6 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 
 void AIMain::Update() {
-	aih->ecostate->Update();
+	LuaAICallBackHandler::SetHelper(aih);
+	aih->ecoState->Update();
 }
