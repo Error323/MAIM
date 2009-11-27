@@ -47,7 +47,7 @@ float3 GameMap::GetClosestOpenMetalSpot(Group* group) {
 void GameMap::CalcMetalSpots() {
 	int X = int(aih->rcb->GetMapWidth()/4);
 	int Z = int(aih->rcb->GetMapHeight()/4);
-	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f));
+	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f))+1;
 	unsigned char metalmap[X*Z];
 
 	// Calculate circular stamp
@@ -129,7 +129,7 @@ void GameMap::CalcMetalSpots() {
 		metalspots.push_back(metalspot);
 
 		// Debug
-		aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+		// aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
 	}
 }
 
