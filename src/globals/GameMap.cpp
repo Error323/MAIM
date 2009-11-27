@@ -48,11 +48,21 @@ void GameMap::CalcMetalSpots() {
 	int X = int(aih->rcb->GetMapWidth()/4);
 	int Z = int(aih->rcb->GetMapHeight()/4);
 	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f));
-
-	const unsigned char *mm = aih->rcb->GetMetalMap();
 	unsigned char metalmap[X*Z];
 
+	// Calculate circular stamp
+	std::vector<int> circle;
+	for (int i = -R; i <= R; i++) {
+		for (int j = -R; j <= R; j++) {
+			float r = sqrt(i*i + j*j);
+			if (r > R) continue;
+			circle.push_back(i);
+			circle.push_back(j);
+		}
+	}
+
 	// Copy metalmap to mutable metalmap
+	std::vector<int> M;
 	for (int z = 0; z < Z; z++) {
 		for (int x = 0; x < X; x++) {
 			float sum = 0.0f;
@@ -61,11 +71,15 @@ void GameMap::CalcMetalSpots() {
 					int zz = z*2+i; int xx = x*2+j;
 					if (zz < 0 || zz > (Z*2-1) || xx < 0 || xx > (X*2-1))
 						continue;
-					sum += mm[zz*(X*2)+xx];
+					sum += aih->rcb->GetMetalMap()[zz*(X*2)+xx];
 				}
 			}
 
 			metalmap[z*X+x] = int(round(sum/9.0f));
+			if (metalmap[z*X+x] >= 32) {
+				M.push_back(z);
+				M.push_back(x);
+			}
 		}
 	}
 
@@ -75,27 +89,22 @@ void GameMap::CalcMetalSpots() {
 		bool mexSpotFound = false;
 
 		// Using a greedy approach, find the best metalspot
-		for (int z = 0; z < Z; z++) {
-			for (int x = 0; x < X; x++) {
-				if (metalmap[z*X+x] < 2*R)
+		for (size_t i = 0; i < M.size(); i+=2) {
+			int z = M[i]; int x = M[i+1];
+			if (metalmap[z*X+x] < 32)
+				continue;
+			mexSpotFound = true;
+			float saturation = 0.0f;
+			for (size_t c = 0; c < circle.size(); c+=2) {
+				int zz = circle[c]+z; int xx = circle[c+1]+x;
+				if (xx < 0 || xx > X-1 || zz < 0 || zz > Z-1)
 					continue;
-				mexSpotFound = true;
-				float saturation = 0.0f;
-				for (int i = -R; i <= R; i++) {
-					for (int j = -R; j <= R; j++) {
-						int zz = i+z; int xx = j+x;
-						if (xx < 0 || xx > X-1 || zz < 0 || zz > Z-1)
-							continue;
-						float r = sqrt(i*i + j*j);
-						if (r > R)
-							continue;
-						saturation += (metalmap[zz*X+xx] * (1.0f / (r+1.0f)));
-					}
-				}
-				if (saturation > highestSaturation) {
-					bestX = x; bestZ = z;
-					highestSaturation = saturation;
-				}
+				float r = sqrt(circle[c]*circle[c] + circle[c+1]*circle[c+1]);
+				saturation += (metalmap[zz*X+xx] * (1.0f / (r+1.0f)));
+			}
+			if (saturation > highestSaturation) {
+				bestX = x; bestZ = z;
+				highestSaturation = saturation;
 			}
 		}
 
@@ -105,16 +114,11 @@ void GameMap::CalcMetalSpots() {
 		metalAmount += metalmap[bestZ*Z+bestX];
 
 		// "Erase" metal under the bestX bestZ radius
-		for (int i = -R; i <= R; i++) {
-			for (int j = -R; j <= R; j++) {
-				int z = i+bestZ; int x = j+bestX;
-				if (x < 0 || x > X-1 || z < 0 || z > Z-1)
-					continue;
-				float r = sqrt(i*i + j*j);
-				if (r > R)
-					continue;
-				metalmap[z*X+x] = int(round(R-r));
-			}
+		for (size_t c = 0; c < circle.size(); c+=2) {
+			int z = circle[c]+bestZ; int x = circle[c+1]+bestX;
+			if (x < 0 || x > X-1 || z < 0 || z > Z-1)
+				continue;
+			metalmap[z*X+x] = 0;
 		}
 		
 		// Increase to world size
@@ -162,7 +166,8 @@ void GameMap::CalcMapHeightFeatures() {
 	for (int z = 0; z < Z; z++) {
 		for (int x = 0; x < X; x++) {
 			float h = hm[z*X+x];
-			if (h >= 0.0f) heightVariance += (h/fsum) * std::pow<float>((h - favg), 2.0f);
+			if (h >= 0.0f) 
+				heightVariance += (h/fsum) * std::pow<float>((h - favg), 2.0f);
 		}
 	}
 
