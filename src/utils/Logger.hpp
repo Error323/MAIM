@@ -31,13 +31,13 @@ public:
 		log << GetInGameTime() << " ";
 		switch (lvl) {
 			case LOG_BASIC: {
-				log << "[BASIC] " << t; log << std::endl;
+				log << "[BASIC] " << t;
 			} break;
 			case LOG_DEBUG: {
-				log << "[DEBUG] " << t; log << std::endl;
+				log << "[DEBUG] " << t;
 			} break;
 			case LOG_ERROR: {
-				log << "[ERROR] " << t; log << std::endl;
+				log << "[ERROR] " << t;
 			} break;
 			default: {
 			} break;

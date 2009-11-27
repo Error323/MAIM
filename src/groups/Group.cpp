@@ -10,7 +10,7 @@ void Group::Release() {
 		(*i)->Release();
 	modules.clear();
 	units.clear();
-	while(!moduleStack.empty())
+	while (!moduleStack.empty())
 		moduleStack.pop();
 	ReusableObjectFactory<Group>::Release(this);
 }
@@ -23,7 +23,7 @@ void Group::AddUnit(AIUnit* unit) {
 }
 
 // Make sure to add modules in this order: emergencies, reactives, proactives
-void Group::AddModule(AModule *module) {
+void Group::AddModule(AModule* module) {
 	module->SetGroup(this); // Allows access to this group from within the module
 	module->Filter(units); // Determines which units are suited for this module
 	modules.push_back(module); // Allows the group to select the module
@@ -50,7 +50,7 @@ void Group::Update() {
 	}
 
 	// Module::Update() returns true when done
-	while(!moduleStack.empty() && moduleStack.top()->Update())
+	while (!moduleStack.empty() && moduleStack.top()->Update())
 		moduleStack.pop();
 }
 

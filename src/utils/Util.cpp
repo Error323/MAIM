@@ -1,5 +1,7 @@
 #include <cassert>
 #include <cstring>
+#include <cmath>
+#include <algorithm>
 
 #include "ExternalAI/IAICallback.h"
 #include "./Util.hpp"
@@ -17,27 +19,52 @@ namespace util {
 
 		// get the absolute path to the file
 		// (and create folders along the way)
-		if (readonly)
+		if (readonly) {
 			cb->GetValue(AIVAL_LOCATE_FILE_R, dst);
-		else
+		} else {
 			cb->GetValue(AIVAL_LOCATE_FILE_W, dst);
+		}
 
 		return (std::string(dst));
 	}
 
-	float WeightedAverage(std::list<float> &V, std::list<float> &W) {
+
+	void StringToLowerInPlace(std::string& s) {
+		std::transform(s.begin(), s.end(), s.begin(), (int (*)(int))tolower);
+	}
+	std::string StringToLower(std::string s) {
+		StringToLowerInPlace(s);
+		return s;
+	}
+
+	std::string StringStripSpaces(const std::string& s1) {
+		std::string s2; s2.reserve(s1.size());
+
+		for (std::string::const_iterator it = s1.begin(); it != s1.end(); it++) {
+			if (!isspace(*it)) {
+				s2.push_back(*it);
+			}
+		}
+
+		return s2;
+	}
+
+
+	float WeightedAverage(std::list<float>& V, std::list<float>& W) {
 		float wavg = 0.0f;
-		std::list<float>::iterator v, w;
+		std::list<float>::const_iterator v, w;
 		for (w = W.begin(), v = V.begin(); v != V.end() && w != W.end(); w++, v++)
-			wavg += (*w) * (*v);
+			wavg += ((*w) * (*v));
 
 		return wavg;
 	}
 
+
 	bool IsBinarySubset(unsigned A, unsigned B) {
 		unsigned cA     = CountOneBits(A);
 		unsigned cAandB = CountOneBits(A&B);
-		return cA == cAandB;
+
+		return (cA == cAandB);
 	}
 
 	unsigned int CountOneBits(unsigned int n) {
@@ -52,9 +79,9 @@ namespace util {
 		return c;
 	}
 
-	float Gauss(float x, float sigma, float mu) {
-		float a = 1.0f / (sigma * sqrt(2*M_PI));
-		float b = exp( -( pow(x-mu, 2) / (2*(pow(sigma,2))) ) );
-		return a * b;
+	float GaussDens(float x, float mu, float sigma) {
+		const float a = 1.0f / (sigma * std::sqrt(2.0f * M_PI));
+		const float b = std::exp(-(((x - mu) * (x - mu)) / (2.0f * sigma * sigma)));
+		return (a * b);
 	}
 }

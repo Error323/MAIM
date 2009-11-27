@@ -5,8 +5,8 @@
 #include "../units/AIUnitDef.hpp"
 #include "../factories/ReusableObjectFactory.hpp"
 
-void FactoryModule::Init(AIHelper* aih) {
-	this->aih = aih;
+void FactoryModule::Init(AIHelper* h) {
+	aih = h;
 
 	// Module actives on these unit types:
 	moduleTypeMasks = MASK_BUILDER_STATIC;

@@ -31,7 +31,7 @@ class GameMap {
 		float GetAmountOfWater() { return waterAmount; }
 
 		/** @return float, amount of land in [0, 1] */
-		float GetAmountOfLand() { return 1.0f-waterAmount; }
+		float GetAmountOfLand() { return (1.0f - waterAmount); }
 
 
 		bool HasMetalSpots() { return metalAmount > 0.0f; }
@@ -57,7 +57,7 @@ class GameMap {
 		std::list<float3> energyfeatures;
 		std::list<float3> metalspots;
 
-		AIHelper *aih;
+		AIHelper* aih;
 
 		void CalcMetalSpots();
 		void CalcMapHeightFeatures();
