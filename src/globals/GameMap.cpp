@@ -77,26 +77,24 @@ void GameMap::CalcMetalSpots() {
 		// Using a greedy approach, find the best metalspot
 		for (int z = 0; z < Z; z++) {
 			for (int x = 0; x < X; x++) {
-				if (metalmap[z*X+x] > 32) {
-					mexSpotFound = true;
-					float saturation = 0.0f;
-					for (int i = -R; i <= R; i++) {
-						for (int j = -R; j <= R; j++) {
-							int zz = i+z;
-							int xx = j+x;
-							if (xx < 0 || xx > X-1 || zz < 0 || zz > Z-1)
-								continue;
-							float r = sqrt(i*i + j*j);
-							if (r > R)
-								continue;
-							saturation += (metalmap[zz*X+xx] * (1.0f / (r+1.0f)));
-						}
+				if (metalmap[z*X+x] < 2*R)
+					continue;
+				mexSpotFound = true;
+				float saturation = 0.0f;
+				for (int i = -R; i <= R; i++) {
+					for (int j = -R; j <= R; j++) {
+						int zz = i+z; int xx = j+x;
+						if (xx < 0 || xx > X-1 || zz < 0 || zz > Z-1)
+							continue;
+						float r = sqrt(i*i + j*j);
+						if (r > R)
+							continue;
+						saturation += (metalmap[zz*X+xx] * (1.0f / (r+1.0f)));
 					}
-					if (saturation > highestSaturation) {
-						bestX = x;
-						bestZ = z;
-						highestSaturation = saturation;
-					}
+				}
+				if (saturation > highestSaturation) {
+					bestX = x; bestZ = z;
+					highestSaturation = saturation;
 				}
 			}
 		}
@@ -109,13 +107,13 @@ void GameMap::CalcMetalSpots() {
 		// "Erase" metal under the bestX bestZ radius
 		for (int i = -R; i <= R; i++) {
 			for (int j = -R; j <= R; j++) {
-				int z = i+bestZ;
-				int x = j+bestX;
+				int z = i+bestZ; int x = j+bestX;
 				if (x < 0 || x > X-1 || z < 0 || z > Z-1)
 					continue;
-				if (sqrt(i*i + j*j) > R)
+				float r = sqrt(i*i + j*j);
+				if (r > R)
 					continue;
-				metalmap[z*X+x] = 0;
+				metalmap[z*X+x] = int(round(R-r));
 			}
 		}
 		
@@ -127,7 +125,7 @@ void GameMap::CalcMetalSpots() {
 		metalspots.push_back(metalspot);
 
 		// Debug
-		// aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+		aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
 	}
 }
 
