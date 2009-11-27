@@ -102,7 +102,7 @@ void GameMap::CalcMetalSpots() {
 				saturation += metalmap[zz*X+xx] * (1.0f / (r+1.0f));
 				sum += metalmap[zz*X+xx];
 			}
-			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*M_PI*R*R)) {
+			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*pow(R-1,2))) {
 				bestX = x; bestZ = z;
 				highestSaturation = saturation;
 				mexSpotFound = true;
