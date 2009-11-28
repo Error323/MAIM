@@ -77,8 +77,8 @@ void GameMap::CalcMetalSpots() {
 				}
 			}
 
-			metalmap[z*X+x] = int(round(sum/9.0f));
-			if (metalmap[z*X+x] >= METAL_THRESHOLD) {
+			metalmap[ID(x,z)] = int(round(sum/9.0f));
+			if (metalmap[ID(x,z)] >= METAL_THRESHOLD) {
 				M.push_back(z);
 				M.push_back(x);
 			}
@@ -99,8 +99,8 @@ void GameMap::CalcMetalSpots() {
 				if (xx < 0 || xx > X-1 || zz < 0 || zz > Z-1)
 					continue;
 				float r = sqrt(circle[c]*circle[c] + circle[c+1]*circle[c+1]);
-				saturation += metalmap[zz*X+xx] * (1.0f / (r+1.0f));
-				sum += metalmap[zz*X+xx];
+				saturation += metalmap[ID(xx, zz)] * (1.0f / (r+1.0f));
+				sum += metalmap[ID(xx,zz)];
 			}
 			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*pow(R-1,2))) {
 				bestX = x; bestZ = z;
@@ -119,7 +119,7 @@ void GameMap::CalcMetalSpots() {
 			int z = circle[c]+bestZ; int x = circle[c+1]+bestX;
 			if (x < 0 || x > X-1 || z < 0 || z > Z-1)
 				continue;
-			metalmap[z*X+x] = 0;
+			metalmap[ID(x,z)] = 0;
 		}
 		
 		// Increase to world size
@@ -150,7 +150,7 @@ void GameMap::CalcMapHeightFeatures() {
 	// Calculate the sum, min and max
 	for (int z = 0; z < Z; z++) {
 		for (int x = 0; x < X; x++) {
-			float h = hm[z*X+x];
+			float h = hm[ID(x,z)];
 			if (h >= 0.0f) {
 				fsum += h;
 				fmin = std::min<float>(fmin,h);
@@ -166,7 +166,7 @@ void GameMap::CalcMapHeightFeatures() {
 	// Calculate the variance
 	for (int z = 0; z < Z; z++) {
 		for (int x = 0; x < X; x++) {
-			float h = hm[z*X+x];
+			float h = hm[ID(x,z)];
 			if (h >= 0.0f) 
 				heightVariance += (h/fsum) * std::pow<float>((h - favg), 2.0f);
 		}
