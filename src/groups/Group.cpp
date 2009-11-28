@@ -4,6 +4,8 @@
 #include "../units/AIUnit.hpp"
 #include "../factories/ReusableObjectFactory.hpp"
 
+int Group::counter = 0;
+
 void Group::Release() {
 	std::list<AModule*>::iterator i;
 	for (i = modules.begin(); i != modules.end(); i++)
