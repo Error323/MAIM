@@ -1,5 +1,5 @@
-#ifndef GROUP
-#define GROUP
+#ifndef GROUP_HDR
+#define GROUP_HDR
 
 #include <list>
 #include <stack>
@@ -13,7 +13,7 @@ class AIUnit;
 
 class Group: public AUnitDestroyedObserver {
 	public:
-		Group(){}
+		Group(): gid(counter) { counter++; }
 		~Group(){}
 
 		void AddUnit(AIUnit*);
@@ -25,8 +25,12 @@ class Group: public AUnitDestroyedObserver {
 		void PushModule(AModule*);
 
 		float3 GetPos();
+		int GetId() { return gid; }
 		
 	private:
+		static int counter;
+		int gid;
+
 		std::map<int, AIUnit*> units;
 		std::list<AModule*> modules;
 		std::stack<AModule*> moduleStack;
