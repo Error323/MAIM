@@ -116,7 +116,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 
 		// lua_register(L, name, func) is short-hand macro for
 		// lua_pushcfunction(L, func) + lua_setglobal(L, name)
-		// do we want any functions available in the global env?
+		// do we want any functions available in the global env (_G)?
 
 		return luaState;
 	}
