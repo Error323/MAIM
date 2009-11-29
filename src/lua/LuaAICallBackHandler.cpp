@@ -6,7 +6,8 @@
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 
-AIHelper* LuaAICallBackHandler::aih = NULL;
+AIHelper* LuaAICallBackHandler::currHelper = NULL;
+LuaModule* LuaAICallBackHandler::currModule = NULL;
 
 /*
 int LuaAICallBackHandler::Avg(lua_State* L) {
@@ -30,24 +31,24 @@ int LuaAICallBackHandler::Avg(lua_State* L) {
 
 int LuaAICallBackHandler::EcoStateIsStallingMetal(lua_State* L) {
 	assert(lua_gettop(L) == 0);
-	lua_pushboolean(L, aih->ecoState->IsStallingMetal());
+	lua_pushboolean(L, currHelper->ecoState->IsStallingMetal());
 	return 1;
 }
 int LuaAICallBackHandler::EcoStateIsStallingEnergy(lua_State* L) {
 	assert(lua_gettop(L) == 0);
-	lua_pushboolean(L, aih->ecoState->IsStallingEnergy());
+	lua_pushboolean(L, currHelper->ecoState->IsStallingEnergy());
 	return 1;
 }
 
 
 int LuaAICallBackHandler::GameMapGetAmountOfLand(lua_State* L) {
 	assert(lua_gettop(L) == 0);
-	lua_pushnumber(L, aih->gameMap->GetAmountOfLand());
+	lua_pushnumber(L, currHelper->gameMap->GetAmountOfLand());
 	return 1;
 }
 
 int LuaAICallBackHandler::GameMapGetAmountOfWater(lua_State* L) {
 	assert(lua_gettop(L) == 0);
-	lua_pushnumber(L, aih->gameMap->GetAmountOfWater());
+	lua_pushnumber(L, currHelper->gameMap->GetAmountOfWater());
 	return 1;
 }

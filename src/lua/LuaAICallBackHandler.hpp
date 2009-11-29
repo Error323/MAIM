@@ -2,12 +2,12 @@
 #define LUA_AI_CALLBACK_HANDLER_HDR
 
 struct AIHelper;
+class LuaModule;
 struct lua_State;
 class LuaAICallBackHandler {
 public:
-	static void SetHelper(AIHelper* h) {
-		aih = h;
-	}
+	static void SetHelper(AIHelper* h) { currHelper = h; }
+	static void SetModule(LuaModule* m) { currModule = m; }
 
 	static int EcoStateIsStallingMetal(lua_State*);
 	static int EcoStateIsStallingEnergy(lua_State*);
@@ -15,7 +15,8 @@ public:
 	static int GameMapGetAmountOfWater(lua_State*);
 
 private:
-	static AIHelper* aih;
+	static AIHelper* currHelper;
+	static LuaModule* currModule;
 };
 
 #endif

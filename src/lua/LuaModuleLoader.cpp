@@ -5,7 +5,7 @@
 #include "ExternalAI/IAICallback.h"
 
 #include "./LuaModuleLoader.hpp"
-#include "../modules/LuaModule.hpp"
+#include "./LuaAICallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../main/AILua.hpp"
 #include "../main/DFolders.hpp"
@@ -13,76 +13,120 @@
 #include "../utils/Util.hpp"
 
 
-// eg. luaModuleLoader->LoadLuaModule("StaticBuilderModule");
+
+// typical call-sequence (from eg. groupHolder)
+//   LuaModule* module = ReusableObjectFactory<LuaModule>::Instance();
+//   module->LoadState("StaticBuilderModule");
+//       calls luaModuleLoader->LoadLuaModule("StaticBuilderModule");
+//   if (module->IsValid())
+//       group->AddModule(module);
 //
-AModule* LuaModuleLoader::LoadLuaModule(const std::string& moduleName) {
-	if (luaModules.find(moduleName) != luaModules.end()) {
-		return luaModules[moduleName];
+lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
+	if (luaStates.find(moduleBaseName) != luaStates.end()) {
+		return luaStates[moduleBaseName];
 	}
 
-	const std::string modName = util::StringStripSpaces(aih->rcb->GetModName());
+	const std::string modFileName = util::StringStripSpaces(aih->rcb->GetModName());
 
-	const std::string defModuleNameRel = (AI_LUA_DIR                ) + ("Def" + moduleName + ".lua");
-	const std::string modModuleNameRel = (AI_LUA_DIR + modName + "/") + ("Mod" + moduleName + ".lua");
-	const std::string defModuleNameAbs = util::GetAbsFileName(aih->rcb, defModuleNameRel, true);
-	const std::string modModuleNameAbs = util::GetAbsFileName(aih->rcb, modModuleNameRel, true);
+	const std::string defModuleFileNameRel = (AI_LUA_DIR                    ) + ("Def" + moduleBaseName + ".lua");
+	const std::string modModuleFileNameRel = (AI_LUA_DIR + modFileName + "/") + ("Mod" + moduleBaseName + ".lua");
+	const std::string defModuleFileNameAbs = util::GetAbsFileName(aih->rcb, defModuleFileNameRel, true);
+	const std::string modModuleFileNameAbs = util::GetAbsFileName(aih->rcb, modModuleFileNameRel, true);
 
-	std::ifstream defModuleStream; defModuleStream.open(defModuleNameAbs.c_str());
-	std::ifstream modModuleStream; modModuleStream.open(modModuleNameAbs.c_str());
+	std::ifstream defModuleFileStream; defModuleFileStream.open(defModuleFileNameAbs.c_str());
+	std::ifstream modModuleFileStream; modModuleFileStream.open(modModuleFileNameAbs.c_str());
 
-	LuaModule* m = NULL;
-	bool loaded = true;
-
-	if (modModuleStream.good()) {
-		// m = ReusableObjectFactory<LuaModule>::Instance();
-		m = new LuaModule();
-		m->Load(modModuleNameAbs);
-
-		aih->logger->Log("[LuaModuleLoader] loaded mod-specific module file \"");
-		aih->logger->Log(modModuleNameAbs + "\n");
-	} else if (defModuleStream.good()) {
-		// load the AI-default module only if no mod-specific one is present
-		// m = ReusableObjectFactory<LuaModule>::Instance();
-		m = new LuaModule();
-		m->Load(defModuleNameAbs);
-
-		aih->logger->Log("[LuaModuleLoader] loaded AI-default module file \"");
-		aih->logger->Log(defModuleNameAbs + "\n");
-	}
-
-	defModuleStream.close();
-	modModuleStream.close();
+	std::string luaScript;
 
 	// either an AI-default or a mod-specific module should exist
-	assert(m != NULL);
+	assert(defModuleFileStream.good() || modModuleFileStream.good());
 
-	LOG_BASIC(aih->logger, "\tIsValid():     " << (m->IsValid()) << "\n");
-	LOG_BASIC(aih->logger, "\tHaveGetName(): " << (m->HaveGetName()) << "\n");
-	LOG_BASIC(aih->logger, "\tHaveCanRun():  " << (m->HaveCanRun()) << "\n");
-	LOG_BASIC(aih->logger, "\tHaveUpdate():  " << (m->HaveUpdate()) << "\n");
-
-
-	if (loaded && !m->IsValid()) {
-		loaded = false;
-	}
-	if (loaded && (!m->HaveGetName() || m->GetName() == "")) {
-		loaded = false;
+	if (modModuleFileStream.good()) {
+		aih->logger->Log("[LuaModuleLoader] loading mod-specific module file \"");
+		aih->logger->Log(modModuleFileNameAbs + "\n");
+		luaScript = modModuleFileNameAbs;
+	} else if (defModuleFileStream.good()) {
+		// load the AI-default module only if no mod-specific one is present
+		aih->logger->Log("[LuaModuleLoader] loading AI-default module file \"");
+		aih->logger->Log(defModuleFileNameAbs + "\n");
+		luaScript = defModuleFileNameAbs;
 	}
 
-	if (loaded) {
-		luaModules[moduleName] = m;
-		return m;
-	} else {
-		aih->logger->Log("\tmodule file is invalid, unloading...");
-		delete m;
+	defModuleFileStream.close();
+	modModuleFileStream.close();
+
+
+	lua_State* luaState = lua_open();
+	luaL_openlibs(luaState);
+
+	luaStates[moduleBaseName] = luaState;
+
+
+	int loadErr = 0;   // 0 | LUA_ERRFILE | LUA_ERRSYNTAX | LUA_ERRMEM
+	int callErr = 0;   // 0 | LUA_ERRRUN  | LUA_ERRMEM    | LUA_ERRERR
+
+	if ((loadErr = luaL_loadfile(luaState, luaScript.c_str())) != 0 || (callErr = lua_pcall(luaState, 0, 0, 0)) != 0) {
+		aih->logger->Log(std::string(lua_tostring(luaState, -1)) + "\n");
+		lua_pop(luaState, 1);
 		return NULL;
+	} else {
+		assert(lua_gettop(luaState) == 0);
+
+		// register the callbacks for this state
+		lua_newtable(luaState); // AI = {}
+			lua_pushstring(luaState, "EcoState");
+			lua_newtable(luaState); // EcoState = {}
+			assert(lua_istable(luaState, -3));
+			assert(lua_istable(luaState, -1));
+				lua_pushstring(luaState, "IsStallingMetal");
+				lua_pushcfunction(luaState, LuaAICallBackHandler::EcoStateIsStallingMetal);
+				assert(lua_istable(luaState, -3));
+				lua_settable(luaState, -3); // EcoState["IsStallingMetal"] = func
+				assert(lua_gettop(luaState) == 3);
+
+				lua_pushstring(luaState, "IsStallingEnergy");
+				lua_pushcfunction(luaState, LuaAICallBackHandler::EcoStateIsStallingEnergy);
+				assert(lua_istable(luaState, -3));
+				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
+				assert(lua_gettop(luaState) == 3);
+			lua_settable(luaState, -3); // AI["EcoState"] = EcoState
+			assert(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "GameMap");
+			lua_newtable(luaState); // GameMap = {}
+			assert(lua_istable(luaState, -3));
+			assert(lua_istable(luaState, -1));
+				lua_pushstring(luaState, "GetAmountOfLand");
+				lua_pushcfunction(luaState, LuaAICallBackHandler::GameMapGetAmountOfLand);
+				assert(lua_istable(luaState, -3));
+				lua_settable(luaState, -3); // GameMap["GetAmountOfLand"] = func
+				assert(lua_gettop(luaState) == 3);
+
+				lua_pushstring(luaState, "GetAmountOfWater");
+				lua_pushcfunction(luaState, LuaAICallBackHandler::GameMapGetAmountOfWater);
+				assert(lua_istable(luaState, -3));
+				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
+				assert(lua_gettop(luaState) == 3);
+			lua_settable(luaState, -3); // AI["GameMap"] = GameMap
+			assert(lua_gettop(luaState) == 1);
+
+		// add the AI root table to the global environment
+		lua_setglobal(luaState, "AI");
+		assert(lua_gettop(luaState) == 0);
+
+		// lua_register(L, name, func) is short-hand macro for
+		// lua_pushcfunction(L, func) + lua_setglobal(L, name)
+		// do we want any functions available in the global env (_G)?
+
+		return luaState;
 	}
 }
 
 LuaModuleLoader::~LuaModuleLoader() {
-	for (std::map<std::string, AModule*>::iterator it = luaModules.begin(); it != luaModules.end(); it++) {
-		delete it->second;
+	// close all cached Lua states
+	for (std::map<std::string, lua_State*>::iterator it = luaStates.begin(); it != luaStates.end(); it++) {
+		lua_close(it->second);
 	}
 
-	luaModules.clear();
+	luaStates.clear();
 }
