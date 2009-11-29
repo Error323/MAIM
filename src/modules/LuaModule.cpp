@@ -3,6 +3,7 @@
 
 #include "./LuaModule.hpp"
 #include "../lua/LuaModuleLoader.hpp"
+#include "../lua/LuaAICallBackHandler.hpp"
 #include "../main/AILua.hpp"
 #include "../main/AIHelper.hpp"
 #include "../factories/ReusableObjectFactory.hpp"
