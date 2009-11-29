@@ -5,6 +5,7 @@
 #include <map>
 
 #include "../main/AIHelper.hpp"
+#include "../main/DMacros.hpp"
 #include "../groups/Group.hpp"
 
 #include "Sim/Units/UnitDef.h"
@@ -102,7 +103,7 @@ void GameMap::CalcMetalSpots() {
 				saturation += metalmap[ID(xx, zz)] * (1.0f / (r+1.0f));
 				sum += metalmap[ID(xx,zz)];
 			}
-			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*pow(R-1,2))) {
+			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*M_PI*pow(R-2,2))) {
 				bestX = x; bestZ = z;
 				highestSaturation = saturation;
 				mexSpotFound = true;

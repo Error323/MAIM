@@ -13,7 +13,7 @@ class AIUnit;
 
 class Group: public AUnitDestroyedObserver {
 	public:
-		Group(){ gid(counter++); }
+		Group(): gid(counter) { counter++; }
 		~Group(){}
 
 		void AddUnit(AIUnit*);
