@@ -24,6 +24,7 @@ void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
 void AIMain::ReleaseAI() {
 	aiInstances--;
 	aih->Release();
+	delete aih;
 }
 
 
