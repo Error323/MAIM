@@ -103,7 +103,7 @@ void GameMap::CalcMetalSpots() {
 				saturation += metalmap[ID(xx, zz)] * (1.0f / (r+1.0f));
 				sum += metalmap[ID(xx,zz)];
 			}
-			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*M_PI*pow(R-2,2))) {
+			if (saturation > highestSaturation && sum > (METAL_THRESHOLD*M_PI*pow((0.7*R),2))) {
 				bestX = x; bestZ = z;
 				highestSaturation = saturation;
 				mexSpotFound = true;
@@ -131,7 +131,7 @@ void GameMap::CalcMetalSpots() {
 		metalspots.push_back(metalspot);
 
 		// Debug
-		// aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+		aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
 	}
 }
 
