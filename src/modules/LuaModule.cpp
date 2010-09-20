@@ -6,7 +6,7 @@
 #include "../lua/LuaAICallBackHandler.hpp"
 #include "../main/AILua.hpp"
 #include "../main/AIHelper.hpp"
-#include "../factories/ReusableObjectFactory.hpp"
+#include "../factories/Factory.hpp"
 #include "../utils/Logger.hpp"
 
 LuaModule::LuaModule(): isValid(false), haveGetName(false), haveCanRun(false), haveUpdate(false), luaState(NULL) {
@@ -51,7 +51,7 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 
 void LuaModule::Release() {
 	assert(lua_gettop(luaState) == 0);
-	ReusableObjectFactory<LuaModule>::Release(this);
+	Factory<LuaModule>::Release(this);
 }
 
 

@@ -1,10 +1,14 @@
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
-#include "../lua/LuaAICallBackHandler.hpp"
 
-#include "../factories/ReusableObjectFactory.hpp"
+#include "../factories/Factory.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
+#include "../lua/LuaAICallBackHandler.hpp"
+#include "../modules/LuaModule.hpp"
+#include "../modules/FactoryModule.hpp"
+#include "../groups/Group.hpp"
+#include "../units/AIUnit.hpp"
 
 unsigned int AIMain::aiInstances = 0;
 
@@ -24,6 +28,14 @@ void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
 void AIMain::ReleaseAI() {
 	aiInstances--;
 	aih->Release();
+
+	if (aiInstances == 0)
+	{
+		Factory<LuaModule>::Free();
+		Factory<FactoryModule>::Free();
+		Factory<Group>::Free();
+		Factory<AIUnit>::Free();
+	}
 	delete aih;
 }
 

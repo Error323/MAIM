@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include "./HEngine.hpp"
 
 #define DECLARE_HUNGARIAN(TYPE)                          \
 	typedef       TYPE*                     p##TYPE;     \
@@ -38,6 +39,10 @@ typedef bool             Bool;   DECLARE_HUNGARIAN(Bool)
 typedef double           Double; DECLARE_HUNGARIAN(Double)
 typedef char             Char;   DECLARE_HUNGARIAN(Char)
 typedef std::string      String; DECLARE_HUNGARIAN(String)
+
+//------------Spring specific classes----------------------
+typedef float3           Float3; DECLARE_HUNGARIAN(Float3)
+                                 DECLARE_HUNGARIAN(UnitDef)
 
 //------------Unix: 32-bit/64-bit compatibility------------
 #ifndef WIN32

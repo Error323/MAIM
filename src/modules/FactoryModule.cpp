@@ -3,7 +3,7 @@
 #include "../main/AIHelper.hpp"
 #include "../units/AIUnit.hpp"
 #include "../units/AIUnitDef.hpp"
-#include "../factories/ReusableObjectFactory.hpp"
+#include "../factories/Factory.hpp"
 
 void FactoryModule::Init(AIHelper* h) {
 	aih = h;
@@ -16,7 +16,7 @@ void FactoryModule::Init(AIHelper* h) {
 }
 
 void FactoryModule::Release() {
-	ReusableObjectFactory<FactoryModule>::Release(this);
+	Factory<FactoryModule>::Release(this);
 }
 
 void FactoryModule::Filter(std::map<int, AIUnit*> &allunits) {

@@ -1,6 +1,6 @@
 #include "AIUnitDef.hpp"
 
-#include "../factories/ReusableObjectFactory.hpp"
+#include "../factories/Factory.hpp"
 #include "../modules/AModule.hpp"
 
 // Include all concrete modules here

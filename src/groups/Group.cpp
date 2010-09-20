@@ -2,7 +2,7 @@
 
 #include "../modules/AModule.hpp"
 #include "../units/AIUnit.hpp"
-#include "../factories/ReusableObjectFactory.hpp"
+#include "../factories/Factory.hpp"
 
 int Group::counter = 0;
 
@@ -14,7 +14,7 @@ void Group::Release() {
 	units.clear();
 	while (!moduleStack.empty())
 		moduleStack.pop();
-	ReusableObjectFactory<Group>::Release(this);
+	Factory<Group>::Release(this);
 }
 
 void Group::AddUnit(AIUnit* unit) {
