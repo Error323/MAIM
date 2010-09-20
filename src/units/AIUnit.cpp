@@ -1,13 +1,7 @@
 #include <cassert>
 
-#include "ExternalAI/IAICallback.h"
-
-#include "Sim/Misc/GlobalConstants.h"
-#include "Sim/MoveTypes/MoveInfo.h"
-#include "Sim/Units/UnitDef.h"
-#include "Sim/Units/CommandAI/Command.h"
-#include "Sim/Units/CommandAI/CommandQueue.h"
-#include "System/float3.h"
+#include "../main/HAIInterface.hpp"
+#include "../main/HEngine.hpp"
 
 #include "./AIUnit.hpp"
 #include "./AIUnitDef.hpp"

@@ -2,7 +2,7 @@
 #include <map>
 #include <cassert>
 
-#include "ExternalAI/IAICallback.h"
+#include "../main/HAIInterface.hpp"
 
 #include "./LuaModuleLoader.hpp"
 #include "./LuaAICallBackHandler.hpp"

@@ -2,9 +2,8 @@
 #include <cassert>
 #include <algorithm>
 
-#include "Sim/Units/UnitDef.h"
-#include "Sim/MoveTypes/MoveInfo.h"
-#include "ExternalAI/IAICallback.h"
+#include "../main/HEngine.hpp"
+#include "../main/HAIInterface.hpp"
 
 #include "./AIUnitDefHandler.hpp"
 #include "./AIUnitDef.hpp"

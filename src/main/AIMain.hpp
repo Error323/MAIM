@@ -1,8 +1,7 @@
 #ifndef AIMAIN_HDR
 #define AIMAIN_HDR
 
-#include "ExternalAI/IGlobalAI.h"
-#include "ExternalAI/IGlobalAICallback.h"
+#include "./HAIInterface.hpp"
 
 class AIHelper;
 class AIMain: public IGlobalAI {

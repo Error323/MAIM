@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "ExternalAI/IAICallback.h"
+#include "../main/HAIInterface.hpp"
 
 #include "./Logger.hpp"
 #include "./Util.hpp"

@@ -1,6 +1,6 @@
 #include "EcoState.hpp"
 
-#include "ExternalAI/IAICallback.h"
+#include "../main/HAIInterface.hpp"
 #include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"

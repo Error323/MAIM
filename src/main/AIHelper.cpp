@@ -1,6 +1,4 @@
-#include "ExternalAI/IGlobalAICallback.h"
-#include "ExternalAI/IAICallback.h"
-
+#include "./HAIInterface.hpp"
 #include "./AIHelper.hpp"
 #include "./DFolders.hpp"
 

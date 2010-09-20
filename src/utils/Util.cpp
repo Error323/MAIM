@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "ExternalAI/IAICallback.h"
+#include "../main/HAIInterface.hpp"
 #include "./Util.hpp"
 
 namespace util {
