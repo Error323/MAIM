@@ -6,7 +6,6 @@
 #include "../globals/GameMap.hpp"
 #include "../lua/LuaAICallBackHandler.hpp"
 #include "../modules/LuaModule.hpp"
-#include "../modules/FactoryModule.hpp"
 #include "../groups/Group.hpp"
 #include "../units/AIUnit.hpp"
 
@@ -32,7 +31,6 @@ void AIMain::ReleaseAI() {
 	if (aiInstances == 0)
 	{
 		Factory<LuaModule>::Free();
-		Factory<FactoryModule>::Free();
 		Factory<Group>::Free();
 		Factory<AIUnit>::Free();
 	}

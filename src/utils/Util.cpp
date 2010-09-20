@@ -38,14 +38,8 @@ namespace util {
 	}
 
 	std::string StringStripSpaces(const std::string& s1) {
-		std::string s2; s2.reserve(s1.size());
-
-		for (std::string::const_iterator it = s1.begin(); it != s1.end(); it++) {
-			if (!isspace(*it)) {
-				s2.push_back(*it);
-			}
-		}
-
+		std::string s2(s1);
+		s2.erase(remove_if(s2.begin(), s2.end(), isspace), s2.end());
 		return s2;
 	}
 
