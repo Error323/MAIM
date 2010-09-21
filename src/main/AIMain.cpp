@@ -1,5 +1,8 @@
+#include <iostream>
+
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
+#include "./MAI.hpp"
 
 #include "../factories/Factory.hpp"
 #include "../globals/EcoState.hpp"
@@ -19,6 +22,7 @@ AIMain::~AIMain() {
 
 
 void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
+	std::cout << AI_CODENAME << std::endl;
 	aiInstance = aiInstances++;
 	aih = new AIHelper();
 	aih->Init(gcb, team);

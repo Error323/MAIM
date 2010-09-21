@@ -31,7 +31,7 @@ ENDIF(SET_VERSION_ERROR)
 
 CONFIGURE_FILE(
 	"${MAI_SOURCE_DIR}/cmake/MAI.hpp.in"
-	"${MAI_BINARY_DIR}/src/main/MAI.hpp"
+	"${MAI_SOURCE_DIR}/src/main/MAI.hpp"
 	)
  
 set(mySourceDirRel "")
