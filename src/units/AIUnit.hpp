@@ -2,14 +2,18 @@
 #define AI_UNIT_HDR
 
 #include "System/float3.h"
+#include "../main/Types.hpp"
 
-struct Command;
-struct AIUnitDef;
-struct AIHelper;
+DECLARE_CLASS(Command)
+DECLARE_CLASS(CCommandQueue)
+DECLARE_CLASS(AIUnitDef)
+DECLARE_CLASS(AIHelper)
+
+DECLARE_CLASS(AIUnit)
 
 class AIUnit {
 public:
-	AIUnit(int iid, AIHelper* h):
+	AIUnit(int iid, pAIHelper h):
 		id(iid),
 		currCmdID(0),
 		active(true),
@@ -18,41 +22,41 @@ public:
 		aih(h) {
 	}
 
-	void Init(AIHelper*);
+	void Init(pAIHelper);
 	void Update();
 
-	bool GetActiveState() const { return active; }
-	void SetActiveState(bool);
+	cBool GetActiveState() const { return active; }
+	void SetActiveState(cBool);
 
-	void SetUnitDef(const AIUnitDef* def) { unitDef = def; }
-	const AIUnitDef* GetUnitDef() const { return unitDef; }
+	void SetUnitDef(pcAIUnitDef def) { unitDef = def; }
+	pcAIUnitDef GetUnitDef() const { return unitDef; }
 
-	const float3& GetPos() const { return pos; }
-	const float3& GetVel() const { return vel; }
-	const float3& GetDir() const { return dir; }
+	rcFloat3 GetPos() const { return pos; }
+	rcFloat3 GetVel() const { return vel; }
+	rcFloat3 GetDir() const { return dir; }
 
-	int GetID() const { return id; }
-	int GetCurrCmdID() const { return currCmdID; }
-	unsigned int GetAge() const { return age; }
+	cInt GetID() const { return id; }
+	cInt GetCurrCmdID() const { return currCmdID; }
+	cUint32 GetAge() const { return age; }
 
-	bool HasCommand() const;
-	bool CanGiveCommand(int) const;
-	int GiveCommand(Command*);
-	int TryGiveCommand(Command*);
-	int GetCommandQueueSize();
+	cBool HasCommand() const;
+	cBool CanGiveCommand(int) const;
+	cInt GiveCommand(pCommand) const;
+	cInt TryGiveCommand(pCommand) const;
+	cInt GetCommandQueueSize() const;
 
-	float GetPositionETA(const float3&);
-	void Move(const float3&);
+	cFloat GetPositionETA(rcFloat3) const;
+	void Move(rcFloat3);
 	void Stop();
+	void Wait(cBool);
 
 private:
 	void UpdatePosition();
 	void UpdateCommand();
 	void UpdateWait();
 
-	void Wait(bool);
 
-	const int id;
+	cInt id;
 	int currCmdID;
 
 	float3 pos;
@@ -63,12 +67,12 @@ private:
 	bool active;
 	bool waiting;
 
-	unsigned int age;
-	unsigned int limboTime;
+	Uint32 age;
+	Uint32 limboTime;
 
-	const AIUnitDef* unitDef;
+	pcAIUnitDef unitDef;
 
-	AIHelper* aih;
+	pAIHelper aih;
 };
 
 #endif

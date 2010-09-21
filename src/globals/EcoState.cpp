@@ -11,7 +11,8 @@ void EcoState::Init(pAIHelper aih) {
 
 	// Create a Gaussian distribution over the HISTORY
 	float sumw = 0.0f;
-	for (int i = 0; i < HISTORY; i++) {
+	for (int i = 0; i < HISTORY; i++) 
+	{
 		float w = util::GaussDens(float(i), 0.0f, 5.0f);
 		sumw += w;
 		weights.push_back(w);
@@ -19,19 +20,22 @@ void EcoState::Init(pAIHelper aih) {
 
 	// Normalize the weights
 	std::list<float>::iterator w;
-	for (w = weights.begin(); w != weights.end(); w++) {
+	for (w = weights.begin(); w != weights.end(); w++) 
+	{
 		*w /= sumw;
-		LOG_DEBUG(aih->logger, "EcoState::Init W("<<*w<<")")
 	}
 
 	// Make sure we don't get bad values at the start
 	for (int i = 0; i < HISTORY; i++)
+	{
 		Update();
+	}
 
 }
 
 void EcoState::Update() {
-	while (histMNow.size() > HISTORY) {
+	while (histMNow.size() > HISTORY) 
+	{
 		histMNow.pop_back();
 		histENow.pop_back();
 		histMIncome.pop_back();

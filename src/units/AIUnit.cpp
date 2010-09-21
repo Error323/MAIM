@@ -7,7 +7,7 @@
 #include "./AIUnitDef.hpp"
 #include "../main/AIHelper.hpp"
 
-void AIUnit::SetActiveState(bool wantActive) {
+void AIUnit::SetActiveState(cBool wantActive) {
 	if (CanGiveCommand(CMD_ONOFF)) {
 		if (active != wantActive) {
 			active = !active;
@@ -20,7 +20,7 @@ void AIUnit::SetActiveState(bool wantActive) {
 	}
 }
 
-void AIUnit::Init(AIHelper* aih) {
+void AIUnit::Init(pAIHelper aih) {
 	this->aih = aih;
 	currCmdID = 0;
 
@@ -63,8 +63,8 @@ void AIUnit::UpdatePosition() {
 }
 
 void AIUnit::UpdateCommand() {
-	const CCommandQueue* cq = aih->rcb->GetCurrentUnitCommands(id);
-	const Command*       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
+	pcCCommandQueue cq = aih->rcb->GetCurrentUnitCommands(id);
+	pcCommand       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
 
 	currCmdID = (uc != NULL)? (uc->id): 0;
 }
@@ -84,14 +84,14 @@ void AIUnit::UpdateWait() {
 
 
 // check if this unit's CQ is non-empty
-bool AIUnit::HasCommand() const {
-	const CCommandQueue* cq = aih->rcb->GetCurrentUnitCommands(id);
-	const Command*       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
+cBool AIUnit::HasCommand() const {
+	pcCCommandQueue cq = aih->rcb->GetCurrentUnitCommands(id);
+	pcCommand       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
 
 	return (uc != NULL);
 }
 
-bool AIUnit::CanGiveCommand(int cmdID) const {
+cBool AIUnit::CanGiveCommand(int cmdID) const {
 	if (cmdID < 0) {
 		// build order
 		return (unitDef->HaveBuildOptionDefID(-cmdID));
@@ -117,11 +117,11 @@ bool AIUnit::CanGiveCommand(int cmdID) const {
 	}
 }
 
-int AIUnit::GiveCommand(Command* c) {
+cInt AIUnit::GiveCommand(pCommand c) const {
 	return (aih->rcb->GiveOrder(id, c));
 }
 
-int AIUnit::TryGiveCommand(Command* c) {
+cInt AIUnit::TryGiveCommand(pCommand c) const {
 	if (CanGiveCommand(c->id)) {
 		return (GiveCommand(c));
 	}
@@ -129,14 +129,27 @@ int AIUnit::TryGiveCommand(Command* c) {
 	return -100;
 }
 
-int AIUnit::GetCommandQueueSize() {
+cInt AIUnit::GetCommandQueueSize() const {
 	return aih->rcb->GetCurrentUnitCommands(id)->size();
 }
 
-void AIUnit::Stop() { Command c; c.id = CMD_STOP; GiveCommand(&c); limboTime = 0; }
-void AIUnit::Wait(bool w) { Command c; c.id = CMD_WAIT; GiveCommand(&c); waiting = w; }
-void AIUnit::Move(const float3& goal) {
-	if (pos != ZeroVector) {
+void AIUnit::Stop() { 
+	Command c; 
+	c.id = CMD_STOP; 
+	GiveCommand(&c); 
+	limboTime = 0; 
+}
+
+void AIUnit::Wait(cBool w) { 
+	Command c; 
+	c.id = CMD_WAIT; 
+	GiveCommand(&c); 
+	waiting = w; 
+}
+
+void AIUnit::Move(rcFloat3 goal) {
+	if (pos != ZeroVector) 
+	{
 		Command c;
 			c.id = CMD_MOVE;
 			c.params.push_back(goal.x);
@@ -149,6 +162,6 @@ void AIUnit::Move(const float3& goal) {
 
 
 
-float AIUnit::GetPositionETA(const float3& p) {
+cFloat AIUnit::GetPositionETA(rcFloat3 p) const {
 	return 1e30f;
 }
