@@ -5,20 +5,22 @@
 #include <set>
 #include <string>
 
-class IAICallback;
+#include "../main/Types.hpp"
+
+DECLARE_CLASS(IAICallback)
 
 namespace util {
-	std::string GetAbsFileName(IAICallback*, const std::string&, bool readonly = false);
+	std::string GetAbsFileName(pIAICallback, rcString, cBool readonly = false);
 
-	void StringToLowerInPlace(std::string&);
-	std::string StringToLower(std::string);
-	std::string StringStripSpaces(const std::string&);
+	void StringToLowerInPlace(rString);
+	std::string StringToLower(String);
+	std::string StringStripSpaces(rcString);
 
 	float WeightedAverage(std::list<float>&, std::list<float>&);
 
 	float GaussDens(float, float mu = 0.0f, float sigma = 1.0f);
 
-	unsigned int CountOneBits(unsigned int n);
+	unsigned int CountOneBits(cUint32 n);
 
 	/** 
 	 * Determines if A is a binary subset of B 
@@ -27,7 +29,7 @@ namespace util {
 	 * @param unsigned, binary mask B
 	 * @return bool, A \subseteq B
 	 */
-	bool IsBinarySubset(unsigned A, unsigned B);
+	bool IsBinarySubset(cUint32 A, cUint32 B);
 
 	template<typename T> std::set<T> IntersectSets(const std::set<T>& s1, const std::set<T>& s2) {
 		typename std::set<T> r;
@@ -51,7 +53,6 @@ namespace util {
 
 		return r;
 	}
-
 }
 
 #endif

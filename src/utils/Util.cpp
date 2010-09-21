@@ -7,10 +7,10 @@
 #include "./Util.hpp"
 
 namespace util {
-	std::string GetAbsFileName(IAICallback* cb, const std::string& relFileName, bool readonly) {
-		char        dst[1024] = {0};
-		const char* src       = relFileName.c_str();
-		const int   len       = relFileName.size();
+	String GetAbsFileName(pIAICallback cb, rcString relFileName, cBool readonly) {
+		char   dst[1024] = {0};
+		pcChar src       = relFileName.c_str();
+		cInt   len       = relFileName.size();
 
 		// last char ('\0') in dst
 		// should not be overwritten
@@ -25,20 +25,20 @@ namespace util {
 			cb->GetValue(AIVAL_LOCATE_FILE_W, dst);
 		}
 
-		return (std::string(dst));
+		return (String(dst));
 	}
 
 
-	void StringToLowerInPlace(std::string& s) {
+	void StringToLowerInPlace(rString s) {
 		std::transform(s.begin(), s.end(), s.begin(), (int (*)(int))tolower);
 	}
-	std::string StringToLower(std::string s) {
+	String StringToLower(String s) {
 		StringToLowerInPlace(s);
 		return s;
 	}
 
-	std::string StringStripSpaces(const std::string& s1) {
-		std::string s2(s1);
+	String StringStripSpaces(rcString s1) {
+		String s2(s1);
 		s2.erase(remove_if(s2.begin(), s2.end(), isspace), s2.end());
 		return s2;
 	}
@@ -54,16 +54,16 @@ namespace util {
 	}
 
 
-	bool IsBinarySubset(unsigned A, unsigned B) {
-		unsigned cA     = CountOneBits(A);
-		unsigned cAandB = CountOneBits(A&B);
+	bool IsBinarySubset(cUint32 A, cUint32 B) {
+		cUint32 Acount = CountOneBits(A);
+		cUint32 AandBcount  = CountOneBits(A&B);
 
-		return (cA == cAandB);
+		return (Acount == AandBcount);
 	}
 
-	unsigned int CountOneBits(unsigned int n) {
-		const int S[] = {1, 2, 4, 8, 16};
-		const int B[] = {0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0x0000FFFF};
+	unsigned int CountOneBits(cUint32 n) {
+		cInt S[] = {1, 2, 4, 8, 16};
+		cInt B[] = {0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0x0000FFFF};
 		int c = n;
 		c = ((c >> S[0]) & B[0]) + (c & B[0]);
 		c = ((c >> S[1]) & B[1]) + (c & B[1]);
@@ -73,9 +73,9 @@ namespace util {
 		return c;
 	}
 
-	float GaussDens(float x, float mu, float sigma) {
-		const float a = 1.0f / (sigma * std::sqrt(2.0f * M_PI));
-		const float b = std::exp(-(((x - mu) * (x - mu)) / (2.0f * sigma * sigma)));
+	float GaussDens(cFloat x, cFloat mu, cFloat sigma) {
+		cFloat a = 1.0f / (sigma * std::sqrt(2.0f * M_PI));
+		cFloat b = std::exp(-(((x - mu) * (x - mu)) / (2.0f * sigma * sigma)));
 		return (a * b);
 	}
 }
