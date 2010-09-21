@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Usage: $(basename $0) [VERSION]
+# Usage: $(basename $0) [VERSION] [ABSOLUTE PATH]
 #
 
 set -u
