@@ -1,12 +1,16 @@
 #!/bin/sh
 #
-# Usage: $(basename $0) [VERSION] [ABSOLUTE PATH]
+# Usage: $(basename $0) [VERSION]
 #
 
 set -u
-echo "$1" > "$2/VERSION"
+DIR="$(dirname $0)/../"
 
-FILE="$2/data/AIInfo.lua"
+# Update the VERSION file with the new version
+echo "$1" > "$DIR/VERSION"
+
+# Update data/AIInfo.lua with the new version
+FILE="$DIR/data/AIInfo.lua"
 LINE=`grep 'AI version - !This comment is used for parsing!' < $FILE`
 NEWLINE="\t\tvalue  = '$1', -- AI version - !This comment is used for parsing!"
 
