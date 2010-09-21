@@ -9,7 +9,7 @@
 // heightVariance(Altair_Crossing.smf)
 #define KBOT_VEH_THRESHOLD 43.97f
 
-DECLARE_CLASS(Group)
+DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIHelper)
 
 DECLARE_CLASS(GameMap)
@@ -22,10 +22,10 @@ class GameMap {
 		void Init(pAIHelper);
 
 		/** @return float3, ZeroVector when there are no candidates */
-		float3 GetClosestOpenMetalSpot(pGroup);
+		float3 GetClosestOpenMetalSpot(pAIGroup);
 
 		/** @return int, unit id of the upgradeable mex, -1 if there are no candidates */
-		int GetClosestUpgradableMetalSpot(pGroup);
+		int GetClosestUpgradableMetalSpot(pAIGroup);
 
 		/** @return float, height variance */
 		float GetHeightVariance() { return heightVariance; }

@@ -1,10 +1,15 @@
-#ifndef LUA_MODULE_HDR
-#define LUA_MODULE_HDR
+#ifndef AI_LUA_MODULE_HDR
+#define AI_LUA_MODULE_HDR
 
-#include "./AModule.hpp"
+#include <map>
+
 
 struct lua_State;
-class LuaModule: public AModule {
+class AIHelper;
+class AIUnit;
+class AIGroup;
+
+class LuaModule {
 public:
 	LuaModule();
 	~LuaModule() {}
@@ -15,10 +20,14 @@ public:
 
 	std::string GetName();
 
-	void Filter(std::map<int, AIUnit*>&) {}
+	void Filter(const std::map<int, AIUnit*>&) {}
 	bool CanRun();
 	bool Update();
 
+	void SetGroup(AIGroup* g) { group = g; }
+	void UnitDestroyed(int unitID) { units.erase(unitID); }
+
+	bool IsSuited(unsigned, unsigned, unsigned, unsigned);
 	bool IsValid() const { return isValid; }
 	bool HaveGetName() const { return haveGetName; }
 	bool HaveCanRun() const { return haveCanRun; }
@@ -34,6 +43,18 @@ private:
 
 	// each Lua module has its own VM state
 	lua_State* luaState;
+
+	std::string name;
+	// ?? why does the *module* need to keep track of this??
+	std::map<int, AIUnit*> units;
+
+	AIGroup* group;
+	AIHelper* aih;
+
+	unsigned moduleTypeMasks;
+	unsigned moduleTerrainMasks;
+	unsigned moduleWeaponMasks;
+	unsigned moduleMoveMasks;
 };
 
 #endif

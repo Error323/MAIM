@@ -7,7 +7,7 @@
 #define HISTORY 10
 
 DECLARE_CLASS(UnitType)
-DECLARE_CLASS(Group)
+DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIHelper)
 
 DECLARE_CLASS(EcoState)
@@ -36,7 +36,7 @@ class EcoState {
 		 * @param Group*, the group that can potentially assist
 		 * @return Group*, the factory which to assist
 		 */
-		pGroup CanAssistFactory(pGroup);
+		pAIGroup CanAssistFactory(pAIGroup);
 
 		/**
 		 * Determine whether a certain unit can be build
@@ -45,7 +45,7 @@ class EcoState {
 		 * @param UnitType*, the unit to be build
 		 * @return bool
 		 */
-		bool CanAffordToBuild(pGroup, pUnitType);
+		bool CanAffordToBuild(pAIGroup, pUnitType);
 
 		bool IsStallingMetal() { return mStalling; }
 		bool IsStallingEnergy() { return eStalling; }
@@ -76,11 +76,11 @@ class EcoState {
 		bool mExceeding, eExceeding;
 
 
-		std::list<pGroup> factories;
-		std::list<pGroup> workers;
-		std::list<pGroup> nanotowers;
-		std::list<pGroup> metalextractors;
-		std::list<pGroup> metalmakers;
+		std::list<pAIGroup> factories;
+		std::list<pAIGroup> workers;
+		std::list<pAIGroup> nanotowers;
+		std::list<pAIGroup> metalextractors;
+		std::list<pAIGroup> metalmakers;
 
 		pAIHelper aih;
 };

@@ -1,12 +1,12 @@
-#ifndef LUA_MODULE_LOADER_HDR
-#define LUA_MODULE_LOADER_HDR
+#ifndef AI_LUA_MODULE_LOADER_HDR
+#define AI_LUA_MODULE_LOADER_HDR
 
 #include <map>
 #include <string>
 
 struct lua_State;
 struct AIHelper;
-class AModule;
+
 class LuaModuleLoader {
 public:
 	LuaModuleLoader(AIHelper* h): aih(h) {}

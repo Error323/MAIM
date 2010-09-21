@@ -8,7 +8,7 @@
 #include "../main/HAIInterface.hpp"
 #include "../main/AIHelper.hpp"
 #include "../main/DMacros.hpp"
-#include "../groups/Group.hpp"
+#include "../groups/AIGroup.hpp"
 
 #define METAL_THRESHOLD 32
 
@@ -28,7 +28,7 @@ void GameMap::Init(pAIHelper aih) {
 	CalcMetalSpots();
 }
 
-float3 GameMap::GetClosestOpenMetalSpot(pGroup group) {
+float3 GameMap::GetClosestOpenMetalSpot(pAIGroup group) {
 	std::map<float, float3> candidates;
 	float3 gpos = group->GetPos();
 	std::list<float3>::iterator i;

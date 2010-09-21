@@ -4,7 +4,7 @@
 #include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
-#include "../groups/Group.hpp"
+#include "../groups/AIGroup.hpp"
 
 void EcoState::Init(pAIHelper aih) {
 	this->aih = aih;
@@ -68,10 +68,10 @@ void EcoState::Update() {
 	eExceeding = (eNow/eStorage) > 0.9f && eIncome > eUsage;
 }
 
-pGroup EcoState::CanAssistFactory(pGroup) {
+pAIGroup EcoState::CanAssistFactory(pAIGroup) {
 	return NULL;
 }
 
-bool EcoState::CanAffordToBuild(pGroup, pUnitType) {
+bool EcoState::CanAffordToBuild(pAIGroup, pUnitType) {
 	return true;
 }

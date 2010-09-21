@@ -7,10 +7,10 @@
 
 #include "./AIUnitDefHandler.hpp"
 #include "./AIUnitDef.hpp"
+#include "../lua/AILuaModule.hpp"
 #include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
-#include "../modules/AModule.hpp"
 
 AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 	unitDefIDSets.push_back(&mobileBuilderUnitDefIDs);
@@ -239,7 +239,7 @@ void AIUnitDefHandler::WriteLog() {
 		}
 
 		msg << "\n\tActivated Modules:\n";
-		std::list<AModule*>::const_iterator j;
+		std::list<LuaModule*>::const_iterator j;
 		for (j = aiUnitDef->modules.begin(); j != aiUnitDef->modules.end(); j++)
 			msg << "\t\t" << (*j)->GetName() << "\n";
 

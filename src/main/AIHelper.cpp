@@ -4,7 +4,7 @@
 
 #include "../utils/Logger.hpp"
 #include "../utils/Timer.hpp"
-#include "../lua/LuaModuleLoader.hpp"
+#include "../lua/AILuaModuleLoader.hpp"
 #include "../units/AIUnitDefHandler.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"

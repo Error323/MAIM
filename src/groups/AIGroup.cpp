@@ -1,48 +1,52 @@
-#include "Group.hpp"
+#include "./AIGroup.hpp"
 
-#include "../modules/AModule.hpp"
-#include "../units/AIUnit.hpp"
 #include "../factories/Factory.hpp"
+#include "../lua/AILuaModule.hpp"
+#include "../units/AIUnit.hpp"
 
-int Group::sCounter = 0;
+int AIGroup::sCounter = 0;
 
-void Group::Release() {
-	std::list<pAModule>::iterator i;
+void AIGroup::Release() {
+	std::list<pLuaModule>::iterator i;
+
 	for (i = modules.begin(); i != modules.end(); i++)
 		(*i)->Release();
+
 	modules.clear();
 	units.clear();
+
 	while (!moduleStack.empty())
 		moduleStack.pop();
-	Factory<Group>::Release(this);
+
+	Factory<AIGroup>::Release(this);
 }
 
-void Group::AddUnit(pAIUnit unit) {
+void AIGroup::AddUnit(pAIUnit unit) {
 	units[unit->GetID()] = unit;
-	std::list<pAModule>::iterator i;
+	std::list<pLuaModule>::iterator i;
 	for (i = modules.begin(); i != modules.end(); i++)
 		(*i)->Filter(units);
 }
 
 // Make sure to add modules in this order: emergencies, reactives, proactives
-void Group::AddModule(pAModule module) {
+void AIGroup::AddModule(pLuaModule module) {
 	module->SetGroup(this); // Allows access to this group from within the module
 	module->Filter(units); // Determines which units are suited for this module
 	modules.push_back(module); // Allows the group to select the module
 }
 
-void Group::RemoveModule(pAModule module) {
+void AIGroup::RemoveModule(pLuaModule module) {
 	modules.remove(module);
 	module->Release();
 }
 
-void Group::PushModule(pAModule module) {
+void AIGroup::PushModule(pLuaModule module) {
 	moduleStack.push(module);
 }
 
-void Group::Update() {
+void AIGroup::Update() {
 	if (moduleStack.empty()) {
-		std::list<pAModule>::iterator i;
+		std::list<pLuaModule>::iterator i;
 		for (i = modules.begin(); i != modules.end(); i++) {
 			if ((*i)->CanRun()) {
 				PushModule(*i);
@@ -56,7 +60,7 @@ void Group::Update() {
 		moduleStack.pop();
 }
 
-void Group::UnitDestroyed(int unit) {
+void AIGroup::UnitDestroyed(int unit) {
 	units.erase(unit);
 	if (units.empty())
 		Release();

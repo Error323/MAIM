@@ -4,10 +4,10 @@
 
 #include "../main/HAIInterface.hpp"
 
-#include "./LuaModuleLoader.hpp"
-#include "./LuaAICallBackHandler.hpp"
+#include "./AILuaHeaders.hpp"
+#include "./AILuaModuleLoader.hpp"
+#include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
-#include "../main/AILua.hpp"
 #include "../main/DFolders.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
@@ -79,13 +79,13 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 			assert(lua_istable(luaState, -3));
 			assert(lua_istable(luaState, -1));
 				lua_pushstring(luaState, "IsStallingMetal");
-				lua_pushcfunction(luaState, LuaAICallBackHandler::EcoStateIsStallingMetal);
+				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateIsStallingMetal);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingMetal"] = func
 				assert(lua_gettop(luaState) == 3);
 
 				lua_pushstring(luaState, "IsStallingEnergy");
-				lua_pushcfunction(luaState, LuaAICallBackHandler::EcoStateIsStallingEnergy);
+				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateIsStallingEnergy);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
 				assert(lua_gettop(luaState) == 3);
@@ -97,13 +97,13 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 			assert(lua_istable(luaState, -3));
 			assert(lua_istable(luaState, -1));
 				lua_pushstring(luaState, "GetAmountOfLand");
-				lua_pushcfunction(luaState, LuaAICallBackHandler::GameMapGetAmountOfLand);
+				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapGetAmountOfLand);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfLand"] = func
 				assert(lua_gettop(luaState) == 3);
 
 				lua_pushstring(luaState, "GetAmountOfWater");
-				lua_pushcfunction(luaState, LuaAICallBackHandler::GameMapGetAmountOfWater);
+				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapGetAmountOfWater);
 				assert(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
 				assert(lua_gettop(luaState) == 3);

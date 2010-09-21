@@ -1,13 +1,14 @@
 #include <sstream>
 #include <cassert>
 
-#include "./LuaModule.hpp"
-#include "../lua/LuaModuleLoader.hpp"
-#include "../lua/LuaAICallBackHandler.hpp"
-#include "../main/AILua.hpp"
+#include "./AILuaHeaders.hpp"
+#include "./AILuaModule.hpp"
+#include "./AILuaModuleLoader.hpp"
+#include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../factories/Factory.hpp"
 #include "../utils/Logger.hpp"
+#include "../utils/Util.hpp"
 
 LuaModule::LuaModule(): isValid(false), haveGetName(false), haveCanRun(false), haveUpdate(false), luaState(NULL) {
 }
@@ -60,13 +61,13 @@ std::string LuaModule::GetName() {
 	std::string ret;
 
 	if (isValid && haveGetName) {
-		LuaAICallBackHandler::SetModule(this);
+		LuaCallBackHandler::SetModule(this);
 		lua_getglobal(luaState, "GetName");
 		lua_call(luaState, 0, 1);
 		assert(lua_isstring(luaState, -1));
 		ret = lua_tostring(luaState, -1);
 		lua_pop(luaState, 1);
-		LuaAICallBackHandler::SetModule(NULL);
+		LuaCallBackHandler::SetModule(NULL);
 	}
 
 	return ret;
@@ -76,29 +77,40 @@ bool LuaModule::CanRun() {
 	bool ret = false;
 
 	if (isValid && haveCanRun) {
-		LuaAICallBackHandler::SetModule(this);
+		LuaCallBackHandler::SetModule(this);
 		lua_getglobal(luaState, "CanRun");
 		lua_call(luaState, 0, 1);
 		assert(lua_isboolean(luaState, -1));
 		ret = lua_toboolean(luaState, -1);
 		lua_pop(luaState, 1);
-		LuaAICallBackHandler::SetModule(NULL);
+		LuaCallBackHandler::SetModule(NULL);
 	}
 
 	return ret;
 }
+
 bool LuaModule::Update() {
 	bool ret = false;
 
 	if (isValid && haveUpdate) {
-		LuaAICallBackHandler::SetModule(this);
+		LuaCallBackHandler::SetModule(this);
 		lua_getglobal(luaState, "Update");
 		lua_call(luaState, 0, 1);
 		assert(lua_isboolean(luaState, -1));
 		ret = lua_toboolean(luaState, -1);
 		lua_pop(luaState, 1);
-		LuaAICallBackHandler::SetModule(NULL);
+		LuaCallBackHandler::SetModule(NULL);
 	}
 
 	return ret;
+}
+
+
+
+bool LuaModule::IsSuited(unsigned unitTypeMasks, unsigned unitTerrainMasks, unsigned unitWeaponMasks, unsigned unitMoveMasks) {
+	bool a = util::IsBinarySubset(moduleTypeMasks, unitTypeMasks);
+	bool b = util::IsBinarySubset(moduleTerrainMasks, unitTerrainMasks);
+	bool c = util::IsBinarySubset(moduleWeaponMasks, unitWeaponMasks);
+	bool d = util::IsBinarySubset(moduleMoveMasks, unitMoveMasks);
+	return (a && b && c && d);
 }

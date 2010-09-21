@@ -1,10 +1,10 @@
-#ifndef LUA_AI_CALLBACK_HANDLER_HDR
-#define LUA_AI_CALLBACK_HANDLER_HDR
+#ifndef AI_LUA_CALLBACK_HANDLER_HDR
+#define AI_LUA_CALLBACK_HANDLER_HDR
 
 struct AIHelper;
 class LuaModule;
 struct lua_State;
-class LuaAICallBackHandler {
+class LuaCallBackHandler {
 public:
 	static void SetHelper(AIHelper* h) { currHelper = h; }
 	static void SetModule(LuaModule* m) { currModule = m; }
