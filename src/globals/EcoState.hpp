@@ -2,12 +2,15 @@
 #define ECO_STATE
 
 #include <list>
+#include "../main/Types.hpp"
 
 #define HISTORY 10
 
-class UnitType;
-class Group;
-class AIHelper;
+DECLARE_CLASS(UnitType)
+DECLARE_CLASS(Group)
+DECLARE_CLASS(AIHelper)
+
+DECLARE_CLASS(EcoState)
 
 class EcoState {
 	public:
@@ -20,7 +23,7 @@ class EcoState {
 		 * @param AIHelper, the global instances holder
 		 * over which is averaged
 		 */
-		void Init(AIHelper*);
+		void Init(pAIHelper);
 
 		/**
 		 * The Update() function calculates the current economic state
@@ -33,7 +36,7 @@ class EcoState {
 		 * @param Group*, the group that can potentially assist
 		 * @return Group*, the factory which to assist
 		 */
-		Group* CanAssistFactory(Group*);
+		pGroup CanAssistFactory(pGroup);
 
 		/**
 		 * Determine whether a certain unit can be build
@@ -42,7 +45,7 @@ class EcoState {
 		 * @param UnitType*, the unit to be build
 		 * @return bool
 		 */
-		bool CanAffordToBuild(Group*, UnitType*);
+		bool CanAffordToBuild(pGroup, pUnitType);
 
 		bool IsStallingMetal() { return mStalling; }
 		bool IsStallingEnergy() { return eStalling; }
@@ -73,13 +76,13 @@ class EcoState {
 		bool mExceeding, eExceeding;
 
 
-		std::list<Group*> factories;
-		std::list<Group*> workers;
-		std::list<Group*> nanotowers;
-		std::list<Group*> metalextractors;
-		std::list<Group*> metalmakers;
+		std::list<pGroup> factories;
+		std::list<pGroup> workers;
+		std::list<pGroup> nanotowers;
+		std::list<pGroup> metalextractors;
+		std::list<pGroup> metalmakers;
 
-		AIHelper *aih;
+		pAIHelper aih;
 };
 
-#endif
+#endif // ECO_STATE

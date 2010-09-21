@@ -12,7 +12,7 @@
 
 #define METAL_THRESHOLD 32
 
-void GameMap::Init(AIHelper *aih) {
+void GameMap::Init(pAIHelper aih) {
 	this->aih = aih;
 
 	heightVariance = 0.0f;
@@ -23,7 +23,7 @@ void GameMap::Init(AIHelper *aih) {
 	CalcMetalSpots();
 }
 
-float3 GameMap::GetClosestOpenMetalSpot(Group* group) {
+float3 GameMap::GetClosestOpenMetalSpot(pGroup group) {
 	std::map<float, float3> candidates;
 	float3 gpos = group->GetPos();
 	std::list<float3>::iterator i;
@@ -47,15 +47,13 @@ float3 GameMap::GetClosestOpenMetalSpot(Group* group) {
 
 
 void GameMap::CalcMetalSpots() {
-	const int METAL2REAL = 32.0f;
+	cInt METAL2REAL = 32.0f;
 	int X = int(aih->rcb->GetMapWidth()/4);
 	int Z = int(aih->rcb->GetMapHeight()/4);
 	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f));
-	const unsigned char *metalmapData = aih->rcb->GetMetalMap();
-	unsigned char *metalmap;
+	pcUint8 metalmapData = aih->rcb->GetMetalMap();
+	Uint8 metalmap[X*Z];
 		
-	metalmap = new unsigned char[X*Z];
-
 	// Calculate circular stamp
 	std::vector<int> circle;
 	std::vector<float> sqrtCircle;
@@ -68,7 +66,7 @@ void GameMap::CalcMetalSpots() {
 			sqrtCircle.push_back(r);
 		}
 	}
-	float minimum = 10*M_PI*R*R;
+	cFloat minimum = 10*M_PI*R*R;
 
 	// Copy metalmap to mutable metalmap
 	std::vector<int> M;
@@ -77,7 +75,7 @@ void GameMap::CalcMetalSpots() {
 	maxMetal = std::numeric_limits<int>::min();
 	for (int z = R; z < Z-R; z++) {
 		for (int x = R; x < X-R; x++) {
-			int m = 0;
+			Uint8 m = 0;
 			for (int i = -1; i <= 1; i++)
 				for (int j = -1; j <= 1; j++)
 					if (metalmapData[(z*2+i)*X*2+(x*2+j)] > 1)
@@ -126,7 +124,7 @@ void GameMap::CalcMetalSpots() {
 
 				saturation = 0.0f; sum = 0.0f;
 				for (size_t c = 0; c < circle.size(); c+=2) {
-					unsigned char &m = metalmap[ID(x+circle[c+1],z+circle[c])];
+					rcUint8 m = metalmap[ID(x+circle[c+1],z+circle[c])];
 					saturation += m * (R-sqrtCircle[c/2]);
 					sum        += m;
 				}
@@ -142,7 +140,7 @@ void GameMap::CalcMetalSpots() {
 			if (!mexSpotFound) break;
 
 			// "Erase" metal under the bestX bestZ radius
-			for (size_t c = 0; c < circle.size(); c+=2)
+			for (Uint32 c = 0; c < circle.size(); c+=2)
 				metalmap[ID(circle[c+1]+bestX,circle[c]+bestZ)] = 0;
 			
 			// Increase to world size
@@ -157,8 +155,6 @@ void GameMap::CalcMetalSpots() {
 		}
 	}
 
-	delete[] metalmap;
-
 	std::string maptype;
 	if(IsMetalMap())
 		maptype = "speedmetal";
@@ -171,16 +167,16 @@ void GameMap::CalcMetalSpots() {
 
 void GameMap::CalcMapHeightFeatures() {
 	// Compute some height features
-	int X = int(aih->rcb->GetMapWidth());
-	int Z = int(aih->rcb->GetMapHeight());
-	const float *hm = aih->rcb->GetHeightMap();
+	cInt X = int(aih->rcb->GetMapWidth());
+	cInt Z = int(aih->rcb->GetMapHeight());
+	pcFloat hm = aih->rcb->GetHeightMap();
 
 	float fmin =  std::numeric_limits<float>::max();
 	float fmax = -std::numeric_limits<float>::max();
 	float fsum = 0.0f;
 
-	unsigned count = 0;
-	unsigned total = 0;
+	Uint32 count = 0;
+	Uint32 total = 0;
 	// Calculate the sum, min and max
 	for (int z = 0; z < Z; z++) {
 		for (int x = 0; x < X; x++) {

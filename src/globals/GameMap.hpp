@@ -4,25 +4,28 @@
 #include <list>
 
 #include "System/float3.h"
+#include "../main/Types.hpp"
 
 // heightVariance(Altair_Crossing.smf)
 #define KBOT_VEH_THRESHOLD 43.97f
 
-class Group;
-class AIHelper;
+DECLARE_CLASS(Group)
+DECLARE_CLASS(AIHelper)
+
+DECLARE_CLASS(GameMap)
 
 class GameMap {
 	public:
 		GameMap(){}
 		~GameMap(){}
 
-		void Init(AIHelper*);
+		void Init(pAIHelper);
 
 		/** @return float3, ZeroVector when there are no candidates */
-		float3 GetClosestOpenMetalSpot(Group*);
+		float3 GetClosestOpenMetalSpot(pGroup);
 
 		/** @return int, unit id of the upgradeable mex, -1 if there are no candidates */
-		int GetClosestUpgradableMetalSpot(Group*);
+		int GetClosestUpgradableMetalSpot(pGroup);
 
 		/** @return float, height variance */
 		float GetHeightVariance() { return heightVariance; }
@@ -58,12 +61,12 @@ class GameMap {
 		int metalCount;
 		int nonMetalCount;
 
-		std::list<float3> geospots;
-		std::list<float3> metalfeatures;
-		std::list<float3> energyfeatures;
-		std::list<float3> metalspots;
+		static std::list<float3> geospots;
+		static std::list<float3> metalfeatures;
+		static std::list<float3> energyfeatures;
+		static std::list<float3> metalspots;
 
-		AIHelper* aih;
+		pAIHelper aih;
 
 		void CalcMetalSpots();
 		void CalcMapHeightFeatures();

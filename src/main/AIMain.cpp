@@ -11,6 +11,7 @@
 #include "../modules/LuaModule.hpp"
 #include "../groups/Group.hpp"
 #include "../units/AIUnit.hpp"
+#include "../utils/Logger.hpp"
 
 unsigned int AIMain::aiInstances = 0;
 
@@ -21,11 +22,14 @@ AIMain::~AIMain() {
 
 
 
-void AIMain::InitAI(IGlobalAICallback* gcb, int team) {
+void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 	std::cout << AI_CODENAME << std::endl;
+
 	aiInstance = aiInstances++;
 	aih = new AIHelper();
 	aih->Init(gcb, team);
+
+	LOG_BASIC(aih->logger, AI_CODENAME)
 }
 
 void AIMain::ReleaseAI() {
@@ -100,12 +104,15 @@ void AIMain::GotChatMsg(const char* msg, int playerNum) {
 int AIMain::HandleEvent(int msgID, const void* msgData) {
 	LuaAICallBackHandler::SetHelper(aih);
 
-	switch (msgID) {
-		case AI_EVENT_UNITGIVEN: {
+	switch (msgID)
+	{
+		case AI_EVENT_UNITGIVEN:
+		{
 			const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
 			UnitFinished(cte->unit);
 		} break;
-		case AI_EVENT_UNITCAPTURED: {
+		case AI_EVENT_UNITCAPTURED:
+		{
 			const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
 			UnitDestroyed(cte->unit, -1);
 		} break;
@@ -117,5 +124,26 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 void AIMain::Update() {
 	LuaAICallBackHandler::SetHelper(aih);
-	aih->ecoState->Update();
+
+	cUint32 currentFrame = aih->rcb->GetCurrentFrame();
+
+	switch (currentFrame)
+	{
+		case 0: // update economic state
+		{
+			aih->ecoState->Update();
+		} break;
+		case 1: // update 
+		{
+		} break;
+		case 2: // update
+		{
+		} break;
+		case 3: // update
+		{
+		} break;
+		case 4: // update
+		{
+		} break;
+	}
 }

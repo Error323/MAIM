@@ -9,7 +9,7 @@
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 
-void AIHelper::Init(IGlobalAICallback* gcb, int i) {
+void AIHelper::Init(pIGlobalAICallback gcb, int i) {
 	rcb  = gcb->GetAICallback();
 	ccb  = gcb->GetCheatInterface();
 	team = i;

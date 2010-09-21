@@ -1,17 +1,21 @@
 #ifndef HELPER_HDR
 #define HELPER_HDR
 
-class IGlobalAICallback;
-class IAICallback;
-class IAICheats;
+#include "./Types.hpp"
 
-class Logger;
-class Timer;
+DECLARE_CLASS(IGlobalAICallback)
+DECLARE_CLASS(IAICallback)
+DECLARE_CLASS(IAICheats)
 
-class LuaModuleLoader;
-class AIUnitDefHandler;
-class EcoState;
-class GameMap;
+DECLARE_CLASS(Logger)
+DECLARE_CLASS(Timer)
+
+DECLARE_CLASS(LuaModuleLoader)
+DECLARE_CLASS(AIUnitDefHandler)
+DECLARE_CLASS(EcoState)
+DECLARE_CLASS(GameMap)
+
+DECLARE_STRUCT(AIHelper)
 
 struct AIHelper {
 public:
@@ -27,20 +31,20 @@ public:
 
 	int team;
 
-	void Init(IGlobalAICallback*, int);
+	void Init(pIGlobalAICallback, int);
 	void Release();
 
-	IAICallback*      rcb;   // regular callback handler
-	IAICheats*        ccb;   // cheat callback handler
+	pIAICallback      rcb;   // regular callback handler
+	pIAICheats        ccb;   // cheat callback handler
 
-	Logger*           logger;
-	Timer*            timer;
+	pLogger           logger;
+	pTimer            timer;
 
-	LuaModuleLoader*  luaModuleLoader;
+	pLuaModuleLoader  luaModuleLoader;
 
-	AIUnitDefHandler* aiUnitDefHandler;
-	EcoState*         ecoState;
-	GameMap*          gameMap;
+	pAIUnitDefHandler aiUnitDefHandler;
+	pEcoState         ecoState;
+	pGameMap          gameMap;
 };
 
 #endif

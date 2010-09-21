@@ -6,7 +6,7 @@
 #include "../utils/Logger.hpp"
 #include "../groups/Group.hpp"
 
-void EcoState::Init(AIHelper* aih) {
+void EcoState::Init(pAIHelper aih) {
 	this->aih = aih;
 
 	// Create a Gaussian distribution over the HISTORY
@@ -64,10 +64,10 @@ void EcoState::Update() {
 	eExceeding = (eNow/eStorage) > 0.9f && eIncome > eUsage;
 }
 
-Group* EcoState::CanAssistFactory(Group*) {
+pGroup EcoState::CanAssistFactory(pGroup) {
 	return NULL;
 }
 
-bool EcoState::CanAffordToBuild(Group*, UnitType*) {
+bool EcoState::CanAffordToBuild(pGroup, pUnitType) {
 	return true;
 }
