@@ -10,8 +10,11 @@
 #include "Sim/MoveTypes/MoveInfo.h"
 
 #include "../main/DConstants.hpp"
+#include "../main/Types.hpp"
 
-class AModule;
+DECLARE_CLASS(AModule)
+DECLARE_CLASS(MoveData)
+DECLARE_CLASS(UnitDef)
 
 // note: MOBILE and STATIC are mutually exclusive
 // todo: make the MOBILE property its own bitmask?
@@ -105,7 +108,7 @@ public:
 	AIUnitDef(): sprUnitDef(0), dgunWeaponDef(0) {
 	}
 
-	void SetUnitDef(const UnitDef* def) { sprUnitDef = def; }
+	void SetUnitDef(pcUnitDef def) { sprUnitDef = def; }
 	void SetDGunWeaponDef(const UnitDef::UnitDefWeapon* def) { dgunWeaponDef = def; }
 	void CalcModules();
 
@@ -115,7 +118,7 @@ public:
 	float GetReclaimSpeed() const { return (GetDef()->reclaimSpeed); }
 	float GetPower() const { return (GetDef()->power); } // hmm
 
-	const char* GetName() const { return (GetDef()->name.c_str()); }
+	pcChar GetName() const { return (GetDef()->name.c_str()); }
 
 	// ticks: number of CTeam::SlowUpdate() calls that
 	// would elapse while building a unit of this type;
@@ -130,13 +133,13 @@ public:
 	float FrameCost(char resCode, float buildSpeed) const {
 		switch (resCode) {
 			case 'M': {
-				const float bt = GetBuildTimeFrames(buildSpeed);
-				const float mc = GetDef()->metalCost / bt;
+				cFloat bt = GetBuildTimeFrames(buildSpeed);
+				cFloat mc = GetDef()->metalCost / bt;
 				return mc;
 			} break;
 			case 'E': {
-				const float bt = GetBuildTimeFrames(buildSpeed);
-				const float ec = GetDef()->energyCost / bt;
+				cFloat bt = GetBuildTimeFrames(buildSpeed);
+				cFloat ec = GetDef()->energyCost / bt;
 				return ec;
 			} break;
 			default: {
@@ -150,16 +153,15 @@ public:
 	}
 
 	int GetID() const { return (GetDef()->id); }
-	const MoveData* GetMoveData() const { return (GetDef()->movedata); }
-	const UnitDef* GetDef() const { return sprUnitDef; }
+	pcMoveData GetMoveData() const { return (GetDef()->movedata); }
+	pcUnitDef GetDef() const { return sprUnitDef; }
 
 	const UnitDef::UnitDefWeapon* GetDGunWeaponDef() const {
 		if (dgunWeaponDef != 0) {
 			return dgunWeaponDef;
 		}
 
-		typedef UnitDef::UnitDefWeapon UDefWeap;
-		std::vector<UDefWeap>::const_iterator wit;
+		std::vector<UnitDef::UnitDefWeapon>::const_iterator wit;
 
 		for (wit = GetDef()->weapons.begin(); wit != GetDef()->weapons.end(); wit++) {
 			if (wit->def->type == "DGun") {
@@ -171,11 +173,11 @@ public:
 	}
 
 
-	unsigned int typeMask;
-	unsigned int terrainMask;
-	unsigned int weaponMask;
-	unsigned int classMask;      // general categorization (scout, raider, ...), unused for now
-	unsigned int boMoveDataMask; // for build options, used by static builders ONLY
+	Uint32 typeMask;
+	Uint32 terrainMask;
+	Uint32 weaponMask;
+	Uint32 classMask;      // general categorization (scout, raider, ...), unused for now
+	Uint32 boMoveDataMask; // for build options, used by static builders ONLY
 
 	bool isHubBuilder;
 	bool isSpecialBuilder;       // if true, none of our build-options are builders
@@ -197,7 +199,7 @@ public:
 	static std::list<AModule*> allmodules;
 
 private:
-	const UnitDef* sprUnitDef;
+	pcUnitDef sprUnitDef;
 	const UnitDef::UnitDefWeapon* dgunWeaponDef;
 };
 
