@@ -12,6 +12,11 @@
 
 #define METAL_THRESHOLD 32
 
+std::list<float3> GameMap::geospots;
+std::list<float3> GameMap::metalfeatures;
+std::list<float3> GameMap::energyfeatures;
+std::list<float3> GameMap::metalspots;
+
 void GameMap::Init(pAIHelper aih) {
 	this->aih = aih;
 
