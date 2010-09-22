@@ -13,7 +13,7 @@ public:
 	LuaModuleLoader() {}
 	~LuaModuleLoader();
 
-	LuaModule* GetModule(AIUnitDef*, unsigned int);
+	LuaModule* GetModule(const AIUnitDef*, unsigned int);
 	lua_State* LoadLuaModule(const std::string&);
 
 private:

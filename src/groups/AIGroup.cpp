@@ -1,6 +1,8 @@
 #include "./AIGroup.hpp"
 
 #include "../lua/AILuaModule.hpp"
+#include "../lua/AILuaModuleLoader.hpp"
+#include "../main/AIHelper.hpp"
 #include "../units/AIUnit.hpp"
 #include "../units/AIUnitDef.hpp"
 #include "../utils/ObjectFactory.hpp"
@@ -38,11 +40,12 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	if (isNewGroup)
 	{
 		// Instantiate modules for the unit
-		// pAIHelper aih = AIHelper::GetInstance();
-		// pAIUnitDef def = unit->GetUnitDef();
-		// modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
-		// modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
-		// modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
+		pAIHelper aih = AIHelper::GetActiveInstance();
+		pcAIUnitDef def = unit->GetUnitDef();
+
+		modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
+		modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
+		modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
 		
 	}
 
@@ -80,7 +83,7 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 }
 
 void AIGroup::AddModule(pLuaModule module) {
-	cUint priority = module->GetPriority();
+	cUint32 priority = module->GetPriority();
 
 	MAI_ASSERT_MSG(modules[priority] == NULL, "Overwriting %s with %s", modules[priority]->GetName().c_str(), module->GetName().c_str());
 

@@ -16,7 +16,7 @@
 
 
 
-LuaModule* LuaModuleLoader::GetModule(AIUnitDef* def, unsigned int priority) {
+LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priority) {
 	LuaModule* module = ObjectFactory<LuaModule>::Instance();
 
 	/*
