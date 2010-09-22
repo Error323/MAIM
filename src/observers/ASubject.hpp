@@ -9,8 +9,8 @@ class ASubject {
 public:
 	virtual ~ASubject() {}
 
-	virtual void Attach(AObserver*);
-	virtual void Detach(AObserver*);
+	virtual void AttachObserver(AObserver*);
+	virtual void DetachObserver(AObserver*);
 	virtual void NotifyObservers();
 
 protected:

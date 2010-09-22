@@ -5,7 +5,7 @@
 
 void AIUnitHandler::AddUnit(pAIUnit unit) {
 	mUnits[unit->GetID()] = unit;
-	unit->Attach(this);
+	unit->AttachObserver(this);
 }
 
 pAIUnit AIUnitHandler::GetUnit(int unitID) {
@@ -15,6 +15,6 @@ pAIUnit AIUnitHandler::GetUnit(int unitID) {
 
 void AIUnitHandler::UnitDestroyed(int unitID) {
 	MAI_ASSERT(mUnits.find(unitID) != mUnits.end());
-	mUnits[unitID]->Detach(this);
+	mUnits[unitID]->DetachObserver(this);
 	mUnits.erase(unitID);
 }

@@ -31,7 +31,7 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 		
 	}
 	// Attach to unit subject
-	unit->Attach(this);
+	unit->AttachObserver(this);
 }
 
 cBool AIGroup::CanBeAdded(pAIUnit unit) const {
@@ -93,7 +93,7 @@ void AIGroup::Update() {
 
 void AIGroup::UnitDestroyed(int unit) {
 	MAI_ASSERT(units.find(unit) != units.end());
-	units[unit]->Detach(this);
+	units[unit]->DetachObserver(this);
 	units.erase(unit);
 	if (units.empty())
 		Release();
