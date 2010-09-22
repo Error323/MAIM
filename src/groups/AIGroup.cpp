@@ -8,17 +8,25 @@
 
 int AIGroup::sCounter = 0;
 
+AIGroup::AIGroup(): gid(sCounter) {
+	SetGroupDestroyedSubjectID(gid); 
+	sCounter++; 
+	activeModule = NULL;
+	modules.resize(MODULE_PRIORITY_COUNT);
+}
+
 void AIGroup::Release() {
-	std::list<pLuaModule>::iterator i;
+	for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
+	{
+		if (modules[i] != NULL)
+		{
+			modules[i]->Release();
+			modules[i] = NULL;
+		}
+	}
 
-	for (i = modules.begin(); i != modules.end(); i++)
-		(*i)->Release();
-
-	modules.clear();
 	units.clear();
-
-	while (!moduleStack.empty())
-		moduleStack.pop();
+	activeModule = NULL;
 
 	NotifyGroupDestroyedObservers();
 }
@@ -38,18 +46,17 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 	// only add unit-type classes that this group already contains
 	bool canBeAdded = true;
 
-	std::list<pLuaModule>::const_iterator i;
-	for (i = modules.begin(); i != modules.end(); i++)
+	for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
 	{
 		// See if the given unit matches all modules in this group
 		Uint32 typeMask     = unit->GetUnitDef()->typeMask;
 		Uint32 terrainMask  = unit->GetUnitDef()->terrainMask;
 		Uint32 weaponMask   = unit->GetUnitDef()->weaponMask;
 		Uint32 moveDataMask = unit->GetUnitDef()->boMoveDataMask;
-		canBeAdded = canBeAdded && (*i)->IsSuited(typeMask, terrainMask, weaponMask, moveDataMask);
+		canBeAdded = canBeAdded && modules[i]->IsSuited(typeMask, terrainMask, weaponMask, moveDataMask);
 
 		// Also extract the max nr of units for this group
-		canBeAdded = canBeAdded && units.size() < (*i)->GetMaxGroupSize();
+		canBeAdded = canBeAdded && units.size() < modules[i]->GetMaxGroupSize();
 
 		// We are very strict about this, if one module fails on either of
 		// these constraints, the unit can't be added
@@ -60,30 +67,27 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 	return true;
 }
 
-// Make sure to add modules in this order: emergencies, reactives, proactives
 void AIGroup::AddModule(pLuaModule module) {
 	module->SetGroup(this); // Allows access to this group from within the module
-	modules.push_back(module); // Allows the group to select the module
-}
-
-void AIGroup::PushModule(pLuaModule module) {
-	moduleStack.push(module);
+	modules[module->GetPriority()] = module; // Allows the group to select the module
 }
 
 void AIGroup::Update() {
-	if (moduleStack.empty()) {
-		std::list<pLuaModule>::iterator i;
-		for (i = modules.begin(); i != modules.end(); i++) {
-			if ((*i)->CanRun()) {
-				PushModule(*i);
+	if (activeModule == NULL)
+	{
+		for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
+		{
+			if (modules[i] != NULL && modules[i]->CanRun()) 
+			{
+				activeModule = modules[i];
 				break;
 			}
 		}
 	}
 
 	// Module::Update() returns true when done
-	while (!moduleStack.empty() && moduleStack.top()->Update())
-		moduleStack.pop();
+	if (activeModule != NULL && activeModule->Update())
+		activeModule = NULL;
 }
 
 void AIGroup::UnitDestroyed(int unit) {

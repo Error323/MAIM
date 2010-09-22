@@ -16,7 +16,7 @@ DECLARE_CLASS(LuaModule)
 
 class AIGroup: public AGroupDestroyedSubject, AUnitDestroyedObserver {
 public:
-	AIGroup(): gid(sCounter) { SetGroupDestroyedSubjectID(gid); sCounter++; }
+	AIGroup();
 	~AIGroup(){}
 
 	void  AddUnit(pAIUnit, cBool isNewGroup);
@@ -32,8 +32,8 @@ private:
 	cInt gid;
 
 	std::map<int, pAIUnit> units;
-	std::list<pLuaModule> modules;
-	std::stack<pLuaModule> moduleStack;
+	vpLuaModule modules;
+	pLuaModule activeModule;
 
 	// implementation
 	void UnitDestroyed(int unit);
