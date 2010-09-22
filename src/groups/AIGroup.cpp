@@ -48,6 +48,9 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 
 	for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
 	{
+		if (modules[i] == NULL)
+			continue;
+
 		// See if the given unit matches all modules in this group
 		Uint32 typeMask     = unit->GetUnitDef()->typeMask;
 		Uint32 terrainMask  = unit->GetUnitDef()->terrainMask;
@@ -69,7 +72,7 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 
 void AIGroup::AddModule(pLuaModule module) {
 	cInt priority = module->GetPriority();
-	MAI_ASSERT_MSG(modules[priority] != NULL, "Overwriting %s with %s", modules[priority]->GetName().c_str(), module->GetName().c_str());
+	MAI_ASSERT_MSG(modules[priority] == NULL, "Overwriting %s with %s", modules[priority]->GetName().c_str(), module->GetName().c_str());
 	module->SetGroup(this); // Allows access to this group from within the module
 	modules[priority] = module; // Allows the group to select the module
 }
