@@ -50,17 +50,26 @@ group's behavior. Whenever a group is created or changed at run-time, zero
 or more LuaModule instances suitable for that group's unit composition are
 added to it or removed.
 
-A group always contains at least one unit. The group is removed when all of
-the units in it are destroyed. Groups can consist of a variety of unit-types
-(which may themselves be of different classes). This implies that for a certain
-group multiple LuaModules can be active, potentially. Therefore each LuaModule
-class contains a filter-function that rejects unsuitable unit-types based on
-the module's predefined class-masks (see the Modules section).
+A group always contains at least one unit. The group is removed when all of the
+units in it are destroyed. Groups are *homogeneous*, meaning only unit-types
+from a single class can exist in a group. This implies that for a certain group
+only a single LuaModule can be active.
 
 Each group contains its own instances of Lua modules, allowing the modules to
 be stateful. Groups contain a module-stack sorted by module priority. Each frame,
 the group's active modules are pushed onto this stack and then executed and popped
 again.
+
+
+### Group Manager
+
+The group manager, as the name implies, deals with the creation and destruction
+of groups. Basic workflow for the GroupManager:
+
+1. Create group.
+2. Assign unit from the callback `AIMain::UnitFinished()` to the appropreate group.
+3. Assign Lua Module to the group.
+4. The function `GroupManager::Update()` makes sure all `AIGroup::Update()` functions are called.
 
 
 ### Lua Modules
@@ -97,7 +106,7 @@ constants for the lifetime of the LuaModule (ie. for as long as it is
 bound to a group).
 
 For example, a hypothetical module intended to manage a group of scout
-hovercraft would have a terrain-mask of `MASK_LAND` | `MASK_WATER_SURFACE`
+hovercraft would have a terrain-mask of `MASK_LAND | MASK_WATER_SURFACE`
 (where `|` is the bitwise-OR operator). Any unit from the class of UnitDef
 types with terrain mask `MASK_WATER_SUBMERGED` would not be able to join
 this group.
@@ -114,7 +123,7 @@ TODO
 
 ### Globals
 
-The directory `src/globals` contains classes with functions ("callouts) which
+The directory `src/globals` contains classes with functions (callouts) which
 are available to all the existing Lua modules. Examples of global classes are:
 
 * EcoState -- for economy-related queries and actions
