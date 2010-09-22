@@ -2,11 +2,12 @@
 #define AI_GROUP_HANDLER_HDR
 
 #include "../main/Types.hpp"
+#include "../observers/AGroupDestroyedObserver.hpp"
 
 DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIUnit)
 
-class AIGroupHandler {
+class AIGroupHandler: public AGroupDestroyedObserver {
 public:
 	AIGroupHandler() {}
 	~AIGroupHandler() {}
@@ -16,6 +17,8 @@ public:
 
 private:
 	std::map<int, pAIGroup> mGroups;
+
+	void GroupDestroyed(int gid);
 };
 
 #endif

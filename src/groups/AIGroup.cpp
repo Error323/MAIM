@@ -20,7 +20,7 @@ void AIGroup::Release() {
 	while (!moduleStack.empty())
 		moduleStack.pop();
 
-	ObjectFactory<AIGroup>::Release(this);
+	NotifyGroupDestroyedObservers();
 }
 
 void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
@@ -28,6 +28,7 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	if (isNewGroup)
 	{
 		// Instantiate modules for the unit
+		
 	}
 	// Attach to unit subject
 	unit->Attach(this);

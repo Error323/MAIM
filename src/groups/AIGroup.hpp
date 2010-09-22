@@ -6,15 +6,17 @@
 #include <map>
 
 #include "../main/Types.hpp"
+#include "../observers/AGroupDestroyedSubject.hpp"
 #include "../observers/AUnitDestroyedObserver.hpp"
 #include "System/float3.h"
 
+DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIUnit)
 DECLARE_CLASS(LuaModule)
 
-class AIGroup: public AUnitDestroyedObserver {
+class AIGroup: public AGroupDestroyedSubject, AUnitDestroyedObserver {
 public:
-	AIGroup(): gid(sCounter) { sCounter++; }
+	AIGroup(): gid(sCounter) { SetGroupDestroyedSubjectID(gid); sCounter++; }
 	~AIGroup(){}
 
 	void  AddUnit(pAIUnit, cBool isNewGroup);
@@ -23,11 +25,11 @@ public:
 	cBool CanBeAdded(pAIUnit) const;
 
 	float3 GetPos();
-	int GetId() { return gid; }
+	int GetID() { return gid; }
 	
 private:
 	static int sCounter;
-	int gid;
+	cInt gid;
 
 	std::map<int, pAIUnit> units;
 	std::list<pLuaModule> modules;
