@@ -6,8 +6,8 @@ class LuaModule;
 struct lua_State;
 class LuaCallBackHandler {
 public:
-	static void SetHelper(AIHelper* h) { currHelper = h; }
-	static void SetModule(LuaModule* m) { currModule = m; }
+	static void SetActiveModule(LuaModule* m) { activeModule = m; }
+	static LuaModule* GetActiveModule() { return activeModule; }
 
 	static int EcoStateIsStallingMetal(lua_State*);
 	static int EcoStateIsStallingEnergy(lua_State*);
@@ -15,8 +15,7 @@ public:
 	static int GameMapGetAmountOfWater(lua_State*);
 
 private:
-	static AIHelper* currHelper;
-	static LuaModule* currModule;
+	static LuaModule* activeModule;
 };
 
 #endif

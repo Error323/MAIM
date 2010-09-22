@@ -18,7 +18,7 @@ LuaModule::LuaModule(): isValid(false), haveGetName(false), haveCanRun(false), h
 // code that is executed depends on the current
 // luaState
 bool LuaModule::LoadState(const std::string& moduleName) {
-	luaState = aih->luaModuleLoader->LoadLuaModule(moduleName);
+	luaState = AIHelper::GetActiveInstance()->luaModuleLoader->LoadLuaModule(moduleName);
 
 	if (luaState != NULL) {
 		assert(lua_gettop(luaState) == 0);
@@ -42,10 +42,10 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 		haveUpdate  = false;
 	}
 
-	LOG_BASIC(aih->logger, "[LuaModule::LoadState(" << moduleName << ")]\n");
-	LOG_BASIC(aih->logger, "\tHaveGetName(): " << (HaveGetName()) << "\n");
-	LOG_BASIC(aih->logger, "\tHaveCanRun():  " << (HaveCanRun())  << "\n");
-	LOG_BASIC(aih->logger, "\tHaveUpdate():  " << (HaveUpdate()) << "\n");
+	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "[LuaModule::LoadState(" << moduleName << ")]\n");
+	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "\tHaveGetName(): " << (HaveGetName()) << "\n");
+	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "\tHaveCanRun():  " << (HaveCanRun())  << "\n");
+	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "\tHaveUpdate():  " << (HaveUpdate()) << "\n");
 
 	return (isValid);
 }
@@ -61,13 +61,13 @@ std::string LuaModule::GetName() {
 	std::string ret;
 
 	if (isValid && haveGetName) {
-		LuaCallBackHandler::SetModule(this);
+		LuaCallBackHandler::SetActiveModule(this);
 		lua_getglobal(luaState, "GetName");
 		lua_call(luaState, 0, 1);
 		assert(lua_isstring(luaState, -1));
 		ret = lua_tostring(luaState, -1);
 		lua_pop(luaState, 1);
-		LuaCallBackHandler::SetModule(NULL);
+		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
 	return ret;
@@ -77,13 +77,13 @@ bool LuaModule::CanRun() {
 	bool ret = false;
 
 	if (isValid && haveCanRun) {
-		LuaCallBackHandler::SetModule(this);
+		LuaCallBackHandler::SetActiveModule(this);
 		lua_getglobal(luaState, "CanRun");
 		lua_call(luaState, 0, 1);
 		assert(lua_isboolean(luaState, -1));
 		ret = lua_toboolean(luaState, -1);
 		lua_pop(luaState, 1);
-		LuaCallBackHandler::SetModule(NULL);
+		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
 	return ret;
@@ -93,13 +93,13 @@ bool LuaModule::Update() {
 	bool ret = false;
 
 	if (isValid && haveUpdate) {
-		LuaCallBackHandler::SetModule(this);
+		LuaCallBackHandler::SetActiveModule(this);
 		lua_getglobal(luaState, "Update");
 		lua_call(luaState, 0, 1);
 		assert(lua_isboolean(luaState, -1));
 		ret = lua_toboolean(luaState, -1);
 		lua_pop(luaState, 1);
-		LuaCallBackHandler::SetModule(NULL);
+		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
 	return ret;
@@ -108,9 +108,9 @@ bool LuaModule::Update() {
 
 
 bool LuaModule::IsSuited(unsigned unitTypeMasks, unsigned unitTerrainMasks, unsigned unitWeaponMasks, unsigned unitMoveMasks) {
-	bool a = util::IsBinarySubset(moduleTypeMasks, unitTypeMasks);
-	bool b = util::IsBinarySubset(moduleTerrainMasks, unitTerrainMasks);
-	bool c = util::IsBinarySubset(moduleWeaponMasks, unitWeaponMasks);
-	bool d = util::IsBinarySubset(moduleMoveMasks, unitMoveMasks);
+	const bool a = util::IsBinarySubset(moduleTypeMasks,    unitTypeMasks);
+	const bool b = util::IsBinarySubset(moduleTerrainMasks, unitTerrainMasks);
+	const bool c = util::IsBinarySubset(moduleWeaponMasks,  unitWeaponMasks);
+	const bool d = util::IsBinarySubset(moduleMoveMasks,    unitMoveMasks);
 	return (a && b && c && d);
 }

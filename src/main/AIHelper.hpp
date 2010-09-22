@@ -34,6 +34,9 @@ public:
 	void Init(pIGlobalAICallback, int);
 	void Release();
 
+	static void SetActiveInstance(pAIHelper h) { activeInstance = h; }
+	static pAIHelper GetActiveInstance() { return activeInstance; }
+
 	pIAICallback      rcb;   // regular callback handler
 	pIAICheats        ccb;   // cheat callback handler
 
@@ -45,6 +48,8 @@ public:
 	pAIUnitDefHandler aiUnitDefHandler;
 	pEcoState         ecoState;
 	pGameMap          gameMap;
+
+	static pAIHelper activeInstance;
 };
 
 #endif

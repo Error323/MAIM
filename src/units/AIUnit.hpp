@@ -13,16 +13,16 @@ DECLARE_CLASS(AIUnit)
 
 class AIUnit {
 public:
-	AIUnit(int iid, pAIHelper h):
+	AIUnit(int iid):
 		id(iid),
 		currCmdID(0),
 		active(true),
 		waiting(false),
-		unitDef(0),
-		aih(h) {
+		unitDef(0)
+	{
 	}
 
-	void Init(pAIHelper);
+	void Init();
 	void Update();
 
 	cBool GetActiveState() const { return active; }
@@ -71,8 +71,6 @@ private:
 	Uint32 limboTime;
 
 	pcAIUnitDef unitDef;
-
-	pAIHelper aih;
 };
 
 #endif

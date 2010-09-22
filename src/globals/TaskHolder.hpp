@@ -18,7 +18,7 @@ class TaskHolder {
 		TaskHolder(){}
 		~TaskHolder(){}
 
-		void Init(AIHelper*);
+		void Init();
 
 		/**
 		 * Add a build task to the taskholder
@@ -73,9 +73,6 @@ class TaskHolder {
 
 		/** Attack tasks */
 		std::list<AttackTask*> attacktasks;
-
-		/** AIHelper reference */
-		AIHelper *aih;
 };
 
 struct BuildTask {
@@ -120,9 +117,6 @@ struct AttackTask {
 
 	/** The assisters of the attack */
 	std::list<Group*> assisters;
-
-	/** AIHelper reference */
-	AIHelper *aih;
 
 	/** The toString() function */
 	friend std::ostream& operator<<(std::ostream&, const AttackTask&);

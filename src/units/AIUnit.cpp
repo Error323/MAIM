@@ -20,8 +20,7 @@ void AIUnit::SetActiveState(cBool wantActive) {
 	}
 }
 
-void AIUnit::Init(pAIHelper aih) {
-	this->aih = aih;
+void AIUnit::Init() {
 	currCmdID = 0;
 
 	age = 0;
@@ -50,20 +49,20 @@ void AIUnit::UpdatePosition() {
 	// dir cannot be derived reliably in all
 	// circumstances, so just set it to zero
 	// if inferred velocity is zero
-	if (aih->rcb->GetUnitPos(id) == pos) {
+	if (AIHelper::GetActiveInstance()->rcb->GetUnitPos(id) == pos) {
 		limboTime += 1;
 	} else {
 		limboTime = 0;
 	}
 
-	vel = aih->rcb->GetUnitPos(id) - pos;
-	pos = aih->rcb->GetUnitPos(id);
+	vel = AIHelper::GetActiveInstance()->rcb->GetUnitPos(id) - pos;
+	pos = AIHelper::GetActiveInstance()->rcb->GetUnitPos(id);
 	dir = (vel != ZeroVector)? (vel / vel.Length()): ZeroVector;
 	spd = (limboTime == 0)? (vel.Length() * GAME_SPEED): 0.0f;
 }
 
 void AIUnit::UpdateCommand() {
-	pcCCommandQueue cq = aih->rcb->GetCurrentUnitCommands(id);
+	pcCCommandQueue cq = AIHelper::GetActiveInstance()->rcb->GetCurrentUnitCommands(id);
 	pcCommand       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
 
 	currCmdID = (uc != NULL)? (uc->id): 0;
@@ -85,7 +84,7 @@ void AIUnit::UpdateWait() {
 
 // check if this unit's CQ is non-empty
 cBool AIUnit::HasCommand() const {
-	pcCCommandQueue cq = aih->rcb->GetCurrentUnitCommands(id);
+	pcCCommandQueue cq = AIHelper::GetActiveInstance()->rcb->GetCurrentUnitCommands(id);
 	pcCommand       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
 
 	return (uc != NULL);
@@ -118,7 +117,7 @@ cBool AIUnit::CanGiveCommand(int cmdID) const {
 }
 
 cInt AIUnit::GiveCommand(pCommand c) const {
-	return (aih->rcb->GiveOrder(id, c));
+	return (AIHelper::GetActiveInstance()->rcb->GiveOrder(id, c));
 }
 
 cInt AIUnit::TryGiveCommand(pCommand c) const {
@@ -130,7 +129,7 @@ cInt AIUnit::TryGiveCommand(pCommand c) const {
 }
 
 cInt AIUnit::GetCommandQueueSize() const {
-	return aih->rcb->GetCurrentUnitCommands(id)->size();
+	return AIHelper::GetActiveInstance()->rcb->GetCurrentUnitCommands(id)->size();
 }
 
 void AIUnit::Stop() { 

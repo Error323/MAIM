@@ -12,7 +12,10 @@
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
 
-AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
+AIUnitDefHandler::AIUnitDefHandler() {
+	AIHelper* aih = AIHelper::GetActiveInstance();
+	IAICallback* rcb = aih->rcb;
+
 	unitDefIDSets.push_back(&mobileBuilderUnitDefIDs);
 	unitDefIDSets.push_back(&staticBuilderUnitDefIDs);
 	unitDefIDSets.push_back(&mobileAssisterUnitDefIDs);
@@ -45,10 +48,10 @@ AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 	// unitDefIDSets.push_back(&manualFireUnitDefIDs);
 
 
-	sprUnitDefsByID.resize(aih->rcb->GetNumUnitDefs() + 1, 0);
-	aiUnitDefsByID.resize(aih->rcb->GetNumUnitDefs() + 1, 0);
+	sprUnitDefsByID.resize(rcb->GetNumUnitDefs() + 1, 0);
+	aiUnitDefsByID.resize(rcb->GetNumUnitDefs() + 1, 0);
 
-	aih->rcb->GetUnitDefList(&sprUnitDefsByID[1]);
+	rcb->GetUnitDefList(&sprUnitDefsByID[1]);
 
 	float maxBuildTime     = 0.0f;
 	float maxMetalCost     = 0.0f;
@@ -57,7 +60,7 @@ AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 	float maxExtractsMetal = 0.0f;
 
 	// first pass: categorization
-	for (int id = 1; id <= aih->rcb->GetNumUnitDefs(); id++) {
+	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
 		if (sprUnitDefsByID[id] == NULL) {
 			continue;
 		}
@@ -84,7 +87,7 @@ AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 
 
 	// second pass: normalization (TODO)
-	for (int id = 1; id <= aih->rcb->GetNumUnitDefs(); id++) {
+	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
 		if (sprUnitDefsByID[id] == NULL) {
 			continue;
 		}
@@ -141,7 +144,7 @@ AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 	}
 
 	// third pass: calculate the fitting modules for each unit
-	for (int id = 1; id <= aih->rcb->GetNumUnitDefs(); id++) {
+	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
 		if (sprUnitDefsByID[id] == NULL) {
 			continue;
 		}
@@ -153,7 +156,10 @@ AIUnitDefHandler::AIUnitDefHandler(AIHelper* h): aih(h) {
 AIUnitDefHandler::~AIUnitDefHandler() {
 	unitDefIDSets.clear();
 
-	for (int id = 1; id <= aih->rcb->GetNumUnitDefs(); id++) {
+	AIHelper* aih = AIHelper::GetActiveInstance();
+	IAICallback* rcb = aih->rcb;
+
+	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
 		delete aiUnitDefsByID[id]; aiUnitDefsByID[id] = 0;
 	}
 
@@ -162,9 +168,12 @@ AIUnitDefHandler::~AIUnitDefHandler() {
 }
 
 void AIUnitDefHandler::WriteLog() {
+	AIHelper* aih = AIHelper::GetActiveInstance();
+	IAICallback* rcb = aih->rcb;
+
 	std::stringstream msg;
 
-	for (int id = 1; id <= aih->rcb->GetNumUnitDefs(); id++) {
+	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
 		if (sprUnitDefsByID[id] == NULL) {
 			continue;
 		}
@@ -686,16 +695,21 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 	assert(!((aiUnitDef->terrainMask & MASK_WATER_SURFACE) && (aiUnitDef->terrainMask & MASK_WATER_SUBMERGED)));
 
 
-	// copy the build options to a more convenient format
-	std::map<int, std::string>& bldOpts = sprUnitDef->buildOptions;
-	std::map<int, std::string>::const_iterator bldOptsIt = bldOpts.begin();
+	{
+		AIHelper* aih = AIHelper::GetActiveInstance();
+		IAICallback* rcb = aih->rcb;
 
-	for (; bldOptsIt != bldOpts.end(); bldOptsIt++) {
-		const char*    bldOptName = bldOptsIt->second.c_str();
-		const UnitDef* bldOptDef  = aih->rcb->GetUnitDef(bldOptName);
+		// copy the build options to a more convenient format
+		std::map<int, std::string>& bldOpts = sprUnitDef->buildOptions;
+		std::map<int, std::string>::const_iterator bldOptsIt = bldOpts.begin();
 
-		assert(bldOptDef != NULL);
+		for (; bldOptsIt != bldOpts.end(); bldOptsIt++) {
+			const char*    bldOptName = bldOptsIt->second.c_str();
+			const UnitDef* bldOptDef  = AIHelper::GetActiveInstance()->rcb->GetUnitDef(bldOptName);
 
-		aiUnitDef->buildOptionUDIDs.insert(bldOptDef->id);
+			assert(bldOptDef != NULL);
+
+			aiUnitDef->buildOptionUDIDs.insert(bldOptDef->id);
+		}
 	}
 }

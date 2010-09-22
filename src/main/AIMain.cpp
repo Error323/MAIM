@@ -16,8 +16,10 @@
 unsigned int AIMain::aiInstances = 0;
 
 AIMain::AIMain(): aiInstance(0) {
+	aih = new AIHelper();
 }
 AIMain::~AIMain() {
+	delete aih;
 }
 
 
@@ -26,7 +28,8 @@ void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 	std::cout << AI_CODENAME << std::endl;
 
 	aiInstance = aiInstances++;
-	aih = new AIHelper();
+
+	AIHelper::SetActiveInstance(aih);
 	aih->Init(gcb, team);
 
 	LOG_BASIC(aih->logger, AI_CODENAME)
@@ -34,6 +37,8 @@ void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 
 void AIMain::ReleaseAI() {
 	aiInstances--;
+
+	AIHelper::SetActiveInstance(aih);
 	aih->Release();
 
 	if (aiInstances == 0)
@@ -42,67 +47,66 @@ void AIMain::ReleaseAI() {
 		Factory<AIGroup>::Free();
 		Factory<AIUnit>::Free();
 	}
-	delete aih;
 }
 
 
 
 void AIMain::UnitCreated(int unitID, int builderUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitFinished(int unitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitIdle(int unitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitMoveFailed(int unitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 
 void AIMain::EnemyEnterLOS(int enemyUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyLeaveLOS(int enemyUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyEnterRadar(int enemyUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyLeaveRadar(int enemyUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyDestroyed(int enemyUnitID, int attackerUnitID) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 
 void AIMain::GotChatMsg(const char* msg, int playerNum) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 }
 
 int AIMain::HandleEvent(int msgID, const void* msgData) {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 
 	switch (msgID)
 	{
@@ -123,7 +127,7 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 
 void AIMain::Update() {
-	LuaCallBackHandler::SetHelper(aih);
+	AIHelper::SetActiveInstance(aih);
 
 	cUint32 currentFrame = aih->rcb->GetCurrentFrame();
 
