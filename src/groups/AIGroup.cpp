@@ -68,8 +68,10 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 }
 
 void AIGroup::AddModule(pLuaModule module) {
+	cInt priority = module->GetPriority();
+	MAI_ASSERT_MSG(modules[priority] != NULL, "Overwriting %s with %s", modules[priority]->GetName().c_str(), module->GetName().c_str());
 	module->SetGroup(this); // Allows access to this group from within the module
-	modules[module->GetPriority()] = module; // Allows the group to select the module
+	modules[priority] = module; // Allows the group to select the module
 }
 
 void AIGroup::Update() {
