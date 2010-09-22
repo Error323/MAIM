@@ -12,7 +12,7 @@ public:
 	AIGroupHandler() {}
 	~AIGroupHandler() {}
 
-	void AddUnit(pAIUnit);
+	void UnitCreated(pAIUnit);
 	void Update();
 
 private:

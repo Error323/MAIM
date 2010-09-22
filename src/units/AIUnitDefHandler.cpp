@@ -502,7 +502,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 	aiUnitDef->typeMask         = 0;
 	aiUnitDef->terrainMask      = 0;
 	aiUnitDef->weaponMask       = 0;
-	aiUnitDef->classMask        = 0;
+	aiUnitDef->roleMask         = 0;
 	aiUnitDef->boMoveDataMask   = 0;
 
 

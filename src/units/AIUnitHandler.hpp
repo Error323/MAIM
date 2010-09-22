@@ -11,11 +11,11 @@ public:
 	AIUnitHandler() {}
 	~AIUnitHandler() {}
 
-	void AddUnit(pAIUnit);
-	pAIUnit GetUnit(int unitID);
-
+	void UnitCreated(pAIUnit);
 	// override AUnitDestroyedObserver::UnitDestroyed
 	void UnitDestroyed(int unitID);
+
+	pAIUnit GetUnit(int unitID);
 
 private:
 	std::map<int, pAIUnit> mUnits;
