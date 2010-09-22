@@ -6,14 +6,14 @@
 class ASubject;
 
 class AUnitDestroyedObserver: public AObserver {
-	public:
-		virtual ~AUnitDestroyedObserver() {}
+public:
+	virtual ~AUnitDestroyedObserver() {}
 
-		virtual void UnitDestroyed(int unit) = 0;
-		void Update(ASubject *subject);
+	virtual void UnitDestroyed(int unit) = 0;
+	void Update(ASubject *subject);
 
-	protected:
-		AUnitDestroyedObserver() {}
+protected:
+	AUnitDestroyedObserver() {}
 };
 
 #endif

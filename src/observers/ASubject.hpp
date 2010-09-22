@@ -6,18 +6,20 @@
 class AObserver;
 
 class ASubject {
-	public:
-		virtual ~ASubject() {}
+public:
+	virtual ~ASubject() {}
 
-		virtual void Attach(AObserver*);
-		virtual void Detach(AObserver*);
-		virtual void Notify();
+	virtual void Attach(AObserver*);
+	virtual void Detach(AObserver*);
+	virtual void Notify();
 
-	protected:
-		ASubject() {}
+protected:
+	ASubject() {}
 
-	private:
-		std::list<AObserver*> observers;
+	void RemoveObservers();
+
+private:
+	std::list<AObserver*> observers;
 };
 
 #endif

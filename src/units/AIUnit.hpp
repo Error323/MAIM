@@ -3,6 +3,7 @@
 
 #include "System/float3.h"
 #include "../main/Types.hpp"
+#include "../observers/AUnitDestroyedSubject.hpp"
 
 DECLARE_CLASS(Command)
 DECLARE_CLASS(CCommandQueue)
@@ -11,10 +12,10 @@ DECLARE_CLASS(AIHelper)
 
 DECLARE_CLASS(AIUnit)
 
-class AIUnit {
+class AIUnit: public AUnitDestroyedSubject {
 public:
-	AIUnit(int iid):
-		id(iid),
+	AIUnit():
+		builderID(-1),
 		currCmdID(0),
 		active(true),
 		waiting(false),
@@ -24,6 +25,7 @@ public:
 
 	void Init();
 	void Update();
+	void Reset(int, int);
 
 	cBool GetActiveState() const { return active; }
 	void SetActiveState(cBool);
@@ -35,7 +37,7 @@ public:
 	rcFloat3 GetVel() const { return vel; }
 	rcFloat3 GetDir() const { return dir; }
 
-	cInt GetID() const { return id; }
+	cInt GetID() const { return unitID; }
 	cInt GetCurrCmdID() const { return currCmdID; }
 	cUint32 GetAge() const { return age; }
 
@@ -55,8 +57,8 @@ private:
 	void UpdateCommand();
 	void UpdateWait();
 
-
-	cInt id;
+	int unitID;    // the unit's runtie id
+	int builderID; // the unit's builder/creator
 	int currCmdID;
 
 	float3 pos;

@@ -10,6 +10,7 @@
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
 #include "../units/AIUnit.hpp"
+#include "../units/AIUnitManager.hpp"
 #include "../utils/Factory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Debugger.hpp"
@@ -56,6 +57,11 @@ void AIMain::ReleaseAI() {
 
 void AIMain::UnitCreated(int unitID, int builderUnitID) {
 	AIHelper::SetActiveInstance(aih);
+
+	pAIUnit unit = Factory<AIUnit>::Instance();
+	unit->Reset(unitID, builderUnitID);
+	aih->unitManager->AddUnit(unit);
+	//aih->groupManager->AddUnit(unit);
 }
 
 void AIMain::UnitFinished(int unitID) {
@@ -64,6 +70,7 @@ void AIMain::UnitFinished(int unitID) {
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
 	AIHelper::SetActiveInstance(aih);
+	aih->unitManager->GetUnit(unitID)->UnitDestroyed();
 }
 
 void AIMain::UnitIdle(int unitID) {

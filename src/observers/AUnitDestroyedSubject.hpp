@@ -4,13 +4,16 @@
 #include "ASubject.hpp"
 
 class AUnitDestroyedSubject: public ASubject {
-	public:
-		AUnitDestroyedSubject(int _unit): unit(_unit){}
-		~AUnitDestroyedSubject(){}
+public:
+	AUnitDestroyedSubject(){}
+	~AUnitDestroyedSubject(){}
 
-		void UnitDestroyed();
+	void UnitDestroyed();
+	void SetUnitDestroyedId(int id) { unitID = id;}
+	int  GetUnitDestroyedId()       { return unitID; }
 
-		int unit;
+private:
+	int unitID;
 };
 
 #endif

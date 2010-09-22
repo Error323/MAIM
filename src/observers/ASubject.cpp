@@ -15,3 +15,7 @@ void ASubject::Notify() {
 	for (i = observers.begin(); i != observers.end(); i++)
 		(*i)->Update(this);
 }
+
+void ASubject::RemoveObservers() {
+	observers.clear();
+}

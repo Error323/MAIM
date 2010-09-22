@@ -13,31 +13,31 @@ DECLARE_CLASS(AIUnit)
 DECLARE_CLASS(LuaModule)
 
 class AIGroup: public AUnitDestroyedObserver {
-	public:
-		AIGroup(): gid(sCounter) { sCounter++; }
-		~AIGroup(){}
+public:
+	AIGroup(): gid(sCounter) { sCounter++; }
+	~AIGroup(){}
 
-		void AddUnit(pAIUnit);
-		void Update(); // called by engine update()
-		void Release(); // Release the group
+	void AddUnit(pAIUnit);
+	void Update(); // called by engine update()
+	void Release(); // Release the group
 
-		void AddModule(pLuaModule);
-		void RemoveModule(pLuaModule);
-		void PushModule(pLuaModule);
+	void AddModule(pLuaModule);
+	void RemoveModule(pLuaModule);
+	void PushModule(pLuaModule);
 
-		float3 GetPos();
-		int GetId() { return gid; }
-		
-	private:
-		static int sCounter;
-		int gid;
+	float3 GetPos();
+	int GetId() { return gid; }
+	
+private:
+	static int sCounter;
+	int gid;
 
-		std::map<int, pAIUnit> units;
-		std::list<pLuaModule> modules;
-		std::stack<pLuaModule> moduleStack;
+	std::map<int, pAIUnit> units;
+	std::list<pLuaModule> modules;
+	std::stack<pLuaModule> moduleStack;
 
-		// implementation
-		void UnitDestroyed(int unit);
+	// implementation
+	void UnitDestroyed(int unit);
 };
 
 #endif

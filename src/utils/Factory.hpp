@@ -36,14 +36,6 @@ void Factory<Object>::Free()
 		delete i->second;
 	}
 
-	/*
-	MAI_ASSERT_MSG(sFree.size() == sAll.size(), 
-		"%d instances of type %s have not explicitly been released\n", 
-		sAll.size()-sFree.size(), 
-		typeid(Object).name()
-	);
-	*/
-
 	typename std::list<Object*>::iterator j;
 	for (j = sAll.begin(); j != sAll.end(); j++)
 	{
@@ -53,7 +45,7 @@ void Factory<Object>::Free()
 
 	std::cout 
 		<< "Factory<"
-		<< typeid(Object).name()
+		<< std::string(typeid(Object).name()).substr(1)
 		<< ">::Free() destroyed " 
 		<< sAll.size() + sSingletons.size()
 		<< " objects, " 

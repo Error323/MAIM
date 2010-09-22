@@ -6,6 +6,7 @@
 #include "../utils/Timer.hpp"
 #include "../lua/AILuaModuleLoader.hpp"
 #include "../units/AIUnitDefHandler.hpp"
+#include "../units/AIUnitManager.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 
@@ -22,6 +23,7 @@ void AIHelper::Init(pIGlobalAICallback gcb, int i) {
 	luaModuleLoader  = new LuaModuleLoader();
 
 	aiUnitDefHandler = new AIUnitDefHandler();
+	unitManager      = new AIUnitManager();
 	ecoState         = new EcoState();
 	gameMap          = new GameMap();
 
@@ -49,6 +51,7 @@ void AIHelper::Release() {
 	delete luaModuleLoader;
 
 	delete aiUnitDefHandler;
+	delete unitManager;
 	delete ecoState;
 	delete gameMap;
 }

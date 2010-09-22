@@ -14,6 +14,7 @@ DECLARE_CLASS(LuaModuleLoader)
 DECLARE_CLASS(AIUnitDefHandler)
 DECLARE_CLASS(EcoState)
 DECLARE_CLASS(GameMap)
+DECLARE_CLASS(AIUnitManager)
 
 DECLARE_STRUCT(AIHelper)
 
@@ -26,6 +27,7 @@ public:
 		timer(0),
 		luaModuleLoader(0),
 		aiUnitDefHandler(0),
+		unitManager(0),
 		ecoState(0),
 		gameMap(0) {}
 
@@ -46,6 +48,7 @@ public:
 	pLuaModuleLoader  luaModuleLoader;
 
 	pAIUnitDefHandler aiUnitDefHandler;
+	pAIUnitManager    unitManager;
 	pEcoState         ecoState;
 	pGameMap          gameMap;
 
