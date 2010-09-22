@@ -15,6 +15,7 @@ DECLARE_CLASS(AIUnitDefHandler)
 DECLARE_CLASS(EcoState)
 DECLARE_CLASS(GameMap)
 DECLARE_CLASS(AIUnitManager)
+DECLARE_CLASS(AIGroupManager)
 
 DECLARE_STRUCT(AIHelper)
 
@@ -28,6 +29,7 @@ public:
 		luaModuleLoader(0),
 		aiUnitDefHandler(0),
 		unitManager(0),
+		groupManager(0),
 		ecoState(0),
 		gameMap(0) {}
 
@@ -49,6 +51,7 @@ public:
 
 	pAIUnitDefHandler aiUnitDefHandler;
 	pAIUnitManager    unitManager;
+	pAIGroupManager   groupManager;
 	pEcoState         ecoState;
 	pGameMap          gameMap;
 

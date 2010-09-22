@@ -7,6 +7,7 @@
 #include "../lua/AILuaModuleLoader.hpp"
 #include "../units/AIUnitDefHandler.hpp"
 #include "../units/AIUnitManager.hpp"
+#include "../groups/AIGroupManager.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 
@@ -24,6 +25,7 @@ void AIHelper::Init(pIGlobalAICallback gcb, int i) {
 
 	aiUnitDefHandler = new AIUnitDefHandler();
 	unitManager      = new AIUnitManager();
+	groupManager     = new AIGroupManager();
 	ecoState         = new EcoState();
 	gameMap          = new GameMap();
 
@@ -52,6 +54,7 @@ void AIHelper::Release() {
 
 	delete aiUnitDefHandler;
 	delete unitManager;
+	delete groupManager;
 	delete ecoState;
 	delete gameMap;
 }

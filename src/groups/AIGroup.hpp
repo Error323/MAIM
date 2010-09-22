@@ -17,13 +17,10 @@ public:
 	AIGroup(): gid(sCounter) { sCounter++; }
 	~AIGroup(){}
 
-	void AddUnit(pAIUnit);
-	void Update(); // called by engine update()
-	void Release(); // Release the group
-
-	void AddModule(pLuaModule);
-	void RemoveModule(pLuaModule);
-	void PushModule(pLuaModule);
+	void  AddUnit(pAIUnit, cBool isNewGroup);
+	void  Update(); // called by engine update()
+	void  Release(); // Release the group
+	cBool CanBeAdded(pAIUnit) const;
 
 	float3 GetPos();
 	int GetId() { return gid; }
@@ -38,6 +35,9 @@ private:
 
 	// implementation
 	void UnitDestroyed(int unit);
+	void AddModule(pLuaModule);
+	void RemoveModule(pLuaModule);
+	void PushModule(pLuaModule);
 };
 
 #endif

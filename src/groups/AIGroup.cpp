@@ -21,11 +21,18 @@ void AIGroup::Release() {
 	Factory<AIGroup>::Release(this);
 }
 
-void AIGroup::AddUnit(pAIUnit unit) {
+void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	units[unit->GetID()] = unit;
-	std::list<pLuaModule>::iterator i;
-	for (i = modules.begin(); i != modules.end(); i++)
-		(*i)->Filter(units);
+	if (isNewGroup)
+	{
+		// Instantiate modules for the unit
+	}
+}
+
+cBool AIGroup::CanBeAdded(pAIUnit) const {
+	// Should check wether unit-type classes match *EXACTLY* with the
+	// unit-type classes that this group already contains
+	return false;
 }
 
 // Make sure to add modules in this order: emergencies, reactives, proactives

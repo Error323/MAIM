@@ -9,6 +9,7 @@
 #include "../lua/AILuaCallBackHandler.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
+#include "../groups/AIGroupManager.hpp"
 #include "../units/AIUnit.hpp"
 #include "../units/AIUnitManager.hpp"
 #include "../utils/Factory.hpp"
@@ -61,7 +62,7 @@ void AIMain::UnitCreated(int unitID, int builderUnitID) {
 	pAIUnit unit = Factory<AIUnit>::Instance();
 	unit->Reset(unitID, builderUnitID);
 	aih->unitManager->AddUnit(unit);
-	//aih->groupManager->AddUnit(unit);
+	aih->groupManager->AddUnit(unit);
 }
 
 void AIMain::UnitFinished(int unitID) {
@@ -141,23 +142,15 @@ void AIMain::Update() {
 
 	cUint32 currentFrame = aih->rcb->GetCurrentFrame();
 
-	switch (currentFrame)
+	switch (currentFrame % 2)
 	{
 		case 0: // update economic state
 		{
 			aih->ecoState->Update();
 		} break;
-		case 1: // update 
+		case 1: // update groups, calls lua modules
 		{
-		} break;
-		case 2: // update
-		{
-		} break;
-		case 3: // update
-		{
-		} break;
-		case 4: // update
-		{
+			aih->groupManager->Update();
 		} break;
 	}
 }
