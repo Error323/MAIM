@@ -43,9 +43,13 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 		pAIHelper aih = AIHelper::GetActiveInstance();
 		pcAIUnitDef def = unit->GetUnitDef();
 
-		modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
-		modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
-		modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
+		AddModule(aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY));
+		AddModule(aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE));
+		AddModule(aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE));
+
+		// modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
+		// modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
+		// modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
 	}
 
 	// Attach to unit subject
