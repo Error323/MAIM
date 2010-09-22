@@ -20,12 +20,11 @@ public:
 
 	std::string GetName();
 
-	void Filter(const std::map<int, AIUnit*>&) {}
 	bool CanRun();
 	bool Update();
 
 	void SetGroup(AIGroup* g) { group = g; }
-	void UnitDestroyed(int unitID) { units.erase(unitID); }
+	int  GetMaxGroupSize() const { return maxGroupSize; }
 
 	bool IsSuited(unsigned, unsigned, unsigned, unsigned);
 	bool IsValid() const { return isValid; }
@@ -45,8 +44,6 @@ private:
 	lua_State* luaState;
 
 	std::string name;
-	// ?? why does the *module* need to keep track of this??
-	std::map<int, AIUnit*> units;
 
 	AIGroup* group;
 
@@ -54,6 +51,9 @@ private:
 	unsigned moduleTerrainMasks;
 	unsigned moduleWeaponMasks;
 	unsigned moduleMoveMasks;
+
+	// Should be read from <module>.lua
+	int maxGroupSize;
 };
 
 #endif

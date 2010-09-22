@@ -2,6 +2,7 @@
 
 #include "../lua/AILuaModule.hpp"
 #include "../units/AIUnit.hpp"
+#include "../units/AIUnitDef.hpp"
 #include "../utils/ObjectFactory.hpp"
 #include "../utils/Debugger.hpp"
 
@@ -32,16 +33,35 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	unit->Attach(this);
 }
 
-cBool AIGroup::CanBeAdded(pAIUnit) const {
-	// Should check wether unit-type classes match *EXACTLY* with the
-	// unit-type classes that this group already contains
-	return false;
+cBool AIGroup::CanBeAdded(pAIUnit unit) const {
+	// only add unit-type classes that this group already contains
+	bool canBeAdded = true;
+
+	std::list<pLuaModule>::const_iterator i;
+	for (i = modules.begin(); i != modules.end(); i++)
+	{
+		// See if the given unit matches all modules in this group
+		Uint32 typeMask     = unit->GetUnitDef()->typeMask;
+		Uint32 terrainMask  = unit->GetUnitDef()->terrainMask;
+		Uint32 weaponMask   = unit->GetUnitDef()->weaponMask;
+		Uint32 moveDataMask = unit->GetUnitDef()->boMoveDataMask;
+		canBeAdded = canBeAdded && (*i)->IsSuited(typeMask, terrainMask, weaponMask, moveDataMask);
+
+		// Also extract the max nr of units for this group
+		canBeAdded = canBeAdded && units.size() < (*i)->GetMaxGroupSize();
+
+		// We are very strict about this, if one module fails on either of
+		// these constraints, the unit can't be added
+		if (!canBeAdded)
+			return false;
+	}
+
+	return true;
 }
 
 // Make sure to add modules in this order: emergencies, reactives, proactives
 void AIGroup::AddModule(pLuaModule module) {
 	module->SetGroup(this); // Allows access to this group from within the module
-	module->Filter(units); // Determines which units are suited for this module
 	modules.push_back(module); // Allows the group to select the module
 }
 

@@ -10,7 +10,14 @@
 #include "../utils/Util.hpp"
 #include "../utils/Debugger.hpp"
 
-LuaModule::LuaModule(): isValid(false), haveGetName(false), haveCanRun(false), haveUpdate(false), luaState(NULL) {
+LuaModule::LuaModule(): 
+	isValid(false), 
+	haveGetName(false), 
+	haveCanRun(false), 
+	haveUpdate(false), 
+	luaState(NULL), 
+	maxGroupSize(0)
+{
 }
 
 // can be called multiple times over the course
