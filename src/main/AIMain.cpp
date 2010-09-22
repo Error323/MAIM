@@ -61,8 +61,8 @@ void AIMain::UnitCreated(int unitID, int builderUnitID) {
 
 	pAIUnit unit = ObjectFactory<AIUnit>::Instance();
 	unit->Reset(unitID, builderUnitID);
-	aih->aiUnitHandler->AddUnit(unit);
-	aih->aiGroupHandler->AddUnit(unit);
+	aih->aiUnitHandler->UnitCreated(unit);
+	aih->aiGroupHandler->UnitCreated(unit);
 }
 
 void AIMain::UnitFinished(int unitID) {
