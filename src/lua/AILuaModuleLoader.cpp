@@ -26,12 +26,15 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 		return luaStates[moduleBaseName];
 	}
 
-	const std::string modFileName = util::StringStripSpaces(aih->rcb->GetModName());
+	AIHelper* aih = AIHelper::GetActiveInstance();
+	IAICallback* rcb = aih->rcb;
+
+	const std::string modFileName = util::StringStripSpaces(rcb->GetModName());
 
 	const std::string defModuleFileNameRel = (AI_LUA_DIR                    ) + ("Def" + moduleBaseName + ".lua");
 	const std::string modModuleFileNameRel = (AI_LUA_DIR + modFileName + "/") + ("Mod" + moduleBaseName + ".lua");
-	const std::string defModuleFileNameAbs = util::GetAbsFileName(aih->rcb, defModuleFileNameRel, true);
-	const std::string modModuleFileNameAbs = util::GetAbsFileName(aih->rcb, modModuleFileNameRel, true);
+	const std::string defModuleFileNameAbs = util::GetAbsFileName(rcb, defModuleFileNameRel, true);
+	const std::string modModuleFileNameAbs = util::GetAbsFileName(rcb, modModuleFileNameRel, true);
 
 	std::ifstream defModuleFileStream; defModuleFileStream.open(defModuleFileNameAbs.c_str());
 	std::ifstream modModuleFileStream; modModuleFileStream.open(modModuleFileNameAbs.c_str());

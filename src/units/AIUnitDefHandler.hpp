@@ -15,7 +15,7 @@ struct AIUnitDef;
 
 class AIUnitDefHandler: public ILogger {
 public:
-	AIUnitDefHandler(AIHelper*);
+	AIUnitDefHandler();
 	~AIUnitDefHandler();
 	void WriteLog();
 
@@ -72,8 +72,6 @@ private:
 
 	std::vector<const UnitDef*> sprUnitDefsByID;
 	std::vector<const AIUnitDef*> aiUnitDefsByID;
-
-	AIHelper* aih;
 };
 
 #endif

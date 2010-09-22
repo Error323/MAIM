@@ -14,7 +14,7 @@ public:
 	LuaModule();
 	~LuaModule() {}
 
-	void Init(AIHelper* h) { aih = h; }
+	void Init() {}
 	void Release();
 	bool LoadState(const std::string&);
 
@@ -49,7 +49,6 @@ private:
 	std::map<int, AIUnit*> units;
 
 	AIGroup* group;
-	AIHelper* aih;
 
 	unsigned moduleTypeMasks;
 	unsigned moduleTerrainMasks;

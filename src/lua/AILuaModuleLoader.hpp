@@ -9,7 +9,7 @@ struct AIHelper;
 
 class LuaModuleLoader {
 public:
-	LuaModuleLoader(AIHelper* h): aih(h) {}
+	LuaModuleLoader() {}
 	~LuaModuleLoader();
 
 	lua_State* LoadLuaModule(const std::string&);
@@ -21,8 +21,6 @@ private:
 	// there are never more states than unique
 	// module script types
 	std::map<std::string, lua_State*> luaStates;
-
-	AIHelper* aih;
 };
 
 #endif

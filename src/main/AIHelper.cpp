@@ -9,6 +9,8 @@
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 
+pAIHelper AIHelper::activeInstance = NULL;
+
 void AIHelper::Init(pIGlobalAICallback gcb, int i) {
 	rcb  = gcb->GetAICallback();
 	ccb  = gcb->GetCheatInterface();
@@ -17,9 +19,9 @@ void AIHelper::Init(pIGlobalAICallback gcb, int i) {
 	logger           = new Logger(rcb);
 	timer            = new Timer();
 
-	luaModuleLoader  = new LuaModuleLoader(this);
+	luaModuleLoader  = new LuaModuleLoader();
 
-	aiUnitDefHandler = new AIUnitDefHandler(this);
+	aiUnitDefHandler = new AIUnitDefHandler();
 	ecoState         = new EcoState();
 	gameMap          = new GameMap();
 
