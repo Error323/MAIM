@@ -1,6 +1,6 @@
 #include "AIUnitDef.hpp"
 
-#include "../factories/Factory.hpp"
+#include "../utils/Factory.hpp"
 #include "../lua/AILuaModule.hpp"
 
 // Include all concrete modules here

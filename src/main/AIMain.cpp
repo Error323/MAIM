@@ -4,12 +4,12 @@
 #include "./AIHelper.hpp"
 #include "./MAI.hpp"
 
-#include "../factories/Factory.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 #include "../lua/AILuaCallBackHandler.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
+#include "../utils/Factory.hpp"
 #include "../units/AIUnit.hpp"
 #include "../utils/Logger.hpp"
 

@@ -6,7 +6,7 @@
 #include "./AILuaModuleLoader.hpp"
 #include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
-#include "../factories/Factory.hpp"
+#include "../utils/Factory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
 

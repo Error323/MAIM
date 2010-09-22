@@ -1,6 +1,6 @@
 #include "./AIGroup.hpp"
 
-#include "../factories/Factory.hpp"
+#include "../utils/Factory.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../units/AIUnit.hpp"
 
@@ -61,6 +61,7 @@ void AIGroup::Update() {
 }
 
 void AIGroup::UnitDestroyed(int unit) {
+	//TODO: Check for module removal for this unit class
 	units.erase(unit);
 	if (units.empty())
 		Release();
