@@ -22,4 +22,4 @@ private:
 
 };
 
-#endif // AI_UNIT_MANAGER_HDR
+#endif
