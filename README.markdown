@@ -1,7 +1,7 @@
 Modular Artificial Intelligence
 ===============================
 
-Last revised: September 19, 2010
+Last revised: September 22, 2010
 
 A modular approach to an Artificial Intelligence for the
 [Spring RTS engine](http://springrts.com) using Lua and C++.
@@ -117,9 +117,18 @@ Furthermore, each module is given a certain execution priority (high to low):
 * `REACTIVE`  -- Kicks in when e.g. a builder detects wrecks which it can reclaim
 * `PROACTIVE` -- Defines a unit's autonomous behavior when none of the above are active
 
+
 ### Tasks
 
-TODO
+Tasks are controlled by the modules themselves, the c++ `TaskHolder` merely
+allows other modules to query tasks executed by others, allowing for e.g.
+assisting of a task. For now, four tasks will be available:
+
+* Build -- Keeps track of groups that are building, what they are building and where they are building it.
+* AssistBuild -- Allows for assisting a build.
+* Attack -- Keeps track of groups that are attacking, what they are attacking and where.
+* AssistAttack -- Allows for assisting an attack.
+
 
 ### Globals
 
