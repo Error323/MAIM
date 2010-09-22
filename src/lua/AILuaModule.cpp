@@ -5,7 +5,7 @@
 #include "./AILuaModuleLoader.hpp"
 #include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
-#include "../utils/Factory.hpp"
+#include "../utils/ObjectFactory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Debugger.hpp"
@@ -52,7 +52,7 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 
 void LuaModule::Release() {
 	MAI_ASSERT(lua_gettop(luaState) == 0);
-	Factory<LuaModule>::Release(this);
+	ObjectFactory<LuaModule>::Release(this);
 }
 
 

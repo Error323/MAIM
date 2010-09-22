@@ -1,11 +1,11 @@
 #include "./AUnitDestroyedSubject.hpp"
-#include "../utils/Factory.hpp"
+#include "../utils/ObjectFactory.hpp"
 #include "../units/AIUnit.hpp"
 
-void AUnitDestroyedSubject::UnitDestroyed() {
+void AUnitDestroyedSubject::NotifyUnitDestroyedObservers() {
 	// Notify all attached UnitDestroyed observers
-	Notify();
+	NotifyObservers();
 
 	// Make unit available again
-	Factory<AIUnit>::Release(dynamic_cast<pAIUnit>(this));
+	ObjectFactory<AIUnit>::Release(dynamic_cast<pAIUnit>(this));
 }

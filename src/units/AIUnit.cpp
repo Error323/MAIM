@@ -48,7 +48,7 @@ void AIUnit::Reset(int id, int builder) {
 
  	// set the UnitDestroyedSubject unit
 	// this is required because units are reusable
-	SetUnitDestroyedId(id);
+	SetUnitDestroyedSubjectID(id);
 
 	// Remove all the observers of this subject
 	AUnitDestroyedSubject::RemoveObservers();

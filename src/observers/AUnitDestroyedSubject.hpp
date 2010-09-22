@@ -5,12 +5,12 @@
 
 class AUnitDestroyedSubject: public ASubject {
 public:
-	AUnitDestroyedSubject(){}
-	~AUnitDestroyedSubject(){}
+	AUnitDestroyedSubject() {}
+	~AUnitDestroyedSubject() {}
 
-	void UnitDestroyed();
-	void SetUnitDestroyedId(int id) { unitID = id;}
-	int  GetUnitDestroyedId()       { return unitID; }
+	void NotifyUnitDestroyedObservers();
+	void SetUnitDestroyedSubjectID(int id) { unitID = id;   }
+	int  GetUnitDestroyedSubjectID()       { return unitID; }
 
 private:
 	int unitID;

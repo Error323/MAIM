@@ -1,8 +1,9 @@
 #include "./AIGroup.hpp"
 
-#include "../utils/Factory.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../units/AIUnit.hpp"
+#include "../utils/ObjectFactory.hpp"
+#include "../utils/Debugger.hpp"
 
 int AIGroup::sCounter = 0;
 
@@ -18,7 +19,7 @@ void AIGroup::Release() {
 	while (!moduleStack.empty())
 		moduleStack.pop();
 
-	Factory<AIGroup>::Release(this);
+	ObjectFactory<AIGroup>::Release(this);
 }
 
 void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
@@ -27,6 +28,8 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	{
 		// Instantiate modules for the unit
 	}
+	// Attach to unit subject
+	unit->Attach(this);
 }
 
 cBool AIGroup::CanBeAdded(pAIUnit) const {
@@ -68,7 +71,8 @@ void AIGroup::Update() {
 }
 
 void AIGroup::UnitDestroyed(int unit) {
-	//TODO: Check for module removal for this unit class
+	MAI_ASSERT(units.find(unit) != units.end());
+	units[unit]->Detach(this);
 	units.erase(unit);
 	if (units.empty())
 		Release();

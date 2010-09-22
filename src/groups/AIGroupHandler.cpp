@@ -1,11 +1,11 @@
-#include "./AIGroupManager.hpp"
+#include "./AIGroupHandler.hpp"
 #include "./AIGroup.hpp"
 
 #include "../units/AIUnit.hpp"
 #include "../utils/Debugger.hpp"
-#include "../utils/Factory.hpp"
+#include "../utils/ObjectFactory.hpp"
 
-void AIGroupManager::AddUnit(pAIUnit unit) {
+void AIGroupHandler::AddUnit(pAIUnit unit) {
 	// Either find an existing group for this unit-type class...
 	std::map<int, pAIGroup>::iterator i;
 	for (i = mGroups.begin(); i != mGroups.end(); i++)
@@ -21,11 +21,11 @@ void AIGroupManager::AddUnit(pAIUnit unit) {
 	}
 
 	// Or construct a new group
-	pAIGroup group = Factory<AIGroup>::Instance();
+	pAIGroup group = ObjectFactory<AIGroup>::Instance();
 	group->AddUnit(unit, true);
 }
 
-void AIGroupManager::Update() {
+void AIGroupHandler::Update() {
 	std::map<int, pAIGroup>::iterator i;
 	for (i = mGroups.begin(); i != mGroups.end(); i++)
 	{
