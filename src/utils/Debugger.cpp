@@ -2,11 +2,6 @@
 
 #include <iostream>
 
-pcChar NC = "\E[0m"; // No Color (reset to default)
-pcChar HOME_CURSOR  = "\E[0;0H"; // Place the cursor at 0;0 position.
-pcChar CLEAR_SCREEN = "\E[2J";
-pcChar FATAL = "\E[1m\E[37m\E[41m"; // Red background, white bold text
-
 Debugger* Debugger::GetInstance() {
 	static Debugger* d = NULL;
 
@@ -24,6 +19,11 @@ void Debugger::FreeInstance(Debugger* d) {
 
 
 #ifdef DEBUG
+pcChar NC = "\E[0m"; // No Color (reset to default)
+// pcChar HOME_CURSOR  = "\E[0;0H"; // Place the cursor at 0;0 position.
+// pcChar CLEAR_SCREEN = "\E[2J";
+pcChar FATAL = "\E[1m\E[37m\E[41m"; // Red background, white bold text
+
 Debugger::Debugger(): mEnabled(false) {
 }
 
@@ -31,18 +31,6 @@ Debugger::~Debugger() {
 }
 
 bool Debugger::Begin(pcChar filename, int line) {
-	snprintf(gDebugMessageKey, 1024, "%s:%d", filename, line);
-
-	mKey = std::string(gDebugMessageKey);
-	std::map<std::string, bool>::iterator i = mIgnoreForever.find(mKey);
-
-	if (i == mIgnoreForever.end())
-		mIgnoreForever[mKey] = false;
-
-	// If we are ignored don't start
-	if (mIgnoreForever[mKey])
-		return false;
-
 	mEnabled = true;
 	mMessage.clear();
 

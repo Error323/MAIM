@@ -10,8 +10,8 @@
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
 #include "../units/AIUnit.hpp"
-#include "../units/AIUnitManager.hpp"
-#include "../utils/Factory.hpp"
+#include "../units/AIUnitHandler.hpp"
+#include "../utils/ObjectFactory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Debugger.hpp"
 
@@ -45,9 +45,9 @@ void AIMain::ReleaseAI() {
 
 	if (aiInstances == 0)
 	{
-		Factory<LuaModule>::Free();
-		Factory<AIGroup>::Free();
-		Factory<AIUnit>::Free();
+		ObjectFactory<LuaModule>::Free();
+		ObjectFactory<AIGroup>::Free();
+		ObjectFactory<AIUnit>::Free();
 
 		Debugger::FreeInstance(Debugger::GetInstance());
 	}
@@ -58,10 +58,10 @@ void AIMain::ReleaseAI() {
 void AIMain::UnitCreated(int unitID, int builderUnitID) {
 	AIHelper::SetActiveInstance(aih);
 
-	pAIUnit unit = Factory<AIUnit>::Instance();
+	pAIUnit unit = ObjectFactory<AIUnit>::Instance();
 	unit->Reset(unitID, builderUnitID);
-	aih->unitManager->AddUnit(unit);
-	//aih->groupManager->AddUnit(unit);
+	aih->aiUnitHandler->AddUnit(unit);
+	// aih->groupManager->AddUnit(unit);
 }
 
 void AIMain::UnitFinished(int unitID) {
@@ -70,7 +70,10 @@ void AIMain::UnitFinished(int unitID) {
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
 	AIHelper::SetActiveInstance(aih);
-	aih->unitManager->GetUnit(unitID)->UnitDestroyed();
+
+	// this reaches the unit-handler indirectly
+	pAIUnit unit = aih->aiUnitHandler->GetUnit(unitID);
+	unit->NotifyUnitDestroyedObservers();
 }
 
 void AIMain::UnitIdle(int unitID) {

@@ -1,5 +1,4 @@
 #include "ASubject.hpp"
-
 #include "AObserver.hpp"
 
 void ASubject::Attach(AObserver* observer) {
@@ -10,10 +9,10 @@ void ASubject::Detach(AObserver* observer) {
 	observers.remove(observer);
 }
 
-void ASubject::Notify() {
+void ASubject::NotifyObservers() {
 	std::list<AObserver*>::iterator i;
 	for (i = observers.begin(); i != observers.end(); i++)
-		(*i)->Update(this);
+		(*i)->Notify(this);
 }
 
 void ASubject::RemoveObservers() {

@@ -1,5 +1,5 @@
-#ifndef ASUBJECT
-#define ASUBJECT
+#ifndef ASUBJECT_HDR
+#define ASUBJECT_HDR
 
 #include <list>
 
@@ -11,7 +11,7 @@ public:
 
 	virtual void Attach(AObserver*);
 	virtual void Detach(AObserver*);
-	virtual void Notify();
+	virtual void NotifyObservers();
 
 protected:
 	ASubject() {}

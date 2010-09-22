@@ -1,5 +1,5 @@
-#ifndef FACTORY
-#define FACTORY
+#ifndef OBJECT_FACTORY_HDR
+#define OBJECT_FACTORY_HDR
 
 #include <list>
 #include <map>
@@ -7,11 +7,11 @@
 #include <typeinfo>
 
 template<class Object> 
-class Factory 
+class ObjectFactory
 {
 public:
-	Factory() {}
-	virtual ~Factory() {}
+	ObjectFactory() {}
+	virtual ~ObjectFactory() {}
 
 	static Object* Instance();
 	static Object* Singleton(int inIndex = 0);
@@ -25,7 +25,7 @@ private:
 };
 
 template<class Object>
-void Factory<Object>::Free() 
+void ObjectFactory<Object>::Free() 
 {
 	int bytes = 0;
 
@@ -44,7 +44,7 @@ void Factory<Object>::Free()
 	}
 
 	std::cout 
-		<< "Factory<"
+		<< "ObjectFactory<"
 		<< std::string(typeid(Object).name()).substr(1)
 		<< ">::Free() destroyed " 
 		<< sAll.size() + sSingletons.size()
@@ -59,7 +59,7 @@ void Factory<Object>::Free()
 }
 
 template<class Object>
-Object* Factory<Object>::Singleton(int inIndex) 
+Object* ObjectFactory<Object>::Singleton(int inIndex) 
 {
 	if (sSingletons.find(inIndex) == sSingletons.end())
 		sSingletons[inIndex] = new Object();
@@ -67,7 +67,7 @@ Object* Factory<Object>::Singleton(int inIndex)
 }
  
 template<class Object>
-Object* Factory<Object>::Instance() 
+Object* ObjectFactory<Object>::Instance() 
 {
 	Object* object;
 
@@ -86,18 +86,18 @@ Object* Factory<Object>::Instance()
 }
  
 template<class Object>
-void Factory<Object>::Release(Object* inObject) 
+void ObjectFactory<Object>::Release(Object* inObject) 
 {
 	sFree.push_back(inObject);
 }
 
 template<class Object>
-std::list<Object*> Factory<Object>::sFree;
+std::list<Object*> ObjectFactory<Object>::sFree;
 
 template<class Object>
-std::list<Object*> Factory<Object>::sAll;
+std::list<Object*> ObjectFactory<Object>::sAll;
 
 template<class Object>
-std::map<int, Object*> Factory<Object>::sSingletons;
+std::map<int, Object*> ObjectFactory<Object>::sSingletons;
 
-#endif // FACTORY
+#endif

@@ -1,24 +1,25 @@
-#ifndef AI_UNIT_MANAGER_HDR
-#define AI_UNIT_MANAGER_HDR
+#ifndef AI_UNIT_HANDLER_HDR
+#define AI_UNIT_HANDLER_HDR
 
 #include "../main/Types.hpp"
 #include "../observers/AUnitDestroyedObserver.hpp"
 
 DECLARE_CLASS(AIUnit)
 
-class AIUnitManager: public AUnitDestroyedObserver {
+class AIUnitHandler: public AUnitDestroyedObserver {
 public:
-	AIUnitManager() {}
-	~AIUnitManager() {}
+	AIUnitHandler() {}
+	~AIUnitHandler() {}
 
 	void AddUnit(pAIUnit);
 	pAIUnit GetUnit(int unitID);
 
+	// override AUnitDestroyedObserver::UnitDestroyed
+	void UnitDestroyed(int unitID);
+
 private:
 	std::map<int, pAIUnit> mUnits;
 
-	// implementation
-	void UnitDestroyed(int unit);
 };
 
 #endif // AI_UNIT_MANAGER_HDR

@@ -3,7 +3,8 @@
 #include "ASubject.hpp"
 #include "AUnitDestroyedSubject.hpp"
 
-void AUnitDestroyedObserver::Update(ASubject *subject) {
-	AUnitDestroyedSubject *uds = dynamic_cast<AUnitDestroyedSubject*>(subject);
-	UnitDestroyed(uds->GetUnitDestroyedId());
+void AUnitDestroyedObserver::Notify(ASubject* subject) {
+	AUnitDestroyedSubject* uds = dynamic_cast<AUnitDestroyedSubject*>(subject);
+	// call the observer's implementation (eg. AIUnitHandler)
+	UnitDestroyed(uds->GetUnitDestroyedSubjectID());
 }

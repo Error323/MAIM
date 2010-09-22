@@ -15,7 +15,7 @@
 
 
 // typical call-sequence (from eg. groupHolder)
-//   LuaModule* module = ReusableObjectFactory<LuaModule>::Instance();
+//   LuaModule* module = ObjectFactory<LuaModule>::Instance();
 //   module->LoadState("StaticBuilderModule");
 //       calls luaModuleLoader->LoadLuaModule("StaticBuilderModule");
 //   if (module->IsValid())

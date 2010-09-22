@@ -1,6 +1,6 @@
 #include "./AIGroup.hpp"
 
-#include "../utils/Factory.hpp"
+#include "../utils/ObjectFactory.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../units/AIUnit.hpp"
 
@@ -18,7 +18,7 @@ void AIGroup::Release() {
 	while (!moduleStack.empty())
 		moduleStack.pop();
 
-	Factory<AIGroup>::Release(this);
+	ObjectFactory<AIGroup>::Release(this);
 }
 
 void AIGroup::AddUnit(pAIUnit unit) {

@@ -81,14 +81,9 @@ public:
 	static void FreeInstance(Debugger*);
 
 private:
-	char gDebugMessageKey[1024];
-
-	std::string mKey;
-	std::map<std::string, bool> mIgnoreForever;
 	std::string mMessage;
 
 	bool mEnabled;
-	int mKeyReleased;
 };
 
 #else // DEBUG
