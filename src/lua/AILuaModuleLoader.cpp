@@ -5,22 +5,36 @@
 
 #include "./AILuaHeaders.hpp"
 #include "./AILuaModuleLoader.hpp"
+#include "./AILuaModule.hpp"
 #include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../main/DFolders.hpp"
-#include "../utils/Logger.hpp"
-#include "../utils/Util.hpp"
 #include "../utils/Debugger.hpp"
+#include "../utils/Logger.hpp"
+#include "../utils/ObjectFactory.hpp"
+#include "../utils/Util.hpp"
 
 
 
-// typical call-sequence (from eg. groupHolder)
-//   LuaModule* module = ObjectFactory<LuaModule>::Instance();
-//   module->LoadState("StaticBuilderModule");
-//       calls luaModuleLoader->LoadLuaModule("StaticBuilderModule");
-//   if (module->IsValid())
-//       group->AddModule(module);
-//
+LuaModule* LuaModuleLoader::GetModule(AIUnitDef* def, unsigned int priority) {
+	LuaModule* module = ObjectFactory<LuaModule>::Instance();
+
+	/*
+	// need to check these against registry (built at load-time)
+	// of class-masks advertised by available Lua script modules
+	//     def->typeMask
+	//     def->terrainMask
+	//     def->weaponMask
+	//     def->roleMask
+	// const std::string& moduleScript = GetModuleScriptName(def, priority);
+
+	module->LoadState(moduleScript, priority);
+
+	MAI_ASSERT(module->IsValid());
+	*/
+	return module;
+}
+
 lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 	if (luaStates.find(moduleBaseName) != luaStates.end()) {
 		return luaStates[moduleBaseName];

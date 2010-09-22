@@ -5,13 +5,15 @@
 #include <string>
 
 struct lua_State;
-struct AIHelper;
 
+class AIUnitDef;
+class LuaModule;
 class LuaModuleLoader {
 public:
 	LuaModuleLoader() {}
 	~LuaModuleLoader();
 
+	LuaModule* GetModule(AIUnitDef*, unsigned int);
 	lua_State* LoadLuaModule(const std::string&);
 
 private:

@@ -17,7 +17,7 @@ LuaModule::LuaModule():
 	haveUpdate(false), 
 	luaState(NULL), 
 	maxGroupSize(0),
-	priority(MODULE_PRIORITY_COUNT)
+	priority(LUAMODULE_NUM_PRIORITIES)
 {
 }
 

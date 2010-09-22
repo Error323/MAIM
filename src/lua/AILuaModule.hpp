@@ -9,14 +9,6 @@ class AIHelper;
 class AIUnit;
 class AIGroup;
 
-// Order matters
-enum modulePriority {
-	EMERGENCY = 0,
-	REACTIVE = 1,
-	PROACTIVE = 2,
-	MODULE_PRIORITY_COUNT = 3
-};
-
 class LuaModule {
 public:
 	LuaModule();
@@ -32,8 +24,8 @@ public:
 	bool Update();
 
 	void SetGroup(AIGroup* g) { group = g; }
-	int  GetMaxGroupSize() const { return maxGroupSize; }
-	int  GetPriority() const { return priority; }
+	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
+	unsigned int GetPriority() const { return priority; }
 
 	bool IsSuited(unsigned, unsigned, unsigned, unsigned);
 	bool IsValid() const { return isValid; }
@@ -42,6 +34,14 @@ public:
 	bool HaveUpdate() const { return haveUpdate; }
 
 	lua_State* GetLuaState() const { return luaState; }
+
+	// note: order matters
+	enum {
+		LUAMODULE_PRIORITY_EMERGENCY = 0,
+		LUAMODULE_PRIORITY_REACTIVE  = 1,
+		LUAMODULE_PRIORITY_PROACTIVE = 2,
+		LUAMODULE_NUM_PRIORITIES     = 3,
+	};
 
 private:
 	bool isValid;
@@ -62,9 +62,9 @@ private:
 	unsigned moduleMoveMasks;
 
 	// Should be read from <module>.lua
-	int maxGroupSize;
+	unsigned int maxGroupSize;
 
-	modulePriority priority;
+	unsigned int priority;
 };
 
 #endif

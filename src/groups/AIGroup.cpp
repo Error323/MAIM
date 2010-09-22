@@ -12,11 +12,13 @@ AIGroup::AIGroup(): gid(sCounter) {
 	SetGroupDestroyedSubjectID(gid); 
 	sCounter++; 
 	activeModule = NULL;
-	modules.resize(MODULE_PRIORITY_COUNT);
+	modules.resize(LuaModule::LUAMODULE_NUM_PRIORITIES);
 }
 
 void AIGroup::Release() {
-	for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
+	activeModule = NULL;
+
+	for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 	{
 		if (modules[i] != NULL)
 		{
@@ -26,18 +28,24 @@ void AIGroup::Release() {
 	}
 
 	units.clear();
-	activeModule = NULL;
 
 	NotifyGroupDestroyedObservers();
 }
 
 void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	units[unit->GetID()] = unit;
+
 	if (isNewGroup)
 	{
 		// Instantiate modules for the unit
+		// pAIHelper aih = AIHelper::GetInstance();
+		// pAIUnitDef def = unit->GetUnitDef();
+		// modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
+		// modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
+		// modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
 		
 	}
+
 	// Attach to unit subject
 	unit->AttachObserver(this);
 }
@@ -46,20 +54,21 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 	// only add unit-type classes that this group already contains
 	bool canBeAdded = true;
 
-	for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
+	for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 	{
 		if (modules[i] == NULL)
 			continue;
 
 		// See if the given unit matches all modules in this group
-		Uint32 typeMask     = unit->GetUnitDef()->typeMask;
-		Uint32 terrainMask  = unit->GetUnitDef()->terrainMask;
-		Uint32 weaponMask   = unit->GetUnitDef()->weaponMask;
-		Uint32 moveDataMask = unit->GetUnitDef()->boMoveDataMask;
-		canBeAdded = canBeAdded && modules[i]->IsSuited(typeMask, terrainMask, weaponMask, moveDataMask);
+		cUint32 typeMask    = unit->GetUnitDef()->typeMask;
+		cUint32 terrainMask = unit->GetUnitDef()->terrainMask;
+		cUint32 weaponMask  = unit->GetUnitDef()->weaponMask;
+		cUint32 roleMask    = unit->GetUnitDef()->roleMask;
+
+		canBeAdded = canBeAdded && modules[i]->IsSuited(typeMask, terrainMask, weaponMask, roleMask);
 
 		// Also extract the max nr of units for this group
-		canBeAdded = canBeAdded && units.size() < modules[i]->GetMaxGroupSize();
+		canBeAdded = (canBeAdded && (units.size() < modules[i]->GetMaxGroupSize()));
 
 		// We are very strict about this, if one module fails on either of
 		// these constraints, the unit can't be added
@@ -71,8 +80,10 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 }
 
 void AIGroup::AddModule(pLuaModule module) {
-	cInt priority = module->GetPriority();
+	cUint priority = module->GetPriority();
+
 	MAI_ASSERT_MSG(modules[priority] == NULL, "Overwriting %s with %s", modules[priority]->GetName().c_str(), module->GetName().c_str());
+
 	module->SetGroup(this); // Allows access to this group from within the module
 	modules[priority] = module; // Allows the group to select the module
 }
@@ -80,7 +91,7 @@ void AIGroup::AddModule(pLuaModule module) {
 void AIGroup::Update() {
 	if (activeModule == NULL)
 	{
-		for (int i = 0; i < MODULE_PRIORITY_COUNT; i++)
+		for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 		{
 			if (modules[i] != NULL && modules[i]->CanRun()) 
 			{
