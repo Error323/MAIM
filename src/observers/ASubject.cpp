@@ -16,6 +16,8 @@ void ASubject::NotifyObservers() {
 
 	for (i = detached.begin(); i != detached.end(); i++)
 		observers.remove(*i);
+	
+	detached.clear();
 }
 
 void ASubject::RemoveObservers() {
