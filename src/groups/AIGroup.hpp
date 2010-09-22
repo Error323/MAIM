@@ -37,8 +37,8 @@ private:
 
 	// implementation
 	void UnitDestroyed(int unit);
+
 	void AddModule(pLuaModule);
-	void RemoveModule(pLuaModule);
 	void PushModule(pLuaModule);
 };
 

@@ -66,11 +66,6 @@ void AIGroup::AddModule(pLuaModule module) {
 	modules.push_back(module); // Allows the group to select the module
 }
 
-void AIGroup::RemoveModule(pLuaModule module) {
-	modules.remove(module);
-	module->Release();
-}
-
 void AIGroup::PushModule(pLuaModule module) {
 	moduleStack.push(module);
 }
