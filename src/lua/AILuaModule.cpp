@@ -1,5 +1,4 @@
 #include <sstream>
-#include <cassert>
 
 #include "./AILuaHeaders.hpp"
 #include "./AILuaModule.hpp"
@@ -9,6 +8,7 @@
 #include "../utils/Factory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
+#include "../utils/Debugger.hpp"
 
 LuaModule::LuaModule(): isValid(false), haveGetName(false), haveCanRun(false), haveUpdate(false), luaState(NULL) {
 }
@@ -21,7 +21,7 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 	luaState = AIHelper::GetActiveInstance()->luaModuleLoader->LoadLuaModule(moduleName);
 
 	if (luaState != NULL) {
-		assert(lua_gettop(luaState) == 0);
+		MAI_ASSERT(lua_gettop(luaState) == 0);
 
 		lua_getglobal(luaState, "GetName");
 			haveGetName = lua_isfunction(luaState, -1);
@@ -34,7 +34,7 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 		lua_pop(luaState, 1);
 
 		isValid = (haveGetName && haveCanRun && haveUpdate);
-		assert(lua_gettop(luaState) == 0);
+		MAI_ASSERT(lua_gettop(luaState) == 0);
 	} else {
 		isValid     = false;
 		haveGetName = false;
@@ -51,7 +51,7 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 }
 
 void LuaModule::Release() {
-	assert(lua_gettop(luaState) == 0);
+	MAI_ASSERT(lua_gettop(luaState) == 0);
 	Factory<LuaModule>::Release(this);
 }
 
@@ -64,7 +64,7 @@ std::string LuaModule::GetName() {
 		LuaCallBackHandler::SetActiveModule(this);
 		lua_getglobal(luaState, "GetName");
 		lua_call(luaState, 0, 1);
-		assert(lua_isstring(luaState, -1));
+		MAI_ASSERT(lua_isstring(luaState, -1));
 		ret = lua_tostring(luaState, -1);
 		lua_pop(luaState, 1);
 		LuaCallBackHandler::SetActiveModule(NULL);
@@ -80,7 +80,7 @@ bool LuaModule::CanRun() {
 		LuaCallBackHandler::SetActiveModule(this);
 		lua_getglobal(luaState, "CanRun");
 		lua_call(luaState, 0, 1);
-		assert(lua_isboolean(luaState, -1));
+		MAI_ASSERT(lua_isboolean(luaState, -1));
 		ret = lua_toboolean(luaState, -1);
 		lua_pop(luaState, 1);
 		LuaCallBackHandler::SetActiveModule(NULL);
@@ -96,7 +96,7 @@ bool LuaModule::Update() {
 		LuaCallBackHandler::SetActiveModule(this);
 		lua_getglobal(luaState, "Update");
 		lua_call(luaState, 0, 1);
-		assert(lua_isboolean(luaState, -1));
+		MAI_ASSERT(lua_isboolean(luaState, -1));
 		ret = lua_toboolean(luaState, -1);
 		lua_pop(luaState, 1);
 		LuaCallBackHandler::SetActiveModule(NULL);

@@ -1,11 +1,10 @@
-#include <cassert>
-
 #include "../main/HAIInterface.hpp"
 #include "../main/HEngine.hpp"
 
 #include "./AIUnit.hpp"
 #include "./AIUnitDef.hpp"
 #include "../main/AIHelper.hpp"
+#include "../utils/Debugger.hpp"
 
 void AIUnit::SetActiveState(cBool wantActive) {
 	if (CanGiveCommand(CMD_ONOFF)) {
@@ -34,7 +33,7 @@ void AIUnit::Init() {
 }
 
 void AIUnit::Update() {
-	assert(unitDef != 0);
+	MAI_ASSERT(unitDef != 0);
 
 	UpdatePosition();
 	UpdateCommand();

@@ -1,10 +1,10 @@
-#include <cassert>
 #include <cstring>
 #include <cmath>
 #include <algorithm>
 
 #include "../main/HAIInterface.hpp"
 #include "./Util.hpp"
+#include "./Debugger.hpp"
 
 namespace util {
 	String GetAbsFileName(pIAICallback cb, rcString relFileName, cBool readonly) {
@@ -14,7 +14,7 @@ namespace util {
 
 		// last char ('\0') in dst
 		// should not be overwritten
-		assert(len < (1024 - 1));
+		MAI_ASSERT(len < (1024 - 1));
 		memcpy(dst, src, len);
 
 		// get the absolute path to the file

@@ -9,9 +9,10 @@
 #include "../lua/AILuaCallBackHandler.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
-#include "../utils/Factory.hpp"
 #include "../units/AIUnit.hpp"
+#include "../utils/Factory.hpp"
 #include "../utils/Logger.hpp"
+#include "../utils/Debugger.hpp"
 
 unsigned int AIMain::aiInstances = 0;
 
@@ -46,6 +47,8 @@ void AIMain::ReleaseAI() {
 		Factory<LuaModule>::Free();
 		Factory<AIGroup>::Free();
 		Factory<AIUnit>::Free();
+
+		Debugger::FreeInstance(Debugger::GetInstance());
 	}
 }
 

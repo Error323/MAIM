@@ -1,6 +1,5 @@
 #include <fstream>
 #include <map>
-#include <cassert>
 
 #include "../main/HAIInterface.hpp"
 
@@ -11,6 +10,7 @@
 #include "../main/DFolders.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
+#include "../utils/Debugger.hpp"
 
 
 
@@ -42,7 +42,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 	std::string luaScript;
 
 	// either an AI-default or a mod-specific module should exist
-	assert(defModuleFileStream.good() || modModuleFileStream.good());
+	MAI_ASSERT(defModuleFileStream.good() || modModuleFileStream.good());
 
 	if (modModuleFileStream.good()) {
 		aih->logger->Log("[LuaModuleLoader] loading mod-specific module file \"");
@@ -73,49 +73,49 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 		lua_pop(luaState, 1);
 		return NULL;
 	} else {
-		assert(lua_gettop(luaState) == 0);
+		MAI_ASSERT(lua_gettop(luaState) == 0);
 
 		// register the callbacks for this state
 		lua_newtable(luaState); // AI = {}
 			lua_pushstring(luaState, "EcoState");
 			lua_newtable(luaState); // EcoState = {}
-			assert(lua_istable(luaState, -3));
-			assert(lua_istable(luaState, -1));
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
 				lua_pushstring(luaState, "IsStallingMetal");
 				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateIsStallingMetal);
-				assert(lua_istable(luaState, -3));
+				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingMetal"] = func
-				assert(lua_gettop(luaState) == 3);
+				MAI_ASSERT(lua_gettop(luaState) == 3);
 
 				lua_pushstring(luaState, "IsStallingEnergy");
 				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateIsStallingEnergy);
-				assert(lua_istable(luaState, -3));
+				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
-				assert(lua_gettop(luaState) == 3);
+				MAI_ASSERT(lua_gettop(luaState) == 3);
 			lua_settable(luaState, -3); // AI["EcoState"] = EcoState
-			assert(lua_gettop(luaState) == 1);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 			lua_pushstring(luaState, "GameMap");
 			lua_newtable(luaState); // GameMap = {}
-			assert(lua_istable(luaState, -3));
-			assert(lua_istable(luaState, -1));
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
 				lua_pushstring(luaState, "GetAmountOfLand");
 				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapGetAmountOfLand);
-				assert(lua_istable(luaState, -3));
+				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfLand"] = func
-				assert(lua_gettop(luaState) == 3);
+				MAI_ASSERT(lua_gettop(luaState) == 3);
 
 				lua_pushstring(luaState, "GetAmountOfWater");
 				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapGetAmountOfWater);
-				assert(lua_istable(luaState, -3));
+				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
-				assert(lua_gettop(luaState) == 3);
+				MAI_ASSERT(lua_gettop(luaState) == 3);
 			lua_settable(luaState, -3); // AI["GameMap"] = GameMap
-			assert(lua_gettop(luaState) == 1);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 		// add the AI root table to the global environment
 		lua_setglobal(luaState, "AI");
-		assert(lua_gettop(luaState) == 0);
+		MAI_ASSERT(lua_gettop(luaState) == 0);
 
 		// lua_register(L, name, func) is short-hand macro for
 		// lua_pushcfunction(L, func) + lua_setglobal(L, name)

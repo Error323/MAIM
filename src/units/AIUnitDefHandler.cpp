@@ -1,5 +1,4 @@
 #include <sstream>
-#include <cassert>
 #include <algorithm>
 
 #include "../main/HEngine.hpp"
@@ -11,6 +10,7 @@
 #include "../main/AIHelper.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
+#include "../utils/Debugger.hpp"
 
 AIUnitDefHandler::AIUnitDefHandler() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
@@ -66,8 +66,8 @@ AIUnitDefHandler::AIUnitDefHandler() {
 		}
 
 		aiUnitDefsByID[id] = new AIUnitDef();
-		// assert(sprUnitDefsByID[id] != NULL);
-		// assert(aiUnitDefsByID[id] != NULL);
+		// MAI_ASSERT(sprUnitDefsByID[id] != NULL);
+		// MAI_ASSERT(aiUnitDefsByID[id] != NULL);
 
 		CategorizeUnitDefByID(id);
 		InsertUnitDefByID(id);
@@ -107,7 +107,7 @@ AIUnitDefHandler::AIUnitDefHandler() {
 		bool isSpecialBuilder = (isStaticBuilder || isMobileBuilder);
 
 		if (isStaticBuilder || isMobileBuilder) {
-			assert(!boUDIDs.empty());
+			MAI_ASSERT(!boUDIDs.empty());
 		}
 
 		// mark all static builder units that are hubs; also
@@ -462,7 +462,7 @@ int AIUnitDefHandler::InsertUnitDefByID(int i) {
 	const AIUnitDef* aiDef = aiUnitDefsByID[i];
 	const UnitDef* sprDef = sprUnitDefsByID[i];
 
-	assert(aiDef->GetDef() == sprDef);
+	MAI_ASSERT(aiDef->GetDef() == sprDef);
 
 	int n = 0;
 
@@ -507,7 +507,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 
 	if (!aiUnitDef->isMobile) {
-		assert(!sprUnitDef->canfly);
+		MAI_ASSERT(!sprUnitDef->canfly);
 	}
 
 	if (!aiUnitDef->isBuilder) {
@@ -583,7 +583,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 			} else {
 				// weapon of some special nature
 				if (w->stockpile) {
-					assert(sprUnitDef->stockpileWeaponDef != NULL);
+					MAI_ASSERT(sprUnitDef->stockpileWeaponDef != NULL);
 					// weapon that uses ammunition (do we need this?)
 					// aiUnitDef->weaponMask |= MASK_STOCKPILE;
 				}
@@ -593,7 +593,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 				}
 
 				if (w->isShield) {
-					assert(sprUnitDef->shieldWeaponDef != NULL);
+					MAI_ASSERT(sprUnitDef->shieldWeaponDef != NULL);
 					// (possibly mobile) shield generator
 					aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_DEFENSE_MOBILE: MASK_DEFENSE_STATIC);
 					aiUnitDef->weaponMask |= MASK_SHIELD;
@@ -630,18 +630,18 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 		}
 	} else {
 		if (sprUnitDef->canfly) {
-			assert(sprUnitDef->movedata == NULL);
+			MAI_ASSERT(sprUnitDef->movedata == NULL);
 			aiUnitDef->terrainMask |= MASK_AIR;
 		} else {
-			assert(sprUnitDef->movedata != NULL);
+			MAI_ASSERT(sprUnitDef->movedata != NULL);
 
 			switch (sprUnitDef->movedata->moveFamily) {
 				case MoveData::Tank: {
 					// fall-through
 				}
 				case MoveData::KBot: {
-					assert(sprUnitDef->movedata->moveType == MoveData::Ground_Move);
-					assert(sprUnitDef->movedata->followGround);
+					MAI_ASSERT(sprUnitDef->movedata->moveType == MoveData::Ground_Move);
+					MAI_ASSERT(sprUnitDef->movedata->followGround);
 
 					aiUnitDef->terrainMask |= MASK_LAND;
 
@@ -653,12 +653,12 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 					}
 				} break;
 				case MoveData::Hover: {
-					assert(sprUnitDef->movedata->moveType == MoveData::Hover_Move);
-					assert(!sprUnitDef->movedata->followGround);
-					assert(sprUnitDef->canhover);
+					MAI_ASSERT(sprUnitDef->movedata->moveType == MoveData::Hover_Move);
+					MAI_ASSERT(!sprUnitDef->movedata->followGround);
+					MAI_ASSERT(sprUnitDef->canhover);
 
 					//! hovercraft are also floaters
-					//! assert(!sprUnitDef->floater);
+					//! MAI_ASSERT(!sprUnitDef->floater);
 					//! for tanks, "minWaterDepth" should be < 0.0f
 					//! for hovers, "maxWaterDepth" should be > 0.0f
 
@@ -668,10 +668,10 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 				case MoveData::Ship: {
 					// floater is true if "waterline" key exists, which submarines ALSO have
 					// followGround is true if movefamily is Tank or KBot, submarines are Ship
-					assert(sprUnitDef->movedata->moveType == MoveData::Ship_Move);
-					assert(!sprUnitDef->movedata->followGround);
-					assert(!sprUnitDef->canhover);
-					assert(sprUnitDef->floater);
+					MAI_ASSERT(sprUnitDef->movedata->moveType == MoveData::Ship_Move);
+					MAI_ASSERT(!sprUnitDef->movedata->followGround);
+					MAI_ASSERT(!sprUnitDef->canhover);
+					MAI_ASSERT(sprUnitDef->floater);
 
 					// explicit || implicit
 					if (sprUnitDef->movedata->subMarine || (sprUnitDef->waterline >= sprUnitDef->movedata->depth)) {
@@ -683,7 +683,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 			}
 
 			if (sprUnitDef->movedata->terrainClass == MoveData::Mixed) {
-				assert(
+				MAI_ASSERT(
 					( aiUnitDef->terrainMask & MASK_LAND) &&
 					((aiUnitDef->terrainMask & MASK_WATER_SURFACE) ||
 					( aiUnitDef->terrainMask & MASK_WATER_SUBMERGED))
@@ -692,7 +692,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 		}
 	}
 
-	assert(!((aiUnitDef->terrainMask & MASK_WATER_SURFACE) && (aiUnitDef->terrainMask & MASK_WATER_SUBMERGED)));
+	MAI_ASSERT(!((aiUnitDef->terrainMask & MASK_WATER_SURFACE) && (aiUnitDef->terrainMask & MASK_WATER_SUBMERGED)));
 
 
 	{
@@ -707,7 +707,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 			const char*    bldOptName = bldOptsIt->second.c_str();
 			const UnitDef* bldOptDef  = AIHelper::GetActiveInstance()->rcb->GetUnitDef(bldOptName);
 
-			assert(bldOptDef != NULL);
+			MAI_ASSERT(bldOptDef != NULL);
 
 			aiUnitDef->buildOptionUDIDs.insert(bldOptDef->id);
 		}
