@@ -23,7 +23,7 @@ void AIGroupHandler::AddUnit(pAIUnit unit) {
 	// Or construct a new group
 	pAIGroup group = ObjectFactory<AIGroup>::Instance();
 	mGroups[group->GetID()] = group;
-	group->Attach(this);
+	group->AttachObserver(this);
 	group->AddUnit(unit, true);
 }
 
@@ -37,6 +37,6 @@ void AIGroupHandler::Update() {
 
 void AIGroupHandler::GroupDestroyed(int gid) {
 	MAI_ASSERT(mGroups.find(gid) != mGroups.end());
-	mGroups[gid]->Detach(this);
+	mGroups[gid]->DetachObserver(this);
 	mGroups.erase(gid);
 }
