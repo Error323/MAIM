@@ -146,20 +146,17 @@ We implement the observer pattern to efficiently handle high-frequency events
 such as UnitDamaged. Each event is sent only to those AI components that need
 to know about it. This has the following consequences:
 
-*
-	The unit-handler (class AIUnitHandler) and possibly other AI components
-	become an observer for all unit-related types of events that they care
-	about (eg. UnitDestroyed, UnitIdle).
-*
-	For each type of game event, there exists an observer base-class (AObserver)
-	which is partially specialized (AUnitDestroyedObsever). Concrete observers
-	like AIUnitHandler extend these further. If an observer is interested in
-	more than one event-type, it MUST use multiple inheritance. (!)
-*
-	To prevent (eg.) a UnitDestroyed event from being broadcasted to every AIGroup
-	instance when at most one group needs to receive it, each unit "attaches" the
-	receiver(s) that it wants to inform about this event-type (eg. AIUnitHandler
-	and its own AIGroup) to a list of subject observers upon creation, and later
-	notifies these when it is destroyed. To accomplish this, AIUnit must extend
-	the AUnitDestroyedSubject class and other specialized subclasses of ASubject.
-	(again using multiple inheritance)
+* The unit-handler (class AIUnitHandler) and possibly other AI components
+become an observer for all unit-related types of events that they care about
+(eg. UnitDestroyed, UnitIdle).
+* For each type of game event, there exists an observer base-class (AObserver)
+which is partially specialized (AUnitDestroyedObsever). Concrete observers
+like AIUnitHandler extend these further. If an observer is interested in more
+than one event-type, it MUST use multiple inheritance. (!)
+* To prevent (eg.) a UnitDestroyed event from being broadcasted to every
+AIGroup instance when at most one group needs to receive it, each unit
+"attaches" the receiver(s) that it wants to inform about this event-type (eg.
+AIUnitHandler and its own AIGroup) to a list of subject observers upon
+creation, and later notifies these when it is destroyed. To accomplish this,
+AIUnit must extend the AUnitDestroyedSubject class and other specialized
+subclasses of ASubject.  (again using multiple inheritance)
