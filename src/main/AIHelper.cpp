@@ -13,10 +13,13 @@
 
 pAIHelper AIHelper::activeInstance = NULL;
 
-void AIHelper::Init(pIGlobalAICallback gcb, int i) {
+void AIHelper::Init(pIGlobalAICallback gcb, unsigned int i) {
 	rcb  = gcb->GetAICallback();
 	ccb  = gcb->GetCheatInterface();
 	team = i;
+
+	initFrame = rcb->GetCurrentFrame();
+	currFrame = initFrame;
 
 	logger           = new Logger(rcb);
 	timer            = new Timer();
@@ -33,8 +36,10 @@ void AIHelper::Init(pIGlobalAICallback gcb, int i) {
 	timer->OpenLog(logger->GetLogName() + "[timings].txt");
 	aiUnitDefHandler->OpenLog(logger->GetLogName() + "[unitdefs].txt");
 
-	ecoState->Init(this);
-	gameMap->Init(this);
+	ecoState->Init();
+	gameMap->Init();
+
+	initialized = true;
 }
 
 void AIHelper::Release() {

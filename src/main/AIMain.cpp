@@ -57,71 +57,127 @@ void AIMain::ReleaseAI() {
 
 
 void AIMain::UnitCreated(int unitID, int builderUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 
 	pAIUnit unit = ObjectFactory<AIUnit>::Instance();
 	unit->Reset(unitID, builderUnitID);
 
 	// TODO: use observer
-	aih->aiUnitHandler->UnitCreated(unit);
-	aih->aiGroupHandler->UnitCreated(unit);
+	aih->GetAIUnitHandler()->UnitCreated(unit);
+	aih->GetAIGroupHandler()->UnitCreated(unit);
 }
 
 void AIMain::UnitFinished(int unitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 
 	// this reaches the unit-handler indirectly
-	pAIUnit unit = aih->aiUnitHandler->GetUnit(unitID);
+	pAIUnit unit = aih->GetAIUnitHandler()->GetUnit(unitID);
 	unit->NotifyUnitDestroyedObservers();
 }
 
 void AIMain::UnitIdle(int unitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::UnitMoveFailed(int unitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 
 void AIMain::EnemyEnterLOS(int enemyUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyLeaveLOS(int enemyUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyEnterRadar(int enemyUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyLeaveRadar(int enemyUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 void AIMain::EnemyDestroyed(int enemyUnitID, int attackerUnitID) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 
 void AIMain::GotChatMsg(const char* msg, int playerNum) {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 }
 
 int AIMain::HandleEvent(int msgID, const void* msgData) {
+	if (!aih->Initialized()) {
+		return 0;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 
 	switch (msgID)
@@ -143,19 +199,24 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 
 void AIMain::Update() {
+	if (!aih->Initialized()) {
+		return;
+	}
+
 	AIHelper::SetActiveInstance(aih);
 
-	cUint32 currentFrame = aih->rcb->GetCurrentFrame();
+	// first Update event is at frame 1, not 0
+	aih->SetCurrFrame(aih->GetCurrFrame() + 1);
 
-	switch (currentFrame % 2)
+	switch (aih->GetCurrFrame() % 2)
 	{
 		case 0: // update economic state
 		{
-			aih->ecoState->Update();
+			aih->GetEcoState()->Update();
 		} break;
 		case 1: // update aiGroups, calls lua modules
 		{
-			aih->aiGroupHandler->Update();
+			aih->GetAIGroupHandler()->Update();
 		} break;
 	}
 }

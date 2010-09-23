@@ -52,25 +52,25 @@ private:
 	IAICallback *cb;
 };
 
-#define LOG_BASIC(MSG)                                               \
-do {                                                                 \
-	std::stringstream ss;                                            \
-	ss << MSG;                                                       \
-	AIHelper::GetActiveInstance()->logger->Log(ss.str(), LOG_BASIC); \
+#define LOG_BASIC(MSG)                                                    \
+do {                                                                      \
+	std::stringstream ss;                                                 \
+	ss << MSG;                                                            \
+	AIHelper::GetActiveInstance()->GetLogger()->Log(ss.str(), LOG_BASIC); \
 } while(0)
 
-#define LOG_DEBUG(MSG)                                               \
-do {                                                                 \
-	std::stringstream ss;                                            \
-	ss << MSG;                                                       \
-	AIHelper::GetActiveInstance()->logger->Log(ss.str(), LOG_DEBUG); \
+#define LOG_DEBUG(MSG)                                                    \
+do {                                                                      \
+	std::stringstream ss;                                                 \
+	ss << MSG;                                                            \
+	AIHelper::GetActiveInstance()->GetLogger()->Log(ss.str(), LOG_DEBUG); \
 } while(0)
 
-#define LOG_ERROR(MSG)                                               \
-do {                                                                 \
-	std::stringstream ss;                                            \
-	ss << MSG;                                                       \
-	AIHelper::GetActiveInstance()->logger->Log(ss.str(), LOG_ERROR); \
+#define LOG_ERROR(MSG)                                                    \
+do {                                                                      \
+	std::stringstream ss;                                                 \
+	ss << MSG;                                                            \
+	AIHelper::GetActiveInstance()->GetLogger()->Log(ss.str(), LOG_ERROR); \
 } while(0)
 
 #endif

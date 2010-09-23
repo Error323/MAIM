@@ -55,25 +55,23 @@ void AIUnit::Reset(int id, int builder) {
 }
 
 void AIUnit::UpdatePosition() {
-	// velocity is always one frame behind
-	//
-	// dir cannot be derived reliably in all
-	// circumstances, so just set it to zero
-	// if inferred velocity is zero
-	if (AIHelper::GetActiveInstance()->rcb->GetUnitPos(unitID) == pos) {
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	if (rcb->GetUnitPos(unitID) == pos) {
 		limboTime += 1;
 	} else {
 		limboTime = 0;
 	}
 
-	vel = AIHelper::GetActiveInstance()->rcb->GetUnitPos(unitID) - pos;
-	pos = AIHelper::GetActiveInstance()->rcb->GetUnitPos(unitID);
+	vel = rcb->GetUnitVel(unitID);
+	pos = rcb->GetUnitPos(unitID);
 	dir = (vel != ZeroVector)? (vel / vel.Length()): ZeroVector;
 	spd = (limboTime == 0)? (vel.Length() * GAME_SPEED): 0.0f;
 }
 
 void AIUnit::UpdateCommand() {
-	pcCCommandQueue cq = AIHelper::GetActiveInstance()->rcb->GetCurrentUnitCommands(unitID);
+	pcCCommandQueue cq = AIHelper::GetActiveInstance()->GetCallbackHandler()->GetCurrentUnitCommands(unitID);
 	pcCommand       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
 
 	currCmdID = (uc != NULL)? (uc->id): 0;
@@ -95,7 +93,10 @@ void AIUnit::UpdateWait() {
 
 // check if this unit's CQ is non-empty
 cBool AIUnit::HasCommand() const {
-	pcCCommandQueue cq = AIHelper::GetActiveInstance()->rcb->GetCurrentUnitCommands(unitID);
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	pcCCommandQueue cq = rcb->GetCurrentUnitCommands(unitID);
 	pcCommand       uc = (cq != NULL && !cq->empty())? &(cq->front()): NULL;
 
 	return (uc != NULL);
@@ -128,7 +129,10 @@ cBool AIUnit::CanGiveCommand(int cmdID) const {
 }
 
 cInt AIUnit::GiveCommand(pCommand c) const {
-	return (AIHelper::GetActiveInstance()->rcb->GiveOrder(unitID, c));
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	return (rcb->GiveOrder(unitID, c));
 }
 
 cInt AIUnit::TryGiveCommand(pCommand c) const {
@@ -140,7 +144,10 @@ cInt AIUnit::TryGiveCommand(pCommand c) const {
 }
 
 cInt AIUnit::GetCommandQueueSize() const {
-	return AIHelper::GetActiveInstance()->rcb->GetCurrentUnitCommands(unitID)->size();
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	return (rcb->GetCurrentUnitCommands(unitID)->size());
 }
 
 void AIUnit::Stop() { 

@@ -16,10 +16,10 @@ DECLARE_CLASS(GameMap)
 
 class GameMap {
 	public:
-		GameMap(){}
-		~GameMap(){}
+		GameMap() {}
+		~GameMap() {}
 
-		void Init(pAIHelper);
+		void Init();
 
 		/** @return float3, ZeroVector when there are no candidates */
 		float3 GetClosestOpenMetalSpot(pAIGroup);
@@ -65,8 +65,6 @@ class GameMap {
 		static std::list<float3> metalfeatures;
 		static std::list<float3> energyfeatures;
 		static std::list<float3> metalspots;
-
-		pAIHelper aih;
 
 		void CalcMetalSpots();
 		void CalcMapHeightFeatures();

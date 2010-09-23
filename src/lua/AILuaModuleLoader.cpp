@@ -42,7 +42,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 	}
 
 	AIHelper* aih = AIHelper::GetActiveInstance();
-	IAICallback* rcb = aih->rcb;
+	IAICallback* rcb = aih->GetCallbackHandler();
 
 	const std::string modFileName = util::StringStripSpaces(rcb->GetModName());
 
@@ -60,13 +60,13 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 	MAI_ASSERT(defModuleFileStream.good() || modModuleFileStream.good());
 
 	if (modModuleFileStream.good()) {
-		aih->logger->Log("[LuaModuleLoader] loading mod-specific module file \"");
-		aih->logger->Log(modModuleFileNameAbs + "\n");
+		aih->GetLogger()->Log("[LuaModuleLoader] loading mod-specific module file \"");
+		aih->GetLogger()->Log(modModuleFileNameAbs + "\n");
 		luaScript = modModuleFileNameAbs;
 	} else if (defModuleFileStream.good()) {
 		// load the AI-default module only if no mod-specific one is present
-		aih->logger->Log("[LuaModuleLoader] loading AI-default module file \"");
-		aih->logger->Log(defModuleFileNameAbs + "\n");
+		aih->GetLogger()->Log("[LuaModuleLoader] loading AI-default module file \"");
+		aih->GetLogger()->Log(defModuleFileNameAbs + "\n");
 		luaScript = defModuleFileNameAbs;
 	}
 
@@ -84,7 +84,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 	int callErr = 0;   // 0 | LUA_ERRRUN  | LUA_ERRMEM    | LUA_ERRERR
 
 	if ((loadErr = luaL_loadfile(luaState, luaScript.c_str())) != 0 || (callErr = lua_pcall(luaState, 0, 0, 0)) != 0) {
-		aih->logger->Log(std::string(lua_tostring(luaState, -1)) + "\n");
+		aih->GetLogger()->Log(std::string(lua_tostring(luaState, -1)) + "\n");
 		lua_pop(luaState, 1);
 		return NULL;
 	} else {

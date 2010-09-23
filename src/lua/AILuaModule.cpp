@@ -26,7 +26,7 @@ LuaModule::LuaModule():
 // code that is executed depends on the current
 // luaState
 bool LuaModule::LoadState(const std::string& moduleName) {
-	luaState = AIHelper::GetActiveInstance()->luaModuleLoader->LoadLuaModule(moduleName);
+	luaState = AIHelper::GetActiveInstance()->GetLuaModuleLoader()->LoadLuaModule(moduleName);
 
 	if (luaState != NULL) {
 		MAI_ASSERT(lua_gettop(luaState) == 0);

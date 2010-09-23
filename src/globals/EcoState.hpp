@@ -14,16 +14,10 @@ DECLARE_CLASS(EcoState)
 
 class EcoState {
 	public:
-		EcoState(){}
-		~EcoState(){}
+		EcoState() {}
+		~EcoState() {}
 
-		/**
-		 * The semi constructor, sets reference to IAICallback
-		 *
-		 * @param AIHelper, the global instances holder
-		 * over which is averaged
-		 */
-		void Init(pAIHelper);
+		void Init();
 
 		/**
 		 * The Update() function calculates the current economic state
@@ -81,8 +75,6 @@ class EcoState {
 		std::list<pAIGroup> nanotowers;
 		std::list<pAIGroup> metalextractors;
 		std::list<pAIGroup> metalmakers;
-
-		pAIHelper aih;
 };
 
 #endif // ECO_STATE

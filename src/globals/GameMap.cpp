@@ -17,9 +17,7 @@ std::list<float3> GameMap::metalfeatures;
 std::list<float3> GameMap::energyfeatures;
 std::list<float3> GameMap::metalspots;
 
-void GameMap::Init(pAIHelper aih) {
-	this->aih = aih;
-
+void GameMap::Init() {
 	heightVariance = 0.0f;
 	waterAmount    = 0.0f;
 	metalAmount    = 0.0f;
@@ -29,17 +27,23 @@ void GameMap::Init(pAIHelper aih) {
 }
 
 float3 GameMap::GetClosestOpenMetalSpot(pAIGroup group) {
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	const float3 gpos = group->GetPos();
+
 	std::map<float, float3> candidates;
-	float3 gpos = group->GetPos();
 	std::list<float3>::iterator i;
+
 	for (i = metalspots.begin(); i != metalspots.end(); i++) 
 	{
 		int units[50];
-		int numUnits = aih->rcb->GetFriendlyUnits(units, *i, aih->rcb->GetExtractorRadius(), 50);
+		int numUnits = rcb->GetFriendlyUnits(units, *i, rcb->GetExtractorRadius(), 50);
 		bool taken = false;
+
 		for (int j = 0; j < numUnits; j++) 
 		{
-			if (aih->rcb->GetUnitDef(units[j])->extractsMetal > 0.0f) 
+			if (rcb->GetUnitDef(units[j])->extractsMetal > 0.0f) 
 			{
 				taken = true;
 				break;
@@ -56,34 +60,41 @@ float3 GameMap::GetClosestOpenMetalSpot(pAIGroup group) {
 
 
 void GameMap::CalcMetalSpots() {
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
 	cInt METAL2REAL = 32.0f;
-	int X = int(aih->rcb->GetMapWidth()/4);
-	int Z = int(aih->rcb->GetMapHeight()/4);
-	int R = int(round(aih->rcb->GetExtractorRadius() / 32.0f));
-	pcUint8 metalmapData = aih->rcb->GetMetalMap();
-	Uint8 metalmap[X*Z];
+	cInt X = int(rcb->GetMapWidth() >> 2);
+	cInt Z = int(rcb->GetMapHeight() >> 2);
+	 Int R = int(round(rcb->GetExtractorRadius() / 32.0f));
+
+	pcUint8 metalmapData = rcb->GetMetalMap();
+	vUint8 metalmap(X * Z, 0);
 		
 	// Calculate circular stamp
 	std::vector<int> circle;
 	std::vector<float> sqrtCircle;
+
 	for (int i = -R; i <= R; i++) 
 	{
 		for (int j = -R; j <= R; j++) 
 		{
-			float r = sqrt((float)i*i + j*j);
+			cFloat r = sqrt((float)i*i + j*j);
 			if (r > R) continue;
 			circle.push_back(i);
 			circle.push_back(j);
 			sqrtCircle.push_back(r);
 		}
 	}
-	cFloat minimum = 10*M_PI*R*R;
+
+	cFloat minimum = 10.0f * M_PI * R * R;
 
 	// Copy metalmap to mutable metalmap
-	std::vector<int> M;
+	vInt M;
 	avgMetal = 0;
 	minMetal = std::numeric_limits<int>::max();
 	maxMetal = std::numeric_limits<int>::min();
+
 	for (int z = R; z < Z-R; z++) 
 	{
 		for (int x = R; x < X-R; x++) 
@@ -118,6 +129,7 @@ void GameMap::CalcMetalSpots() {
 	}
 	avgMetal /= (metalCount + nonMetalCount);
 
+
 	if (IsMetalMap()) 
 	{
 		int step = (R+R) > 4 ? (R+R) : 4;
@@ -127,18 +139,19 @@ void GameMap::CalcMetalSpots() {
 			{
 				if (metalmap[ID(x,z)] > 1) 
 				{
-					float3 metalspot(x*METAL2REAL, aih->rcb->GetElevation(x*METAL2REAL,z*METAL2REAL), z*METAL2REAL);
+					float3 metalspot(x * METAL2REAL, rcb->GetElevation(x * METAL2REAL, z * METAL2REAL), z * METAL2REAL);
 					GameMap::metalspots.push_back(metalspot);
-					if (true)
-					{
-						aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
-					}
+
+					#ifdef GAMEMAP_DEBUG
+					rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+					#endif
 				}
 			}
 		}
 	}
 	else {
 		R++;
+
 		while (true) 
 		{
 			float highestSaturation = 0.0f, saturation, sum;
@@ -183,13 +196,12 @@ void GameMap::CalcMetalSpots() {
 			bestX *= METAL2REAL; bestZ *= METAL2REAL;
 
 			// Store metal spot
-			float3 metalspot(bestX, aih->rcb->GetElevation(bestX,bestZ), bestZ);
+			float3 metalspot(bestX, rcb->GetElevation(bestX,bestZ), bestZ);
 			GameMap::metalspots.push_back(metalspot);
 
-			if (true)
-			{
-				aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
-			}
+			#ifdef GAMEMAP_DEBUG
+			aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+			#endif
 		}
 	}
 
@@ -210,10 +222,13 @@ void GameMap::CalcMetalSpots() {
 
 
 void GameMap::CalcMapHeightFeatures() {
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
 	// Compute some height features
-	cInt X = int(aih->rcb->GetMapWidth());
-	cInt Z = int(aih->rcb->GetMapHeight());
-	pcFloat hm = aih->rcb->GetHeightMap();
+	cInt X = rcb->GetMapWidth();
+	cInt Z = rcb->GetMapHeight();
+	pcFloat hm = rcb->GetHeightMap();
 
 	float fmin =  std::numeric_limits<float>::max();
 	float fmax = -std::numeric_limits<float>::max();
@@ -221,6 +236,7 @@ void GameMap::CalcMapHeightFeatures() {
 
 	Uint32 count = 0;
 	Uint32 total = 0;
+
 	// Calculate the sum, min and max
 	for (int z = 0; z < Z; z++) 
 	{
@@ -248,7 +264,7 @@ void GameMap::CalcMapHeightFeatures() {
 			float h = hm[ID(x,z)];
 			if (h >= 0.0f) 
 			{
-				heightVariance += (h/fsum) * std::pow<float>((h - favg), 2.0f);
+				heightVariance += (h / fsum) * std::pow<float>((h - favg), 2.0f);
 			}
 		}
 	}
