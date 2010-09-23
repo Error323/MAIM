@@ -35,21 +35,23 @@ void AITaskHolder::AddAttackTask(pAIGroup group, int target) {
 void AITaskHolder::AddAssistAttackTask(pAIGroup group, pAttackTask task) {
 	MAI_ASSERT(mAttackTasks.find(group->GetID()) == mAttackTasks.end());
 
+	group->AttachObserver(task);
+	group->AttachObserver(this);
+
 	// Assisters are also added just like normal tasks
 	// This means there can exist more groups on one task
 	task->mAssisters[group->GetID()] = group;
-	group->AttachObserver(task);
-	group->AttachObserver(this);
 }
 
 void AITaskHolder::AddAssistBuildTask(pAIGroup group, pBuildTask task) {
 	MAI_ASSERT(mBuildTasks.find(group->GetID()) == mBuildTasks.end());
 
+	group->AttachObserver(task);
+	group->AttachObserver(this);
+
 	// Assisters are also added just like normal tasks
 	// This means there can exist more groups on one task
 	task->mAssisters[group->GetID()] = group;
-	group->AttachObserver(task);
-	group->AttachObserver(this);
 }
 
 // FIXME: What todo with assisters when alphagroup is destroyed?
@@ -94,12 +96,14 @@ void AITaskHolder::GroupDestroyed(int groupID) {
 }
 
 void AttackTask::GroupDestroyed(int groupID) {
+	MAI_ASSERT(mAssisters.find(groupID) != mAssisters.end());
 	pAIGroup group = AIHelper::GetActiveInstance()->GetAIGroupHandler()->GetGroup(groupID);
 	group->DetachObserver(this);
 	mAssisters.erase(groupID);
 }
 
 void BuildTask::GroupDestroyed(int groupID) {
+	MAI_ASSERT(mAssisters.find(groupID) != mAssisters.end());
 	pAIGroup group = AIHelper::GetActiveInstance()->GetAIGroupHandler()->GetGroup(groupID);
 	group->DetachObserver(this);
 	mAssisters.erase(groupID);
