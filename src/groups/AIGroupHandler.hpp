@@ -12,8 +12,9 @@ public:
 	AIGroupHandler() {}
 	~AIGroupHandler() {}
 
-	void UnitFinished(pAIUnit);
-	void Update();
+	void     UnitFinished(pAIUnit);
+	pAIGroup GetGroup(int groupID);
+	void     Update();
 
 private:
 	std::map<int, pAIGroup> mGroups;

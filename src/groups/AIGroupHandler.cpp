@@ -35,6 +35,11 @@ void AIGroupHandler::Update() {
 	}
 }
 
+pAIGroup AIGroupHandler::GetGroup(int groupID) {
+	MAI_ASSERT(mGroups.find(groupID) != mGroups.end());
+	return mGroups[groupID];
+}
+
 void AIGroupHandler::GroupDestroyed(int gid) {
 	MAI_ASSERT(mGroups.find(gid) != mGroups.end());
 	mGroups[gid]->DetachObserver(this);
