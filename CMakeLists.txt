@@ -43,10 +43,17 @@ CONFIGURE_FILE(
 	"${MAI_SOURCE_DIR}/cmake/MAI.hpp.in"
 	"${MAI_SOURCE_DIR}/src/main/MAI.hpp"
 	)
+
+GetNativeSourcesRecursive(luaSources "${CMAKE_SOURCE_DIR}/rts/lib/lua/src" "")
  
 set(mySourceDirRel "")
-set(additionalSources ${CUtils_SRC})
+set(additionalSources      ${CUtils_SRC} ${luaSources})
 set(additionalCompileFlags "")
-set(additionalLibraries ${LegacyCpp_AIWRAPPER_TARGET} ${Lua} ${SDL_LIBRARY} )
+set(additionalCompileFlags "${additionalCompileFlags} -I ${CMAKE_SOURCE_DIR}/rts/lib/lua/include/")
+set(additionalCompileFlags "${additionalCompileFlags} -I ${CMAKE_SOURCE_DIR}/rts/lib/lua/src/")
+set(additionalCompileFlags "${additionalCompileFlags} -I ${CMAKE_SOURCE_DIR}/rts/lib/streflop/")
+set(additionalLibraries ${LegacyCpp_AIWRAPPER_TARGET} ${SDL_LIBRARY} )
+## use instead of Spring's Lua sources when AI_LUA_LIB_EXT == 1
+## set(additionalLibraries ${LegacyCpp_AIWRAPPER_TARGET} ${Lua} ${SDL_LIBRARY} )
  
 ConfigureNativeSkirmishAI(mySourceDirRel additionalSources additionalCompileFlags additionalLibraries)
