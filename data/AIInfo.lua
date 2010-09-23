@@ -30,7 +30,7 @@ local infos = {
 	},
 	{
 		key    = 'description',
-		value  = 'Modulair AI - Theoretically capable of supporting any mod',
+		value  = 'Modular AI - Theoretically capable of supporting any mod',
 		desc   = 'tooltip.',
 	},
 	{

@@ -10,7 +10,7 @@ class AIUnitDef;
 class LuaModule;
 class LuaModuleLoader {
 public:
-	LuaModuleLoader() {}
+	LuaModuleLoader();
 	~LuaModuleLoader();
 
 	LuaModule* GetModule(const AIUnitDef*, unsigned int);

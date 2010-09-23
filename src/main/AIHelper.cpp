@@ -21,7 +21,7 @@ void AIHelper::Init(pIGlobalAICallback gcb, unsigned int i) {
 	initFrame = rcb->GetCurrentFrame();
 	currFrame = initFrame;
 
-	logger           = new Logger(rcb);
+	logger           = new Logger();
 	timer            = new Timer();
 
 	luaModuleLoader  = new LuaModuleLoader();

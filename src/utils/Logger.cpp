@@ -3,16 +3,20 @@
 #include <iomanip>
 #include <iostream>
 
+#include "../main/DFolders.hpp"
 #include "../main/HAIInterface.hpp"
+#include "../main/AIHelper.hpp"
 
 #include "./Logger.hpp"
 #include "./Util.hpp"
-#include "../main/DFolders.hpp"
 
 std::string Logger::GetLogName() const {
 	if (init) {
 		return name;
 	}
+
+	AIHelper* aih = AIHelper::GetActiveInstance();
+	IAICallback* rcb = aih->GetCallbackHandler();
 
 	time_t t;
 	time(&t);
@@ -21,9 +25,9 @@ std::string Logger::GetLogName() const {
 	std::stringstream ss;
 		ss << std::string(AI_LOG_DIR);
 		ss << "[";
-		ss << cb->GetMapName();
+		ss << rcb->GetMapName();
 		ss << "-";
-		ss << cb->GetModName();
+		ss << rcb->GetModName();
 		ss << "][";
 		ss << lt->tm_mon + 1;
 		ss << "-";
@@ -34,17 +38,16 @@ std::string Logger::GetLogName() const {
 		ss << lt->tm_hour;
 		ss << lt->tm_min;
 		ss << "][team";
-		ss << cb->GetMyTeam();
+		ss << rcb->GetMyTeam();
 		ss << "]";
 
 	std::string relName = ss.str();
-	std::string absName = util::GetAbsFileName(cb, relName);
-	std::cout << "Logging to " << absName << std::endl;
+	std::string absName = util::GetAbsFileName(rcb, relName);
 	return absName;
 }
 
 std::string Logger::GetInGameTime() {
-	const int simFrame = cb->GetCurrentFrame();
+	const int simFrame = AIHelper::GetActiveInstance()->GetCurrFrame();
 	const int sec      = (simFrame / 30) % 60;
 	const int min      = ((simFrame / 30) - sec) / 60;
 

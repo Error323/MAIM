@@ -7,8 +7,6 @@
 
 #include "./ILogger.hpp"
 
-class IAICallback;
-
 enum LogLevel {
 	LOG_BASIC = 0,
 	LOG_DEBUG = 1,
@@ -17,7 +15,7 @@ enum LogLevel {
 
 class Logger: public ILogger {
 public:
-	Logger(IAICallback* _cb): init(false), cb(_cb) {
+	Logger(): init(false) {
 		name = GetLogName();
 		init = true;
 	}
@@ -29,6 +27,7 @@ public:
 
 	template<typename T> Logger& Log(const T& t, LogLevel lvl = LOG_BASIC) {
 		log << GetInGameTime() << " ";
+
 		switch (lvl) {
 			case LOG_BASIC: {
 				log << "[BASIC] " << t;
@@ -49,7 +48,6 @@ public:
 private:
 	bool init;
 	std::string name;
-	IAICallback *cb;
 };
 
 #define LOG_BASIC(MSG)                                                    \
