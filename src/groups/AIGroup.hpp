@@ -28,7 +28,7 @@ public:
 	int GetID() { return gid; }
 	
 private:
-	static int sCounter;
+	static int sGroupCounter;
 	cInt gid;
 
 	std::map<int, pAIUnit> units;

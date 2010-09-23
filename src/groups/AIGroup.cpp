@@ -8,11 +8,11 @@
 #include "../utils/ObjectFactory.hpp"
 #include "../utils/Debugger.hpp"
 
-int AIGroup::sCounter = 0;
+int AIGroup::sGroupCounter = 0;
 
-AIGroup::AIGroup(): gid(sCounter) {
+AIGroup::AIGroup(): gid(sGroupCounter) {
 	SetGroupDestroyedSubjectID(gid); 
-	sCounter++; 
+	sGroupCounter++; 
 	activeModule = NULL;
 	modules.resize(LuaModule::LUAMODULE_NUM_PRIORITIES);
 }
@@ -43,13 +43,13 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 		pAIHelper aih = AIHelper::GetActiveInstance();
 		pcAIUnitDef def = unit->GetUnitDef();
 
-		AddModule(aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY));
-		AddModule(aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE));
-		AddModule(aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE));
+		AddModule(aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY));
+		AddModule(aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE));
+		AddModule(aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE));
 
-		// modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
-		// modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
-		// modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->luaModuleLoader->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
+		// modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
+		// modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
+		// modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
 	}
 
 	// Attach to unit subject

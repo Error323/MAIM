@@ -14,7 +14,7 @@
 
 AIUnitDefHandler::AIUnitDefHandler() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
-	IAICallback* rcb = aih->rcb;
+	IAICallback* rcb = aih->GetCallbackHandler();
 
 	unitDefIDSets.push_back(&mobileBuilderUnitDefIDs);
 	unitDefIDSets.push_back(&staticBuilderUnitDefIDs);
@@ -157,7 +157,7 @@ AIUnitDefHandler::~AIUnitDefHandler() {
 	unitDefIDSets.clear();
 
 	AIHelper* aih = AIHelper::GetActiveInstance();
-	IAICallback* rcb = aih->rcb;
+	IAICallback* rcb = aih->GetCallbackHandler();
 
 	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
 		delete aiUnitDefsByID[id]; aiUnitDefsByID[id] = 0;
@@ -169,7 +169,7 @@ AIUnitDefHandler::~AIUnitDefHandler() {
 
 void AIUnitDefHandler::WriteLog() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
-	IAICallback* rcb = aih->rcb;
+	IAICallback* rcb = aih->GetCallbackHandler();
 
 	std::stringstream msg;
 
@@ -697,7 +697,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 	{
 		AIHelper* aih = AIHelper::GetActiveInstance();
-		IAICallback* rcb = aih->rcb;
+		IAICallback* rcb = aih->GetCallbackHandler();
 
 		// copy the build options to a more convenient format
 		std::map<int, std::string>& bldOpts = sprUnitDef->buildOptions;
@@ -705,7 +705,7 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 		for (; bldOptsIt != bldOpts.end(); bldOptsIt++) {
 			const char*    bldOptName = bldOptsIt->second.c_str();
-			const UnitDef* bldOptDef  = AIHelper::GetActiveInstance()->rcb->GetUnitDef(bldOptName);
+			const UnitDef* bldOptDef  = rcb->GetUnitDef(bldOptName);
 
 			MAI_ASSERT(bldOptDef != NULL);
 

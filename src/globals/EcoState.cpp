@@ -6,9 +6,7 @@
 #include "../utils/Logger.hpp"
 #include "../groups/AIGroup.hpp"
 
-void EcoState::Init(pAIHelper aih) {
-	this->aih = aih;
-
+void EcoState::Init() {
 	// Create a Gaussian distribution over the HISTORY
 	float sumw = 0.0f;
 	for (int i = 0; i < HISTORY; i++) 
@@ -34,6 +32,9 @@ void EcoState::Init(pAIHelper aih) {
 }
 
 void EcoState::Update() {
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+	
 	while (histMNow.size() > HISTORY) 
 	{
 		histMNow.pop_back();
@@ -44,12 +45,12 @@ void EcoState::Update() {
 		histEUsage.pop_back();
 	}
 
-	histMNow.push_front(aih->rcb->GetMetal());
-	histENow.push_front(aih->rcb->GetEnergy());
-	histMIncome.push_front(aih->rcb->GetMetalIncome());
-	histEIncome.push_front(aih->rcb->GetEnergyIncome());
-	histMUsage.push_front(aih->rcb->GetMetalUsage());
-	histEUsage.push_front(aih->rcb->GetEnergyUsage());
+	histMNow.push_front(rcb->GetMetal());
+	histENow.push_front(rcb->GetEnergy());
+	histMIncome.push_front(rcb->GetMetalIncome());
+	histEIncome.push_front(rcb->GetEnergyIncome());
+	histMUsage.push_front(rcb->GetMetalUsage());
+	histEUsage.push_front(rcb->GetEnergyUsage());
 
 	mNow = util::WeightedAverage(histMNow, weights);
 	eNow = util::WeightedAverage(histENow, weights);
@@ -58,8 +59,8 @@ void EcoState::Update() {
 	mUsage = util::WeightedAverage(histMUsage, weights);
 	eUsage = util::WeightedAverage(histEUsage, weights);
 
-	mStorage = aih->rcb->GetMetalStorage();
-	eStorage = aih->rcb->GetEnergyStorage();
+	mStorage = rcb->GetMetalStorage();
+	eStorage = rcb->GetEnergyStorage();
 
 	mStalling = (mNow/mStorage) < 0.1f && mIncome < mUsage;
 	eStalling = (eNow/eStorage) < 0.1f && eIncome < eUsage;
