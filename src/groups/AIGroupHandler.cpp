@@ -5,7 +5,7 @@
 #include "../utils/Debugger.hpp"
 #include "../utils/ObjectFactory.hpp"
 
-void AIGroupHandler::UnitCreated(pAIUnit unit) {
+void AIGroupHandler::UnitFinished(pAIUnit unit) {
 	// Either find an existing group for this unit-type class...
 	std::map<int, pAIGroup>::iterator i;
 	for (i = mGroups.begin(); i != mGroups.end(); i++)

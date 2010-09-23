@@ -64,11 +64,9 @@ void AIMain::UnitCreated(int unitID, int builderUnitID) {
 	AIHelper::SetActiveInstance(aih);
 
 	pAIUnit unit = ObjectFactory<AIUnit>::Instance();
-	unit->Reset(unitID, builderUnitID);
 
-	// TODO: use observer
+	unit->Reset(unitID, builderUnitID);
 	aih->GetAIUnitHandler()->UnitCreated(unit);
-	aih->GetAIGroupHandler()->UnitCreated(unit);
 }
 
 void AIMain::UnitFinished(int unitID) {
@@ -77,6 +75,10 @@ void AIMain::UnitFinished(int unitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	pAIUnit unit = aih->GetAIUnitHandler()->GetUnit(unitID);
+
+	aih->GetAIGroupHandler()->UnitFinished(unit);
 }
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
@@ -185,6 +187,7 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 		case AI_EVENT_UNITGIVEN:
 		{
 			const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
+			UnitCreated(cte->unit, -1);
 			UnitFinished(cte->unit);
 		} break;
 		case AI_EVENT_UNITCAPTURED:
