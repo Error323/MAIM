@@ -2,6 +2,9 @@
 #include <cmath>
 #include <algorithm>
 
+#include <sys/types.h>
+#include <dirent.h>
+
 #include "../main/HAIInterface.hpp"
 #include "./Util.hpp"
 #include "./Debugger.hpp"
@@ -26,6 +29,27 @@ namespace util {
 		}
 
 		return (String(dst));
+	}
+
+	int GetFilesInDir(rcString dir, rvString files) {
+		typedef struct dirent DIRENT;
+
+		DIR* dirStream;
+		DIRENT* dirEntry;
+
+		if ((dirStream = opendir(dir.c_str())) == NULL) {
+			return -1;
+		}
+
+		while ((dirEntry = readdir(dirStream)) != NULL) {
+			if (dirEntry->d_type == DT_REG) {
+				// regular file
+				files.push_back(String(dirEntry->d_name));
+			}
+		}
+
+		closedir(dirStream);
+		return 0;
 	}
 
 

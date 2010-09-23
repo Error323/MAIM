@@ -11,6 +11,7 @@ DECLARE_CLASS(IAICallback)
 
 namespace util {
 	std::string GetAbsFileName(pIAICallback, rcString, cBool readonly = false);
+	int GetFilesInDir(rcString dir, rvString files);
 
 	void StringToLowerInPlace(rString);
 	std::string StringToLower(String);
