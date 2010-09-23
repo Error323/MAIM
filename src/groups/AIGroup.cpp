@@ -89,10 +89,11 @@ void AIGroup::AddModule(pLuaModule module) {
 	cUint32 priority = module->GetPriority();
 
 	MAI_ASSERT_MSG(priority < LuaModule::LUAMODULE_NUM_PRIORITIES, "Illegal module priority %u", priority);
+
+	modules[priority] = module; // Allows the group to select the module
 	MAI_ASSERT_MSG(modules[priority] == NULL, "Overwriting %s with %s", modules[priority]->GetName().c_str(), module->GetName().c_str());
 
 	module->SetGroup(this); // Allows access to this group from within the module
-	modules[priority] = module; // Allows the group to select the module
 }
 
 void AIGroup::Update() {
