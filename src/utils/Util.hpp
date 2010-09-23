@@ -9,6 +9,9 @@
 
 DECLARE_CLASS(IAICallback)
 
+#define EMPTY_BINARY_INTERSECTION(A, B) (((A) & (B)) == 0)
+#define BINARY_SUBSET(A, B)             (((A) & (B)) == (A))
+
 namespace util {
 	std::string GetAbsFileName(pIAICallback, rcString, cBool readonly = false);
 	int GetFilesInDir(rcString dir, rvString files);
@@ -26,24 +29,6 @@ namespace util {
 
 	/**@brief fill with unit-type mask to see wether a AIUnitDef meets the filters */
 	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude);
-
-	/**
-	 * Determines if the intersection of A and B is the empty set
-	 *
-	 * @param unsigned, binary mask A
-	 * @param unsigned, binary mask B
-	 * @return A \cap B = \emptyset
-	 */
-	bool IsBinaryIntersectionEmpty(cUint32 A, cUint32 B);
-
-	/** 
-	 * Determines if A is a binary subset of B 
-	 *
-	 * @param unsigned, binary mask A
-	 * @param unsigned, binary mask B
-	 * @return bool, A \subseteq B
-	 */
-	bool IsBinarySubset(cUint32 A, cUint32 B);
 
 	/**@brief counts bits set to 1 */
 	Uint32 CountOneBits(cUint32 n);

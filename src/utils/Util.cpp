@@ -95,18 +95,7 @@ namespace util {
 	}
 
 	inline bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude) {
-		return (IsBinarySubset(include, subject) && IsBinaryIntersectionEmpty(subject, exclude));
-	}
-
-	inline bool IsBinaryIntersectionEmpty(cUint32 A, cUint32 B) {
-		return (A&B) == 0;
-	}
-
-	inline bool IsBinarySubset(cUint32 A, cUint32 B) {
-		cUint32 Acount      = CountOneBits(A);
-		cUint32 AandBcount  = CountOneBits(A&B);
-
-		return (Acount == AandBcount);
+		return (BINARY_SUBSET(include, subject) && EMPTY_BINARY_INTERSECTION(subject, exclude));
 	}
 
 	inline unsigned int CountOneBits(cUint32 n) {
