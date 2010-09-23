@@ -23,6 +23,7 @@ public:
 	bool CanRun();
 	bool Update();
 
+	void SetPriority(unsigned int p) { priority = p; }
 	void SetGroup(AIGroup* g) { group = g; }
 	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
 	unsigned int GetPriority() const { return priority; }

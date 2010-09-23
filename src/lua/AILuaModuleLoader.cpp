@@ -32,6 +32,7 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 
 	MAI_ASSERT(module->IsValid());
 	*/
+	module->SetPriority(priority);
 	return module;
 }
 
