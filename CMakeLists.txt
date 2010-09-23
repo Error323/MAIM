@@ -7,7 +7,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 # NOTE: we need -rdynamic for backtrace() to work properly
 #-------------------------------------------------------------------------------
 SET(CMAKE_COLOR_MAKEFILE ON)
-SET(CMAKE_CXX_FLAGS "-Wall -Wextra -fno-strict-aliasing")
+SET(CMAKE_CXX_FLAGS "-Wall -fno-strict-aliasing")
 SET(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -rdynamic -DDEBUG")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -rdynamic -DDEBUG")
