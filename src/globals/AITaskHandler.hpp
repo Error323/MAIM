@@ -17,11 +17,6 @@ public:
 	AITaskHandler(){}
 	~AITaskHandler(){}
 
-	enum TaskType { 
-		BUILD, 
-		ATTACK
-	};
-
 	DECLARE_STRUCT(AttackTask)
 	DECLARE_STRUCT(BuildTask)
 
@@ -33,7 +28,13 @@ public:
 			DEFENSE 
 		};
 
-		BuildTask(){}
+		BuildTask(): mBuildTaskID(sBuildTaskCounter) {
+			sBuildTaskCounter++;
+		}
+
+		static Uint32 sBuildTaskCounter;
+
+		cUint32 mBuildTaskID;
 
 		/** The abstract build */
 		BuildTaskType mBuildTaskType;
@@ -45,7 +46,7 @@ public:
 		pAIGroup mAlphaGroup;
 
 		/** The assisters of the build */
-		std::map<Uint32, pAIGroup> mAssisters;
+		std::map<cUint32, pAIGroup> mAssisters;
 
 		/** The position where the build will take place */
 		float3 mPosition;
@@ -58,7 +59,13 @@ public:
 	};
 
 	struct AttackTask: public AGroupDestroyedObserver {
-		AttackTask(){}
+		AttackTask(): mAttackTaskID(sAttackTaskCounter) {
+			sAttackTaskCounter++;
+		}
+
+		static Uint32 sAttackTaskCounter;
+
+		cUint32 mAttackTaskID;
 
 		/** The target to attack */
 		int mTarget;
@@ -67,7 +74,7 @@ public:
 		pAIGroup mAlphaGroup;
 
 		/** The assisters of the attack */
-		std::map<Uint32, pAIGroup> mAssisters;
+		std::map<cUint32, pAIGroup> mAssisters;
 
 		// Implementation for assisters
 		void GroupDestroyed(int groupID);
@@ -110,17 +117,19 @@ public:
 	/**
 	 * Get the targets that are in the attack list
 	 *
-	 * @param std::list<int>&, the list that will be holding the targets
+	 * @param rvInt, the vector that will be holding the targets
 	 */
 	void GetAttackingTargets(rvInt);
 
 private:
+	std::map<cUint32, pBuildTask> mBuildTasks;
+	std::map<cUint32, pAttackTask> mAttackTasks;
 
 	/** Build tasks with groupid as key, also includes assisters */
-	std::map<Uint32, pBuildTask> mBuildTasks;
+	std::map<cUint32, pBuildTask> mGroupToBuildTasks;
 
 	/** Attack tasks with groupid as key, also include assisters */
-	std::map<Uint32, pAttackTask> mAttackTasks;
+	std::map<cUint32, pAttackTask> mGroupToAttackTasks;
 
 	// Implementation
 	void GroupDestroyed(int groupID);

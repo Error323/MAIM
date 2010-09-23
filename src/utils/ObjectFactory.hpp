@@ -45,7 +45,7 @@ void ObjectFactory<Object>::Free()
 
 	std::cout 
 		<< "ObjectFactory<"
-		<< std::string(typeid(Object).name()).substr(1)
+		<< typeid(Object).name()
 		<< ">::Free() destroyed " 
 		<< sAll.size() + sSingletons.size()
 		<< " objects, " 
