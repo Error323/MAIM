@@ -6,7 +6,7 @@
 
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
-#include "../globals/AITaskHolder.hpp"
+#include "../globals/AITaskHandler.hpp"
 #include "../lua/AILuaCallBackHandler.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
@@ -50,8 +50,8 @@ void AIMain::ReleaseAI() {
 		ObjectFactory<LuaModule>::Free();
 		ObjectFactory<AIGroup>::Free();
 		ObjectFactory<AIUnit>::Free();
-		ObjectFactory<AttackTask>::Free();
-		ObjectFactory<BuildTask>::Free();
+		ObjectFactory<AITaskHandler::AttackTask>::Free();
+		ObjectFactory<AITaskHandler::BuildTask>::Free();
 
 		Debugger::FreeInstance(Debugger::GetInstance());
 	}

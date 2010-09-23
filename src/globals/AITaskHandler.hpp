@@ -11,23 +11,69 @@
 DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIHelper)
 DECLARE_CLASS(AIUnitDef)
-DECLARE_STRUCT(AttackTask)
-DECLARE_STRUCT(BuildTask)
 
-class AITaskHolder: public AGroupDestroyedObserver {
+class AITaskHandler: public AGroupDestroyedObserver {
 public:
-	AITaskHolder(){}
-	~AITaskHolder(){}
+	AITaskHandler(){}
+	~AITaskHandler(){}
 
 	enum TaskType { 
 		BUILD, 
 		ATTACK
 	};
-	enum BuildTaskType { 
-		FACTORY, 
-		METAL, 
-		ENERGY, 
-		DEFENSE 
+
+	DECLARE_STRUCT(AttackTask)
+	DECLARE_STRUCT(BuildTask)
+
+	struct BuildTask: public AGroupDestroyedObserver {
+		enum BuildTaskType { 
+			FACTORY, 
+			METAL, 
+			ENERGY, 
+			DEFENSE 
+		};
+
+		BuildTask(){}
+
+		/** The abstract build */
+		BuildTaskType mBuildTaskType;
+
+		/** The unit to build */
+		pUnitDef mUnitToBuild;
+
+		/** The primary group that applies the build */
+		pAIGroup mAlphaGroup;
+
+		/** The assisters of the build */
+		std::map<Uint32, pAIGroup> mAssisters;
+
+		/** The position where the build will take place */
+		float3 mPosition;
+
+		// Implementation for assisters
+		void GroupDestroyed(int groupID);
+
+		/** The toString() function */
+		friend std::ostream& operator<<(std::ostream&, rcBuildTask);
+	};
+
+	struct AttackTask: public AGroupDestroyedObserver {
+		AttackTask(){}
+
+		/** The target to attack */
+		int mTarget;
+
+		/** The primary attack group */
+		pAIGroup mAlphaGroup;
+
+		/** The assisters of the attack */
+		std::map<Uint32, pAIGroup> mAssisters;
+
+		// Implementation for assisters
+		void GroupDestroyed(int groupID);
+
+		/** The toString() function */
+		friend std::ostream& operator<<(std::ostream&, rcAttackTask);
 	};
 
 	void Init();
@@ -40,7 +86,7 @@ public:
 	 * @param UnitType*, the unit to build
 	 * @param float3, the position where to build
 	 */
-	void AddBuildTask(pAIGroup, BuildTaskType, pcUnitDef, rFloat3);
+	void AddBuildTask(pAIGroup, BuildTask::BuildTaskType, pcUnitDef, rFloat3);
 
 	/**
 	 * Add an attack task to the taskholder
@@ -59,7 +105,7 @@ public:
 	 * @param buildTaskType, the type of buildtask
 	 * @param float3&, the position
 	 */
-	pBuildTask GetClosestBuildTask(BuildTaskType, rcFloat3);
+	pBuildTask GetClosestBuildTask(BuildTask::BuildTaskType, rcFloat3);
 
 	/**
 	 * Get the targets that are in the attack list
@@ -69,6 +115,7 @@ public:
 	void GetAttackingTargets(rvInt);
 
 private:
+
 	/** Build tasks with groupid as key, also includes assisters */
 	std::map<Uint32, pBuildTask> mBuildTasks;
 
@@ -77,50 +124,6 @@ private:
 
 	// Implementation
 	void GroupDestroyed(int groupID);
-};
-
-struct BuildTask: public AGroupDestroyedObserver {
-	BuildTask(){}
-
-	/** The abstract build */
-	AITaskHolder::BuildTaskType mBuildTaskType;
-
-	/** The unit to build */
-	pUnitDef mUnitToBuild;
-
-	/** The primary group that applies the build */
-	pAIGroup mAlphaGroup;
-
-	/** The assisters of the build */
-	std::map<Uint32, pAIGroup> mAssisters;
-
-	/** The position where the build will take place */
-	float3 mPosition;
-
-	// Implementation for assisters
-	void GroupDestroyed(int groupID);
-
-	/** The toString() function */
-	friend std::ostream& operator<<(std::ostream&, rcBuildTask);
-};
-
-struct AttackTask: public AGroupDestroyedObserver {
-	AttackTask(){}
-
-	/** The target to attack */
-	int mTarget;
-
-	/** The primary attack group */
-	pAIGroup mAlphaGroup;
-
-	/** The assisters of the attack */
-	std::map<Uint32, pAIGroup> mAssisters;
-
-	// Implementation for assisters
-	void GroupDestroyed(int groupID);
-
-	/** The toString() function */
-	friend std::ostream& operator<<(std::ostream&, rcAttackTask);
 };
 
 #endif

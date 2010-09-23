@@ -1,4 +1,4 @@
-#include "./AITaskHolder.hpp"
+#include "./AITaskHandler.hpp"
 
 #include "../groups/AIGroup.hpp"
 #include "../groups/AIGroupHandler.hpp"
@@ -7,12 +7,12 @@
 #include "../utils/Debugger.hpp"
 #include "../utils/ObjectFactory.hpp"
 
-void AITaskHolder::AddBuildTask(pAIGroup group, BuildTaskType btt, pcUnitDef toBuild, rFloat3 pos) {
+void AITaskHandler::AddBuildTask(pAIGroup group, BuildTask::BuildTaskType btt, pcUnitDef toBuild, rFloat3 pos) {
 	MAI_ASSERT(mBuildTasks.find(group->GetID()) == mBuildTasks.end());
 
 	group->AttachObserver(this);
 
-	pBuildTask build_task = ObjectFactory<BuildTask>::Instance();
+	pBuildTask build_task = ObjectFactory<AITaskHandler::BuildTask>::Instance();
 	build_task->mBuildTaskType = btt;
 	build_task->mAlphaGroup = group;
 	build_task->mPosition = pos;
@@ -20,19 +20,19 @@ void AITaskHolder::AddBuildTask(pAIGroup group, BuildTaskType btt, pcUnitDef toB
 	mBuildTasks[group->GetID()] = build_task;
 }
 
-void AITaskHolder::AddAttackTask(pAIGroup group, int target) {
+void AITaskHandler::AddAttackTask(pAIGroup group, int target) {
 	MAI_ASSERT(mAttackTasks.find(group->GetID()) == mAttackTasks.end());
 
 	group->AttachObserver(this);
 
-	pAttackTask attack_task = ObjectFactory<AttackTask>::Instance();
+	pAttackTask attack_task = ObjectFactory<AITaskHandler::AttackTask>::Instance();
 	attack_task->mTarget = target;
 	attack_task->mAlphaGroup = group;
 	attack_task->mAssisters.clear();
 	mAttackTasks[group->GetID()] = attack_task;
 }
 
-void AITaskHolder::AddAssistAttackTask(pAIGroup group, pAttackTask task) {
+void AITaskHandler::AddAssistAttackTask(pAIGroup group, pAttackTask task) {
 	MAI_ASSERT(mAttackTasks.find(group->GetID()) == mAttackTasks.end());
 
 	group->AttachObserver(task);
@@ -43,7 +43,7 @@ void AITaskHolder::AddAssistAttackTask(pAIGroup group, pAttackTask task) {
 	task->mAssisters[group->GetID()] = group;
 }
 
-void AITaskHolder::AddAssistBuildTask(pAIGroup group, pBuildTask task) {
+void AITaskHandler::AddAssistBuildTask(pAIGroup group, pBuildTask task) {
 	MAI_ASSERT(mBuildTasks.find(group->GetID()) == mBuildTasks.end());
 
 	group->AttachObserver(task);
@@ -57,7 +57,7 @@ void AITaskHolder::AddAssistBuildTask(pAIGroup group, pBuildTask task) {
 // FIXME: What todo with assisters when alphagroup is destroyed?
 //        Possibly fire an observer that can be used in the lua modules
 //        which allows assisting groups to determine what todo
-void AITaskHolder::GroupDestroyed(int groupID) {
+void AITaskHandler::GroupDestroyed(int groupID) {
 	std::map<Uint32, pBuildTask>::iterator build_it   = mBuildTasks.find(groupID);
 	std::map<Uint32, pAttackTask>::iterator attack_it = mAttackTasks.find(groupID);
 
@@ -72,7 +72,7 @@ void AITaskHolder::GroupDestroyed(int groupID) {
 
 		if (group == build_task->mAlphaGroup)
 		{
-			ObjectFactory<BuildTask>::Release(build_task);
+			ObjectFactory<AITaskHandler::BuildTask>::Release(build_task);
 		}
 		else { /* we were an assisting group */ }
 	}
@@ -85,7 +85,7 @@ void AITaskHolder::GroupDestroyed(int groupID) {
 
 		if (group == attack_task->mAlphaGroup)
 		{
-			ObjectFactory<AttackTask>::Release(attack_task);
+			ObjectFactory<AITaskHandler::AttackTask>::Release(attack_task);
 		}
 		else { /* we were an assisting group */ }
 	}
@@ -95,14 +95,14 @@ void AITaskHolder::GroupDestroyed(int groupID) {
 	}
 }
 
-void AttackTask::GroupDestroyed(int groupID) {
+void AITaskHandler::AttackTask::GroupDestroyed(int groupID) {
 	MAI_ASSERT(mAssisters.find(groupID) != mAssisters.end());
 	pAIGroup group = AIHelper::GetActiveInstance()->GetAIGroupHandler()->GetGroup(groupID);
 	group->DetachObserver(this);
 	mAssisters.erase(groupID);
 }
 
-void BuildTask::GroupDestroyed(int groupID) {
+void AITaskHandler::BuildTask::GroupDestroyed(int groupID) {
 	MAI_ASSERT(mAssisters.find(groupID) != mAssisters.end());
 	pAIGroup group = AIHelper::GetActiveInstance()->GetAIGroupHandler()->GetGroup(groupID);
 	group->DetachObserver(this);
