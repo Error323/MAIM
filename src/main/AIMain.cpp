@@ -29,14 +29,12 @@ AIMain::~AIMain() {
 
 
 void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
-	std::cout << AI_CODENAME << std::endl;
-
 	aiInstance = aiInstances++;
 
 	AIHelper::SetActiveInstance(aih);
 	aih->Init(gcb, team);
 
-	LOG_BASIC(AI_CODENAME);
+	aih->GetLogger()->Log(String(AI_CODENAME) + "\n");
 }
 
 void AIMain::ReleaseAI() {
