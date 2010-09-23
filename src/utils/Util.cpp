@@ -99,7 +99,7 @@ namespace util {
 	}
 
 	inline bool IsBinaryIntersectionEmpty(cUint32 A, cUint32 B) {
-		return CountOneBits(A&B) == 0;
+		return (A&B) == 0;
 	}
 
 	inline bool IsBinarySubset(cUint32 A, cUint32 B) {

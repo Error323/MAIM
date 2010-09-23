@@ -21,18 +21,10 @@ namespace util {
 
 	float GaussDens(float, float mu = 0.0f, float sigma = 1.0f);
 
-
-	// |subjects| = |includes| = |excludes|
-	//
-	// \forall subject \in subjects,
-	// \forall include \in includes,
-	// \forall exclude \in excludes:
-	//
-	// include \subseteq subject AND exclude \cap subject = \emptyset
-	/**@brief fill with unit-type masks to see wether eg. a AIUnitDef meets the filters */
+	/**@brief fill with unit-type masks to see wether a AIUnitDef meets the filters */
 	bool AreSuitedSubjects(rcvUint32 subjects, rcvUint32 includes, rcvUint32 excludes);
 
-	// include \subseteq subject AND exclude \cap subject = \emptyset
+	/**@brief fill with unit-type mask to see wether a AIUnitDef meets the filters */
 	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude);
 
 	/**
@@ -53,6 +45,7 @@ namespace util {
 	 */
 	bool IsBinarySubset(cUint32 A, cUint32 B);
 
+	/**@brief counts bits set to 1 */
 	Uint32 CountOneBits(cUint32 n);
 
 	template<typename T> std::set<T> IntersectSets(const std::set<T>& s1, const std::set<T>& s2) {
