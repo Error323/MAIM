@@ -9,8 +9,8 @@
 
 DECLARE_CLASS(IAICallback)
 
-#define EMPTY_BINARY_INTERSECTION(A, B) (((A) & (B)) == 0)
-#define BINARY_SUBSET(A, B)             (((A) & (B)) == (A))
+#define IS_EMPTY_BINARY_INTERSECTION(A, B) (((A) & (B)) == 0)
+#define IS_BINARY_SUBSET(A, B)             (((A) & (B)) == (A))
 
 namespace util {
 	std::string GetAbsFileName(pIAICallback, rcString, cBool readonly = false);
