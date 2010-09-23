@@ -50,10 +50,10 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 		haveUpdate  = false;
 	}
 
-	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "[LuaModule::LoadState(" << moduleName << ")]\n");
-	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "\tHaveGetName(): " << (HaveGetName()) << "\n");
-	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "\tHaveCanRun():  " << (HaveCanRun())  << "\n");
-	LOG_BASIC(AIHelper::GetActiveInstance()->logger, "\tHaveUpdate():  " << (HaveUpdate()) << "\n");
+	LOG_BASIC("[LuaModule::LoadState(" << moduleName << ")]\n");
+	LOG_BASIC("\tHaveGetName(): " << (HaveGetName()) << "\n");
+	LOG_BASIC("\tHaveCanRun():  " << (HaveCanRun())  << "\n");
+	LOG_BASIC("\tHaveUpdate():  " << (HaveUpdate()) << "\n");
 
 	return (isValid);
 }

@@ -35,7 +35,7 @@ void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 	AIHelper::SetActiveInstance(aih);
 	aih->Init(gcb, team);
 
-	LOG_BASIC(aih->logger, AI_CODENAME)
+	LOG_BASIC(AI_CODENAME);
 }
 
 void AIMain::ReleaseAI() {

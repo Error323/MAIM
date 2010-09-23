@@ -1,14 +1,16 @@
 #ifndef MAI_DEBUGGER_HDR
 #define MAI_DEBUGGER_HDR
 
+#include "../main/Types.hpp"
+
+DECLARE_CLASS(Debugger)
+
 #ifdef DEBUG
 #include <cstdio>
 #include <cstdlib>
 
 #include <map>
 #include <string>
-
-#include "../main/Types.hpp"
 
 #if (!defined(WIN32) && !defined(__powerpc64__))
 #include <execinfo.h>
@@ -24,7 +26,7 @@
 
 #define BEGIN() Debugger::GetInstance()->Begin(__FILE__, __LINE__)
 #define END() if (Debugger::GetInstance()->End()) BREAKPOINT
-#define FORMAT_STRING "***ASSERTION FAILED***\n\n\tfile\t%s\n\tline\t%d\n\tfunc\t%s\n\tcond\t%s\n"
+#define FORMAT_STRING "***ASSERTION FAILED***\t\n\n\tfile\t%s\n\tline\t%d\n\tfunc\t%s\n\tcond\t%s\n"
 #define FORMAT_STRING_MSG FORMAT_STRING"\ttext\t"
 
 #define BACKTRACE()                                          \
@@ -77,8 +79,8 @@ public:
 	pcChar GetMessage() const { return mMessage.c_str(); }
 	bool IsEnabled() const { return mEnabled; }
 
-	static Debugger* GetInstance();
-	static void FreeInstance(Debugger*);
+	static pDebugger GetInstance();
+	static void FreeInstance(pDebugger);
 
 private:
 	std::string mMessage;
@@ -93,10 +95,10 @@ private:
 // dummy
 class Debugger {
 public:
-	static Debugger* GetInstance();
-	static void FreeInstance(Debugger*);
+	static pDebugger GetInstance();
+	static void FreeInstance(pDebugger);
 
-	const char* GetMessage() const { return ""; }
+	pcChar GetMessage() const { return ""; }
 	bool IsEnabled() const { return false; }
 };
 #endif // DEBUG

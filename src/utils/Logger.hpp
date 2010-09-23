@@ -1,5 +1,5 @@
-#ifndef CARLAI_CLOGGER_HDR
-#define CARLAI_CLOGGER_HDR
+#ifndef LOGGER_HDR
+#define LOGGER_HDR
 
 #include <string>
 #include <fstream>
@@ -52,8 +52,25 @@ private:
 	IAICallback *cb;
 };
 
-#define LOG_BASIC(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), LOG_BASIC); }
-#define LOG_DEBUG(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), LOG_DEBUG); }
-#define LOG_ERROR(l, m) { std::stringstream ss; ss << m; l->Log(ss.str(), LOG_ERROR); }
+#define LOG_BASIC(MSG)                                               \
+do {                                                                 \
+	std::stringstream ss;                                            \
+	ss << MSG;                                                       \
+	AIHelper::GetActiveInstance()->logger->Log(ss.str(), LOG_BASIC); \
+} while(0)
+
+#define LOG_DEBUG(MSG)                                               \
+do {                                                                 \
+	std::stringstream ss;                                            \
+	ss << MSG;                                                       \
+	AIHelper::GetActiveInstance()->logger->Log(ss.str(), LOG_DEBUG); \
+} while(0)
+
+#define LOG_ERROR(MSG)                                               \
+do {                                                                 \
+	std::stringstream ss;                                            \
+	ss << MSG;                                                       \
+	AIHelper::GetActiveInstance()->logger->Log(ss.str(), LOG_ERROR); \
+} while(0)
 
 #endif
