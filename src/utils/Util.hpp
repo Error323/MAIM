@@ -21,7 +21,28 @@ namespace util {
 
 	float GaussDens(float, float mu = 0.0f, float sigma = 1.0f);
 
-	unsigned int CountOneBits(cUint32 n);
+
+	// |subjects| = |includes| = |excludes|
+	//
+	// \forall subject \in subjects,
+	// \forall include \in includes,
+	// \forall exclude \in excludes:
+	//
+	// include \subseteq subject AND exclude \cap subject = \emptyset
+	/**@brief fill with unit-type masks to see wether eg. a AIUnitDef meets the filters */
+	bool AreSuitedSubjects(rcvUint32 subjects, rcvUint32 includes, rcvUint32 excludes);
+
+	// include \subseteq subject AND exclude \cap subject = \emptyset
+	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude);
+
+	/**
+	 * Determines if the intersection of A and B is the empty set
+	 *
+	 * @param unsigned, binary mask A
+	 * @param unsigned, binary mask B
+	 * @return A \cap B = \emptyset
+	 */
+	bool IsBinaryIntersectionEmpty(cUint32 A, cUint32 B);
 
 	/** 
 	 * Determines if A is a binary subset of B 
@@ -31,6 +52,8 @@ namespace util {
 	 * @return bool, A \subseteq B
 	 */
 	bool IsBinarySubset(cUint32 A, cUint32 B);
+
+	Uint32 CountOneBits(cUint32 n);
 
 	template<typename T> std::set<T> IntersectSets(const std::set<T>& s1, const std::set<T>& s2) {
 		typename std::set<T> r;

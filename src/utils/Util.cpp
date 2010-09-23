@@ -53,15 +53,15 @@ namespace util {
 	}
 
 
-	void StringToLowerInPlace(rString s) {
+	inline void StringToLowerInPlace(rString s) {
 		std::transform(s.begin(), s.end(), s.begin(), (int (*)(int))tolower);
 	}
-	String StringToLower(String s) {
+	inline String StringToLower(String s) {
 		StringToLowerInPlace(s);
 		return s;
 	}
 
-	String StringStripSpaces(rcString s1) {
+	inline String StringStripSpaces(rcString s1) {
 		String s2(s1);
 		s2.erase(remove_if(s2.begin(), s2.end(), isspace), s2.end());
 		return s2;
@@ -77,15 +77,39 @@ namespace util {
 		return wavg;
 	}
 
+	bool AreSuitedSubjects(rcvUint32 subjects, rcvUint32 includes, rcvUint32 excludes) {
+		cUint32 n = subjects.size();
 
-	bool IsBinarySubset(cUint32 A, cUint32 B) {
-		cUint32 Acount = CountOneBits(A);
+		MAI_ASSERT(n == includes.size());
+		MAI_ASSERT(n == excludes.size());
+
+		for (Uint32 i = 0; i < n; i++)
+		{
+			if (!IsSuitedSubject(subjects[i], includes[i], excludes[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	inline bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude) {
+		return (IsBinarySubset(include, subject) && IsBinaryIntersectionEmpty(subject, exclude));
+	}
+
+	inline bool IsBinaryIntersectionEmpty(cUint32 A, cUint32 B) {
+		return CountOneBits(A&B) == 0;
+	}
+
+	inline bool IsBinarySubset(cUint32 A, cUint32 B) {
+		cUint32 Acount      = CountOneBits(A);
 		cUint32 AandBcount  = CountOneBits(A&B);
 
 		return (Acount == AandBcount);
 	}
 
-	unsigned int CountOneBits(cUint32 n) {
+	inline unsigned int CountOneBits(cUint32 n) {
 		cInt S[] = {1, 2, 4, 8, 16};
 		cInt B[] = {0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0x0000FFFF};
 		int c = n;
@@ -97,7 +121,7 @@ namespace util {
 		return c;
 	}
 
-	float GaussDens(cFloat x, cFloat mu, cFloat sigma) {
+	inline float GaussDens(cFloat x, cFloat mu, cFloat sigma) {
 		cFloat a = 1.0f / (sigma * std::sqrt(2.0f * M_PI));
 		cFloat b = std::exp(-(((x - mu) * (x - mu)) / (2.0f * sigma * sigma)));
 		return (a * b);
