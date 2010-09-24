@@ -218,8 +218,10 @@ LuaModuleLoader::LuaModuleLoader() {
 				lua_call(moduleState, inArgs, outArgs);
 
 		#define CALL_LUA_FUNC_END(L, n)     \
+				lua_pop(L, n);              \
+			} else {                        \
+				lua_pop(L, 1);              \
 			}                               \
-			lua_pop(L, n);                  \
 			MAI_ASSERT(lua_gettop(L) == 0);
 
 		CALL_LUA_FUNC_BEG(moduleState, "GetPriority", 0, 1);
