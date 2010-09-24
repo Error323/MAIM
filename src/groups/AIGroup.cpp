@@ -7,6 +7,7 @@
 #include "../units/AIUnitDef.hpp"
 #include "../utils/ObjectFactory.hpp"
 #include "../utils/Debugger.hpp"
+#include "../utils/Util.hpp"
 
 int AIGroup::sGroupCounter = 0;
 
@@ -66,18 +67,21 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 			continue;
 
 		// See if the given unit matches all modules in this group
-		cUint32 typeMask    = unit->GetUnitDef()->typeMask;
-		cUint32 terrainMask = unit->GetUnitDef()->terrainMask;
-		cUint32 weaponMask  = unit->GetUnitDef()->weaponMask;
-		cUint32 roleMask    = unit->GetUnitDef()->roleMask;
+		cUint32 typeMask = unit->GetUnitDef()->typeMask;
+		cUint32 terrMask = unit->GetUnitDef()->terrainMask;
+		cUint32 weapMask = unit->GetUnitDef()->weaponMask;
+		cUint32 roleMask = unit->GetUnitDef()->roleMask;
 
-		canBeAdded = canBeAdded && modules[i]->IsSuited(typeMask, terrainMask, weaponMask, roleMask);
+		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(typeMask, modules[i]->GetTypeMask()));
+		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(terrMask, modules[i]->GetTerrMask()));
+		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(weapMask, modules[i]->GetWeapMask()));
+		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(roleMask, modules[i]->GetRoleMask()));
 
-		// Also extract the max nr of units for this group
+		// Also extract the maximum number of units for this group
 		canBeAdded = (canBeAdded && (units.size() < modules[i]->GetMaxGroupSize()));
 
-		// We are very strict about this, if one module fails on either of
-		// these constraints, the unit can't be added
+		// We are very strict about this: if one module fails on
+		// any of these constraints, the unit can't be added
 		if (!canBeAdded)
 			return false;
 	}

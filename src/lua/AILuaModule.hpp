@@ -28,7 +28,11 @@ public:
 	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
 	unsigned int GetPriority() const { return priority; }
 
-	bool IsSuited(unsigned, unsigned, unsigned, unsigned);
+	unsigned int GetTypeMask() { return typeMask; }
+	unsigned int GetTerrMask() { return terrMask; }
+	unsigned int GetWeapMask() { return weapMask; }
+	unsigned int GetRoleMask() { return roleMask; }
+
 	bool IsValid() const { return isValid; }
 	bool HaveGetName() const { return haveGetName; }
 	bool HaveCanRun() const { return haveCanRun; }
@@ -58,10 +62,10 @@ private:
 
 	AIGroup* group;
 
-	unsigned moduleTypeMasks;
-	unsigned moduleTerrainMasks;
-	unsigned moduleWeaponMasks;
-	unsigned moduleMoveMasks;
+	unsigned typeMask;
+	unsigned terrMask;
+	unsigned weapMask;
+	unsigned roleMask;
 
 	// Should be read from <module>.lua
 	unsigned int maxGroupSize;

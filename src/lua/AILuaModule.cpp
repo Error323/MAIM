@@ -115,13 +115,3 @@ bool LuaModule::Update() {
 
 	return ret;
 }
-
-
-
-bool LuaModule::IsSuited(unsigned unitTypeMasks, unsigned unitTerrainMasks, unsigned unitWeaponMasks, unsigned unitMoveMasks) {
-	cBool a = IS_BINARY_SUBSET(moduleTypeMasks,    unitTypeMasks);
-	cBool b = IS_BINARY_SUBSET(moduleTerrainMasks, unitTerrainMasks);
-	cBool c = IS_BINARY_SUBSET(moduleWeaponMasks,  unitWeaponMasks);
-	cBool d = IS_BINARY_SUBSET(moduleMoveMasks,    unitMoveMasks);
-	return (a && b && c && d);
-}

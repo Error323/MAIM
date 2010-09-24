@@ -142,15 +142,6 @@ AIUnitDefHandler::AIUnitDefHandler() {
 
 		aiUnitDef->isSpecialBuilder = isSpecialBuilder;
 	}
-
-	// third pass: calculate the fitting modules for each unit
-	for (int id = 1; id <= rcb->GetNumUnitDefs(); id++) {
-		if (sprUnitDefsByID[id] == NULL) {
-			continue;
-		}
-		AIUnitDef* aiUnitDef = const_cast<AIUnitDef*>(aiUnitDefsByID[id]);
-		aiUnitDef->CalcModules();
-	}
 }
 
 AIUnitDefHandler::~AIUnitDefHandler() {
@@ -246,11 +237,6 @@ void AIUnitDefHandler::WriteLog() {
 			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_MXD) { msg << "\t\tMASK_MOVEDATA_TC_MXD   = 1\n"; }
 			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_AIR) { msg << "\t\tMASK_MOVEDATA_TC_AIR   = 1\n"; }
 		}
-
-		msg << "\n\tActivated Modules:\n";
-		std::list<LuaModule*>::const_iterator j;
-		for (j = aiUnitDef->modules.begin(); j != aiUnitDef->modules.end(); j++)
-			msg << "\t\t" << (*j)->GetName() << "\n";
 
 		msg << "\n";
 	}

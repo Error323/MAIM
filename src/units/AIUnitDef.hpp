@@ -2,7 +2,6 @@
 #define AI_UNITDEF_HDR
 
 #include <set>
-#include <list>
 
 #include "LegacyCpp/UnitDef.h"
 #include "Sim/Misc/GlobalConstants.h"
@@ -12,7 +11,6 @@
 #include "../main/DConstants.hpp"
 #include "../main/Types.hpp"
 
-DECLARE_CLASS(LuaModule)
 DECLARE_CLASS(MoveData)
 DECLARE_CLASS(UnitDef)
 
@@ -195,8 +193,6 @@ public:
 	float nExtractsMetal;        // normalized extraction depth (unused)
 
 	std::set<int> buildOptionUDIDs;
-	std::list<LuaModule*> modules;
-	static std::list<LuaModule*> allmodules;
 
 private:
 	pcUnitDef sprUnitDef;
