@@ -13,15 +13,11 @@ public:
 	LuaModule();
 	~LuaModule() {}
 
-	void Init() {}
 	void Release();
-	bool LoadState(const std::string&);
-
-	std::string GetName();
-
 	bool CanRun();
 	bool Update();
 
+	std::string GetName();
 	void SetPriority(unsigned int p) { priority = p; }
 	void SetGroup(AIGroup* g) { group = g; }
 	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
@@ -32,8 +28,8 @@ public:
 	bool HaveCanRun() const { return haveCanRun; }
 	bool HaveUpdate() const { return haveUpdate; }
 
-	bool SetLuaState(lua_State*);
-	lua_State* GetLuaState() const { return luaState; }
+	bool SetModuleState(lua_State*);
+	lua_State* GetModuleState() const { return moduleState; }
 
 
 	// note: order matters
@@ -75,10 +71,8 @@ private:
 	bool haveUpdate;
 
 	// each Lua module has its own VM state
-	lua_State* luaState;
+	lua_State* moduleState;
 	LuaModuleClass moduleClass;
-
-	std::string name;
 
 	AIGroup* group;
 

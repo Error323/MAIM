@@ -56,7 +56,7 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 	//   of type <def> whose class-mask does not map to *any* registered
 	//   Lua script (for any priority-level)
 	module->SetModuleClass(moduleClass);
-	module->SetLuaState(moduleState);
+	module->SetModuleState(moduleState);
 	module->SetPriority(priority);
 
 	return module;

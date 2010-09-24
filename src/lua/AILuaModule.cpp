@@ -15,7 +15,7 @@ LuaModule::LuaModule():
 	haveGetName(false),
 	haveCanRun(false),
 	haveUpdate(false),
-	luaState(NULL),
+	moduleState(NULL),
 	maxGroupSize(0),
 	priority(LUAMODULE_NUM_PRIORITIES)
 {
@@ -24,25 +24,25 @@ LuaModule::LuaModule():
 // can be called multiple times over the course
 // of a module's lifetime; underlying Lua script
 // code that is executed depends on the current
-// luaState
-bool LuaModule::SetLuaState(lua_State* L) {
-	luaState = L;
+// moduleState
+bool LuaModule::SetModuleState(lua_State* L) {
+	moduleState = L;
 
-	if (luaState != NULL) {
-		MAI_ASSERT(lua_gettop(luaState) == 0);
+	if (moduleState != NULL) {
+		MAI_ASSERT(lua_gettop(moduleState) == 0);
 
-		lua_getglobal(luaState, "GetName");
-			haveGetName = lua_isfunction(luaState, -1);
-		lua_pop(luaState, 1);
-		lua_getglobal(luaState, "CanRun");
-			haveCanRun = lua_isfunction(luaState, -1);
-		lua_pop(luaState, 1);
-		lua_getglobal(luaState, "Update");
-			haveUpdate = lua_isfunction(luaState, -1);
-		lua_pop(luaState, 1);
+		lua_getglobal(moduleState, "GetName");
+			haveGetName = lua_isfunction(moduleState, -1);
+		lua_pop(moduleState, 1);
+		lua_getglobal(moduleState, "CanRun");
+			haveCanRun = lua_isfunction(moduleState, -1);
+		lua_pop(moduleState, 1);
+		lua_getglobal(moduleState, "Update");
+			haveUpdate = lua_isfunction(moduleState, -1);
+		lua_pop(moduleState, 1);
 
 		isValid = (haveGetName && haveCanRun && haveUpdate);
-		MAI_ASSERT(lua_gettop(luaState) == 0);
+		MAI_ASSERT(lua_gettop(moduleState) == 0);
 	} else {
 		isValid     = false;
 		haveGetName = false;
@@ -50,7 +50,7 @@ bool LuaModule::SetLuaState(lua_State* L) {
 		haveUpdate  = false;
 	}
 
-	LOG_BASIC("[LuaModule::SetLuaState()]\n");
+	LOG_BASIC("[LuaModule::SetModuleState()]\n");
 	LOG_BASIC("\tHaveGetName(): " << (HaveGetName()) << "\n");
 	LOG_BASIC("\tHaveCanRun():  " << (HaveCanRun())  << "\n");
 	LOG_BASIC("\tHaveUpdate():  " << (HaveUpdate()) << "\n");
@@ -59,8 +59,8 @@ bool LuaModule::SetLuaState(lua_State* L) {
 }
 
 void LuaModule::Release() {
-	if (luaState != NULL) {
-		MAI_ASSERT(lua_gettop(luaState) == 0);
+	if (moduleState != NULL) {
+		MAI_ASSERT(lua_gettop(moduleState) == 0);
 	}
 
 	ObjectFactory<LuaModule>::Release(this);
@@ -73,11 +73,11 @@ std::string LuaModule::GetName() {
 
 	if (isValid && haveGetName) {
 		LuaCallBackHandler::SetActiveModule(this);
-		lua_getglobal(luaState, "GetName");
-		lua_call(luaState, 0, 1);
-		MAI_ASSERT(lua_isstring(luaState, -1));
-		ret = lua_tostring(luaState, -1);
-		lua_pop(luaState, 1);
+		lua_getglobal(moduleState, "GetName");
+		lua_call(moduleState, 0, 1);
+		MAI_ASSERT(lua_isstring(moduleState, -1));
+		ret = lua_tostring(moduleState, -1);
+		lua_pop(moduleState, 1);
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
@@ -89,11 +89,11 @@ bool LuaModule::CanRun() {
 
 	if (isValid && haveCanRun) {
 		LuaCallBackHandler::SetActiveModule(this);
-		lua_getglobal(luaState, "CanRun");
-		lua_call(luaState, 0, 1);
-		MAI_ASSERT(lua_isboolean(luaState, -1));
-		ret = lua_toboolean(luaState, -1);
-		lua_pop(luaState, 1);
+		lua_getglobal(moduleState, "CanRun");
+		lua_call(moduleState, 0, 1);
+		MAI_ASSERT(lua_isboolean(moduleState, -1));
+		ret = lua_toboolean(moduleState, -1);
+		lua_pop(moduleState, 1);
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
@@ -105,11 +105,11 @@ bool LuaModule::Update() {
 
 	if (isValid && haveUpdate) {
 		LuaCallBackHandler::SetActiveModule(this);
-		lua_getglobal(luaState, "Update");
-		lua_call(luaState, 0, 1);
-		MAI_ASSERT(lua_isboolean(luaState, -1));
-		ret = lua_toboolean(luaState, -1);
-		lua_pop(luaState, 1);
+		lua_getglobal(moduleState, "Update");
+		lua_call(moduleState, 0, 1);
+		MAI_ASSERT(lua_isboolean(moduleState, -1));
+		ret = lua_toboolean(moduleState, -1);
+		lua_pop(moduleState, 1);
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
