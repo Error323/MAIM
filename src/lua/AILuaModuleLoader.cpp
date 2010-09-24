@@ -77,7 +77,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 	int callErr = 0;   // 0 | LUA_ERRRUN  | LUA_ERRMEM    | LUA_ERRERR
 
 	if ((loadErr = luaL_loadfile(luaState, luaScript.c_str())) != 0 || (callErr = lua_pcall(luaState, 0, 0, 0)) != 0) {
-		LOG_BASIC(std::string(lua_tostring(luaState, -1)) + "\n");
+		LOG_ERROR(std::string(lua_tostring(luaState, -1)) + "\n");
 		lua_pop(luaState, 1);
 		return NULL;
 	} else {
