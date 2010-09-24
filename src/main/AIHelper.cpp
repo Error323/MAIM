@@ -21,20 +21,19 @@ void AIHelper::Init(pIGlobalAICallback gcb, unsigned int i) {
 	initFrame = rcb->GetCurrentFrame();
 	currFrame = initFrame;
 
-	logger           = new Logger();
-	timer            = new Timer();
+	logger           = new Logger(); logger->OpenLog(logger->GetLogName() + "[log].txt");
+	timer            = new Timer(); timer->OpenLog(logger->GetLogName() + "[timings].txt");
 
 	luaModuleLoader  = new LuaModuleLoader();
-
 	aiUnitDefHandler = new AIUnitDefHandler();
 	aiGroupHandler   = new AIGroupHandler();
 	aiUnitHandler    = new AIUnitHandler();
 	ecoState         = new EcoState();
 	gameMap          = new GameMap();
 
-	logger->OpenLog(logger->GetLogName() + "[log].txt");
-	timer->OpenLog(logger->GetLogName() + "[timings].txt");
 	aiUnitDefHandler->OpenLog(logger->GetLogName() + "[unitdefs].txt");
+	aiUnitDefHandler->WriteLog();
+	aiUnitDefHandler->CloseLog();
 
 	ecoState->Init();
 	gameMap->Init();
@@ -49,14 +48,10 @@ void AIHelper::Release() {
 	timer->WriteLog();
 	timer->CloseLog();
 
-	aiUnitDefHandler->WriteLog();
-	aiUnitDefHandler->CloseLog();
-
 	delete logger;
 	delete timer;
 
 	delete luaModuleLoader;
-
 	delete aiUnitDefHandler;
 	delete aiGroupHandler;
 	delete aiUnitHandler;
