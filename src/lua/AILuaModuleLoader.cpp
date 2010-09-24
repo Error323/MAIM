@@ -146,7 +146,7 @@ LuaModuleLoader::LuaModuleLoader() {
 
 	std::vector<std::string> defModuleFiles;
 	std::vector<std::string> modModuleFiles;
-	std::set<std::string> moduleFiles;
+	std::map<std::string, std::string> moduleFiles;
 
 	LOG_BASIC("[LuaModuleLoader] loading custom Lua scripts from " << modModuleDirAbs << "\n");
 
@@ -154,9 +154,9 @@ LuaModuleLoader::LuaModuleLoader() {
 		LOG_BASIC("\tfound " << modModuleFiles.size() << " custom scripts\n");
 
 		for (unsigned int i = 0;i < modModuleFiles.size(); i++) {
-			LOG_BASIC("\t\tloading " << modModuleFiles[i] << "\n");
+			LOG_BASIC("\t\tloading " << (modModuleDirAbs + modModuleFiles[i]) << "\n");
 
-			moduleFiles.insert(modModuleFiles[i]);
+			moduleFiles[modModuleFiles[i]] = modModuleDirAbs;
 		}
 	}
 
@@ -167,16 +167,16 @@ LuaModuleLoader::LuaModuleLoader() {
 
 		for (unsigned int i = 0;i < defModuleFiles.size(); i++) {
 			if (moduleFiles.find(defModuleFiles[i]) == moduleFiles.end()) {
-				LOG_BASIC("\t\tloading " << defModuleFiles[i] << "\n");
+				LOG_BASIC("\t\tloading " << (defModuleDirAbs + defModuleFiles[i]) << "\n");
 
 				// default module is not overridden, load it
-				moduleFiles.insert(defModuleFiles[i]);
+				moduleFiles[defModuleFiles[i]] = defModuleDirAbs;
 			}
 		}
 	}
 
-	for (std::set<std::string>::const_iterator it = moduleFiles.begin(); it != moduleFiles.end(); ++it) {
-		lua_State* moduleState = LoadLuaModule(*it);
+	for (std::map<std::string, std::string>::const_iterator it = moduleFiles.begin(); it != moduleFiles.end(); ++it) {
+		lua_State* moduleState = LoadLuaModule(it->second + it->first);
 
 		if (moduleState == NULL) {
 			// bad script
