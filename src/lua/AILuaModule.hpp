@@ -41,6 +41,9 @@ public:
 	};
 
 	struct LuaModuleClass {
+		LuaModuleClass(): typeMask(0), terrMask(0), weapMask(0), roleMask(0) {
+		}
+
 		bool operator < (const LuaModuleClass& mc) const {
 			return (typeMask < mc.typeMask && terrMask < mc.terrMask && weapMask < mc.weapMask);
 		}

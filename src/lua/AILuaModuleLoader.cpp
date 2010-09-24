@@ -208,33 +208,47 @@ LuaModuleLoader::LuaModuleLoader() {
 	for (std::set<std::string>::const_iterator it = moduleFiles.begin(); it != moduleFiles.end(); ++it) {
 		lua_State* moduleState = LoadLuaModule(*it);
 
-		// TODO:
-		//     now we need the script's masks, which means running callins
-		//
-		//     however, we do not have any actual LuaModule instances here
-		//     (those are created on-demand by groups calling GetModule())
 		LuaModule::LuaModuleClass moduleClass;
-			moduleClass.typeMask = 0;
-			moduleClass.terrMask = 0;
-			moduleClass.weapMask = 0;
-			moduleClass.roleMask = 0;
-		unsigned int priority = LuaModule::LUAMODULE_NUM_PRIORITIES;
+		unsigned int modulePriority = LuaModule::LUAMODULE_NUM_PRIORITIES;
 
-		if (priority >= LuaModule::LUAMODULE_NUM_PRIORITIES) {
+		#define CALL_LUA_FUNC_BEG(L, name, inArgs, outArgs) \
+			MAI_ASSERT(lua_gettop(L) == 0);                 \
+			lua_getglobal(L, name);                         \
+			if (lua_isfunction(L, -1)) {                    \
+				lua_call(moduleState, inArgs, outArgs);
+
+		#define CALL_LUA_FUNC_END(L, n)     \
+			}                               \
+			lua_pop(L, n);                  \
+			MAI_ASSERT(lua_gettop(L) == 0);
+
+		CALL_LUA_FUNC_BEG(moduleState, "GetPriority", 0, 1);
+			modulePriority = lua_tointeger(moduleState, -1);
+		CALL_LUA_FUNC_END(moduleState, 1);
+
+		CALL_LUA_FUNC_BEG(moduleState, "GetClassMask", 0, 4);
+			moduleClass.typeMask = luaL_checkint(moduleState, -4);
+			moduleClass.terrMask = luaL_checkint(moduleState, -3);
+			moduleClass.weapMask = luaL_checkint(moduleState, -2);
+			moduleClass.roleMask = luaL_checkint(moduleState, -1);
+		CALL_LUA_FUNC_END(moduleState, 4);
+
+
+		if (modulePriority >= LuaModule::LUAMODULE_NUM_PRIORITIES) {
 			// illegal priority, can't load this module
 			continue;
 		}
 
 		if (luaModuleStates.find(moduleClass) == luaModuleStates.end()) {
 			luaModuleStates[moduleClass] = std::vector<lua_State*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
-			luaModuleStates[moduleClass][priority] = moduleState;
+			luaModuleStates[moduleClass][modulePriority] = moduleState;
 		} else {
-			if (luaModuleStates[moduleClass][priority] != NULL) {
+			if (luaModuleStates[moduleClass][modulePriority] != NULL) {
 				// two or more .lua scripts have the same class-mask _and_
 				// the same priority, so we don't require a new lua_State*
 				lua_close(moduleState);
 			} else {
-				luaModuleStates[moduleClass][priority] = moduleState;
+				luaModuleStates[moduleClass][modulePriority] = moduleState;
 			}
 		}
 	}

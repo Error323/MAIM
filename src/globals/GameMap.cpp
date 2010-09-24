@@ -7,9 +7,9 @@
 #include "../main/HEngine.hpp"
 #include "../main/HAIInterface.hpp"
 #include "../main/AIHelper.hpp"
-#include "../main/DMacros.hpp"
 #include "../groups/AIGroup.hpp"
 
+#define ID(x, z) ((z) * X + (x))
 #define METAL_THRESHOLD 32
 
 std::list<float3> GameMap::geospots;
@@ -123,7 +123,7 @@ void GameMap::CalcMetalSpots() {
 			{
 				nonMetalCount++;
 			}
-			metalmap[ID(x,z)] = m;
+			metalmap[ID(x, z)] = m;
 			avgMetal += m;
 		}
 	}
@@ -137,7 +137,7 @@ void GameMap::CalcMetalSpots() {
 		{
 			for (int x = R; x < X-R; x+=step) 
 			{
-				if (metalmap[ID(x,z)] > 1) 
+				if (metalmap[ID(x, z)] > 1) 
 				{
 					float3 metalspot(x * METAL2REAL, rcb->GetElevation(x * METAL2REAL, z * METAL2REAL), z * METAL2REAL);
 					GameMap::metalspots.push_back(metalspot);
@@ -162,7 +162,7 @@ void GameMap::CalcMetalSpots() {
 			for (size_t i = 0; i < M.size(); i+=2) 
 			{
 				int z = M[i]; int x = M[i+1];
-				if (metalmap[ID(x,z)] == 0)
+				if (metalmap[ID(x, z)] == 0)
 				{
 					continue;
 				}
@@ -170,7 +170,7 @@ void GameMap::CalcMetalSpots() {
 				saturation = 0.0f; sum = 0.0f;
 				for (size_t c = 0; c < circle.size(); c+=2) 
 				{
-					rcUint8 m = metalmap[ID(x+circle[c+1],z+circle[c])];
+					rcUint8 m = metalmap[ID(x + circle[c + 1], z + circle[c])];
 					saturation += m * (R-sqrtCircle[c/2]);
 					sum        += m;
 				}
@@ -189,7 +189,7 @@ void GameMap::CalcMetalSpots() {
 			// "Erase" metal under the bestX bestZ radius
 			for (Uint32 c = 0; c < circle.size(); c+=2)
 			{
-				metalmap[ID(circle[c+1]+bestX,circle[c]+bestZ)] = 0;
+				metalmap[ID(circle[c + 1] + bestX, circle[c] + bestZ)] = 0;
 			}
 			
 			// Increase to world size
@@ -242,7 +242,7 @@ void GameMap::CalcMapHeightFeatures() {
 	{
 		for (int x = 0; x < X; x++) 
 		{
-			float h = hm[ID(x,z)];
+			float h = hm[ID(x, z)];
 			if (h >= 0.0f) 
 			{
 				fsum += h;
@@ -261,7 +261,7 @@ void GameMap::CalcMapHeightFeatures() {
 	{
 		for (int x = 0; x < X; x++) 
 		{
-			float h = hm[ID(x,z)];
+			float h = hm[ID(x, z)];
 			if (h >= 0.0f) 
 			{
 				heightVariance += (h / fsum) * std::pow<float>((h - favg), 2.0f);

@@ -77,11 +77,13 @@ std::string LuaModule::GetName() {
 
 	if (isValid && haveGetName) {
 		LuaCallBackHandler::SetActiveModule(this);
+
 		lua_getglobal(moduleState, "GetName");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isstring(moduleState, -1));
 		ret = lua_tostring(moduleState, -1);
 		lua_pop(moduleState, 1);
+
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
@@ -93,11 +95,13 @@ bool LuaModule::CanRun() {
 
 	if (isValid && haveCanRun) {
 		LuaCallBackHandler::SetActiveModule(this);
+
 		lua_getglobal(moduleState, "CanRun");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isboolean(moduleState, -1));
 		ret = lua_toboolean(moduleState, -1);
 		lua_pop(moduleState, 1);
+
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
@@ -109,11 +113,13 @@ bool LuaModule::Update() {
 
 	if (isValid && haveUpdate) {
 		LuaCallBackHandler::SetActiveModule(this);
+
 		lua_getglobal(moduleState, "Update");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isboolean(moduleState, -1));
 		ret = lua_toboolean(moduleState, -1);
 		lua_pop(moduleState, 1);
+
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
