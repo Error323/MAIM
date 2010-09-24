@@ -19,19 +19,6 @@ void AIUnit::SetActiveState(cBool wantActive) {
 	}
 }
 
-void AIUnit::Init() {
-	currCmdID = 0;
-
-	age = 0;
-	limboTime = 0;
-
-	waiting = false;
-
-	pos = ZeroVector;
-	vel = ZeroVector;
-	dir = ZeroVector;
-}
-
 void AIUnit::Update() {
 	MAI_ASSERT(unitDef != 0);
 
@@ -42,13 +29,25 @@ void AIUnit::Update() {
 	age += 1;
 }
 
-void AIUnit::Reset(int id, int builder) {
-	unitID    = id;
-	builderID = builder;
+void AIUnit::Init(unsigned int _unitID, int unsigned _builderID) {
+	currCmdID = 0;
+
+	age = 0;
+	limboTime = 0;
+
+	waiting = false;
+
+	pos = ZeroVector;
+	vel = ZeroVector;
+	dir = ZeroVector;
+
+	unitDef   = AIHelper::GetActiveInstance()->GetCallbackHandler()->GetUnitDef(_unitID);
+	unitID    = _unitID;
+	builderID = _builderID;
 
  	// set the UnitDestroyedSubject unit
 	// this is required because units are reusable
-	SetUnitDestroyedSubjectID(id);
+	SetUnitDestroyedSubjectID(unitID);
 
 	// Remove all the observers of this subject
 	AUnitDestroyedSubject::RemoveObservers();
@@ -150,22 +149,24 @@ cInt AIUnit::GetCommandQueueSize() const {
 	return (rcb->GetCurrentUnitCommands(unitID)->size());
 }
 
-void AIUnit::Stop() { 
-	Command c; 
-	c.id = CMD_STOP; 
-	GiveCommand(&c); 
-	limboTime = 0; 
+void AIUnit::Stop() {
+	Command c;
+		c.id = CMD_STOP;
+	GiveCommand(&c);
+
+	limboTime = 0;
 }
 
-void AIUnit::Wait(cBool w) { 
-	Command c; 
-	c.id = CMD_WAIT; 
-	GiveCommand(&c); 
-	waiting = w; 
+void AIUnit::Wait(cBool w) {
+	Command c;
+		c.id = CMD_WAIT;
+	GiveCommand(&c);
+
+	waiting = w;
 }
 
 void AIUnit::Move(rcFloat3 goal) {
-	if (pos != ZeroVector) 
+	if (pos != ZeroVector)
 	{
 		Command c;
 			c.id = CMD_MOVE;
@@ -174,11 +175,4 @@ void AIUnit::Move(rcFloat3 goal) {
 			c.params.push_back(goal.z);
 		TryGiveCommand(&c);
 	}
-}
-
-
-
-
-cFloat AIUnit::GetPositionETA(rcFloat3 p) const {
-	return 1e30f;
 }

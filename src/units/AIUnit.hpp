@@ -23,9 +23,8 @@ public:
 	{
 	}
 
-	void Init();
+	void Init(unsigned int, unsigned int);
 	void Update();
-	void Reset(int, int);
 
 	cBool GetActiveState() const { return active; }
 	void SetActiveState(cBool);
@@ -47,7 +46,6 @@ public:
 	cInt TryGiveCommand(pCommand) const;
 	cInt GetCommandQueueSize() const;
 
-	cFloat GetPositionETA(rcFloat3) const;
 	void Move(rcFloat3);
 	void Stop();
 	void Wait(cBool);
