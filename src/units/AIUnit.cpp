@@ -3,6 +3,7 @@
 
 #include "./AIUnit.hpp"
 #include "./AIUnitDef.hpp"
+#include "./AIUnitDefHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../utils/Debugger.hpp"
 
@@ -41,7 +42,13 @@ void AIUnit::Init(unsigned int _unitID, int unsigned _builderID) {
 	vel = ZeroVector;
 	dir = ZeroVector;
 
-	unitDef   = AIHelper::GetActiveInstance()->GetCallbackHandler()->GetUnitDef(_unitID);
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	pcUnitDef def = rcb->GetUnitDef(_unitID);
+	pcAIUnitDef defAI = aih->GetAIUnitDefHandler()->GetUnitDefByID(def->id);
+
+	unitDef   = defAI;
 	unitID    = _unitID;
 	builderID = _builderID;
 
