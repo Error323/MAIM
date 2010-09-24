@@ -216,6 +216,11 @@ LuaModuleLoader::LuaModuleLoader() {
 			moduleClass.roleMask = 0;
 		unsigned int priority = LuaModule::LUAMODULE_NUM_PRIORITIES;
 
+		if (priority >= LuaModule::LUAMODULE_NUM_PRIORITIES) {
+			// illegal priority, can't load this module
+			continue;
+		}
+
 		if (luaModuleStates.find(moduleClass) == luaModuleStates.end()) {
 			luaModuleStates[moduleClass] = std::vector<lua_State*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
 			luaModuleStates[moduleClass][priority] = moduleState;
