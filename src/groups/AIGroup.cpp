@@ -61,21 +61,24 @@ cBool AIGroup::CanBeAdded(pAIUnit unit) const {
 	// only add unit-type classes that this group already contains
 	bool canBeAdded = true;
 
+	LuaModule::LuaModuleClass ulmc;
+		ulmc.typeMask = unit->GetUnitDef()->typeMask;
+		ulmc.terrMask = unit->GetUnitDef()->terrainMask;
+		ulmc.weapMask = unit->GetUnitDef()->weaponMask;
+		ulmc.roleMask = unit->GetUnitDef()->roleMask;
+
 	for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 	{
 		if (modules[i] == NULL)
 			continue;
 
-		// See if the given unit matches all modules in this group
-		cUint32 typeMask = unit->GetUnitDef()->typeMask;
-		cUint32 terrMask = unit->GetUnitDef()->terrainMask;
-		cUint32 weapMask = unit->GetUnitDef()->weaponMask;
-		cUint32 roleMask = unit->GetUnitDef()->roleMask;
+		const LuaModule::LuaModuleClass& glmc = modules[i]->GetModuleClass();
 
-		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(typeMask, modules[i]->GetTypeMask()));
-		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(terrMask, modules[i]->GetTerrMask()));
-		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(weapMask, modules[i]->GetWeapMask()));
-		canBeAdded = canBeAdded && (IS_BINARY_SUBSET(roleMask, modules[i]->GetRoleMask()));
+		// See if the given unit matches all modules in this group
+		canBeAdded = canBeAdded && IS_BINARY_SUBSET(ulmc.typeMask, glmc.typeMask);
+		canBeAdded = canBeAdded && IS_BINARY_SUBSET(ulmc.terrMask, glmc.terrMask);
+		canBeAdded = canBeAdded && IS_BINARY_SUBSET(ulmc.weapMask, glmc.weapMask);
+		canBeAdded = canBeAdded && IS_BINARY_SUBSET(ulmc.roleMask, glmc.roleMask);
 
 		// Also extract the maximum number of units for this group
 		canBeAdded = (canBeAdded && (units.size() < modules[i]->GetMaxGroupSize()));

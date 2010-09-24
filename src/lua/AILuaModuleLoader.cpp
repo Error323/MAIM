@@ -20,7 +20,7 @@
 LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priority) {
 	lua_State* moduleState = NULL;
 	LuaModule* module = NULL;
-	LuaModuleClass moduleClass;
+	LuaModule::LuaModuleClass moduleClass;
 		moduleClass.typeMask = def->typeMask;
 		moduleClass.terrMask = def->terrainMask;
 		moduleClass.weapMask = def->weaponMask;
@@ -32,11 +32,11 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 	} else {
 		module = ObjectFactory<LuaModule>::Instance();
 
-		typedef std::map<LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
-		typedef std::map<LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
+		typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
+		typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
 
 		for (LuaStateMapIt it = luaModuleStates.begin(); it != luaModuleStates.end(); ++it) {
-			const LuaModuleClass& lmc = it->first;
+			const LuaModule::LuaModuleClass& lmc = it->first;
 			const std::vector<lua_State*>& lmsv = it->second;
 
 			// check if <def>'s module-class is suited for this module
@@ -55,6 +55,7 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 	//   moduleState can be NULL, which means we have a group of units
 	//   of type <def> whose class-mask does not map to *any* registered
 	//   Lua script (for any priority-level)
+	module->SetModuleClass(moduleClass);
 	module->SetLuaState(moduleState);
 	module->SetPriority(priority);
 
@@ -209,7 +210,7 @@ LuaModuleLoader::LuaModuleLoader() {
 		//
 		//     however, we do not have any actual LuaModule instances here
 		//     (those are created on-demand by groups calling GetModule())
-		LuaModuleClass moduleClass;
+		LuaModule::LuaModuleClass moduleClass;
 			moduleClass.typeMask = 0;
 			moduleClass.terrMask = 0;
 			moduleClass.weapMask = 0;
@@ -233,8 +234,8 @@ LuaModuleLoader::LuaModuleLoader() {
 
 LuaModuleLoader::~LuaModuleLoader() {
 	// close all cached unique Lua states
-	typedef std::map<LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
-	typedef std::map<LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
+	typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
+	typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
 
 	for (LuaStateMapIt mit = luaModuleStates.begin(); mit != luaModuleStates.end(); mit++) {
 		std::vector<lua_State*>& luaStateVec = mit->second;

@@ -4,10 +4,11 @@
 #include <map>
 #include <vector>
 
+#include "AILuaModule.hpp"
+
 struct lua_State;
 
 class AIUnitDef;
-class LuaModule;
 class LuaModuleLoader {
 public:
 	LuaModuleLoader();
@@ -18,20 +19,6 @@ public:
 
 private:
 	lua_State* LoadLuaModule(const std::string&);
-
-	struct LuaModuleClass {
-		bool operator < (const LuaModuleClass& mc) const {
-			return (typeMask < mc.typeMask && terrMask < mc.terrMask && weapMask < mc.weapMask);
-		}
-		bool operator == (const LuaModuleClass& mc) const {
-			return (typeMask == mc.typeMask && terrMask == mc.terrMask && weapMask == mc.weapMask);
-		}
-
-		unsigned int typeMask;
-		unsigned int terrMask;
-		unsigned int weapMask;
-		unsigned int roleMask;
-	};
 
 	// each AI instance maintains a cache of Lua
 	// VM states; there is exactly one state for
@@ -44,8 +31,8 @@ private:
 	// load a lua_State* per group? but that would
 	// be inefficient wrt. group creation
 	//
-	std::map<LuaModuleClass, std::vector<lua_State*> > luaModuleStates;
-	std::map<LuaModuleClass, std::vector<LuaModule*> > luaModules;
+	std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > luaModuleStates;
+	std::map<LuaModule::LuaModuleClass, std::vector<LuaModule*> > luaModules;
 };
 
 #endif

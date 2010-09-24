@@ -3,7 +3,6 @@
 
 #include <map>
 
-
 struct lua_State;
 class AIHelper;
 class AIUnit;
@@ -28,11 +27,6 @@ public:
 	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
 	unsigned int GetPriority() const { return priority; }
 
-	unsigned int GetTypeMask() { return typeMask; }
-	unsigned int GetTerrMask() { return terrMask; }
-	unsigned int GetWeapMask() { return weapMask; }
-	unsigned int GetRoleMask() { return roleMask; }
-
 	bool IsValid() const { return isValid; }
 	bool HaveGetName() const { return haveGetName; }
 	bool HaveCanRun() const { return haveCanRun; }
@@ -40,6 +34,7 @@ public:
 
 	bool SetLuaState(lua_State*);
 	lua_State* GetLuaState() const { return luaState; }
+
 
 	// note: order matters
 	enum {
@@ -49,6 +44,30 @@ public:
 		LUAMODULE_NUM_PRIORITIES     = 3,
 	};
 
+	struct LuaModuleClass {
+		bool operator < (const LuaModuleClass& mc) const {
+			return (typeMask < mc.typeMask && terrMask < mc.terrMask && weapMask < mc.weapMask);
+		}
+		bool operator == (const LuaModuleClass& mc) const {
+			return (typeMask == mc.typeMask && terrMask == mc.terrMask && weapMask == mc.weapMask);
+		}
+		LuaModuleClass& operator = (const LuaModuleClass& mc) {
+			typeMask = mc.typeMask;
+			terrMask = mc.terrMask;
+			weapMask = mc.weapMask;
+			roleMask = mc.roleMask;
+			return *this;
+		}
+
+		unsigned int typeMask;
+		unsigned int terrMask;
+		unsigned int weapMask;
+		unsigned int roleMask;
+	};
+
+	void SetModuleClass(const LuaModuleClass& c) { moduleClass = c; }
+	const LuaModuleClass& GetModuleClass() const { return moduleClass; }
+
 private:
 	bool isValid;
 	bool haveGetName;
@@ -57,15 +76,11 @@ private:
 
 	// each Lua module has its own VM state
 	lua_State* luaState;
+	LuaModuleClass moduleClass;
 
 	std::string name;
 
 	AIGroup* group;
-
-	unsigned typeMask;
-	unsigned terrMask;
-	unsigned weapMask;
-	unsigned roleMask;
 
 	// Should be read from <module>.lua
 	unsigned int maxGroupSize;

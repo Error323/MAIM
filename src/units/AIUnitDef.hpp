@@ -174,8 +174,8 @@ public:
 	Uint32 typeMask;
 	Uint32 terrainMask;
 	Uint32 weaponMask;
-	Uint32 roleMask;       // general categorization (scout, raider, ...), unused for now
-	Uint32 boMoveDataMask; // for build options, used by static builders ONLY
+	Uint32 roleMask;             // general categorization (scout, raider, ...), unused for now
+	Uint32 boMoveDataMask;       // for build options, used by static builders ONLY
 
 	bool isHubBuilder;
 	bool isSpecialBuilder;       // if true, none of our build-options are builders
