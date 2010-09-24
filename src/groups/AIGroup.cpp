@@ -118,6 +118,12 @@ void AIGroup::Update() {
 	// Module::Update() returns true when done
 	if (activeModule != NULL && activeModule->Update())
 		activeModule = NULL;
+	
+	// Update all units in the group (age, position etc)
+	for (std::map<int, pAIUnit>::iterator i = units.begin(); i != units.end(); i++)
+	{
+		i->second->Update();
+	}
 }
 
 void AIGroup::UnitDestroyed(int unit) {
