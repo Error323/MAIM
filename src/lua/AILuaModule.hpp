@@ -19,7 +19,7 @@ public:
 
 	std::string GetName();
 	void SetPriority(unsigned int p) { priority = p; }
-	void SetGroup(AIGroup* g) { group = g; }
+	void SetGroup(AIGroup* g) { moduleGroup = g; }
 	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
 	unsigned int GetPriority() const { return priority; }
 
@@ -70,15 +70,14 @@ private:
 	bool haveCanRun;
 	bool haveUpdate;
 
-	// each Lua module has its own VM state
 	lua_State* moduleState;
+	AIGroup* moduleGroup;
 	LuaModuleClass moduleClass;
-
-	AIGroup* group;
 
 	// Should be read from <module>.lua
 	unsigned int maxGroupSize;
 
+	// LUAMODULE_PRIORITY_*
 	unsigned int priority;
 };
 

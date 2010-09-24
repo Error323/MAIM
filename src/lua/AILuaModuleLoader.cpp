@@ -27,8 +27,8 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 		moduleClass.roleMask = def->roleMask;
 
 	if (luaModules.find(moduleClass) != luaModules.end()) {
-		module = luaModules[moduleClass][priority];
-		moduleState = luaModuleStates[moduleClass][priority];
+		// module = luaModules[moduleClass][priority];
+		// moduleState = luaModuleStates[moduleClass][priority];
 	} else {
 		module = ObjectFactory<LuaModule>::Instance();
 
@@ -49,6 +49,10 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 			moduleState = lmsv[priority];
 			break;
 		}
+
+		// do NOT cache LuaModule*'s, each AIGroup* must have a unique instance
+		// luaModules[moduleClass] = std::vector<LuaModule*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
+		// luaModules[moduleClass][priority] = module;
 	}
 
 	// NOTE:

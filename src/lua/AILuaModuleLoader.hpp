@@ -25,12 +25,8 @@ private:
 	// each unique type of Lua script present in
 	// AI_LUA_DIR/{def/, mod/}
 	//
-	// this means multiple groups of the same type
-	// of unit will share the same state, which is
-	// possibly not what we want... can we not just
-	// load a lua_State* per group? but that would
-	// be inefficient wrt. group creation
-	//
+	// multiple AIGroup*'s can NOT share one LuaModule*
+	// multiple LuaModule*'s CAN share one lua_State*
 	std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > luaModuleStates;
 	std::map<LuaModule::LuaModuleClass, std::vector<LuaModule*> > luaModules;
 };

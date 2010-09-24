@@ -16,6 +16,7 @@ LuaModule::LuaModule():
 	haveCanRun(false),
 	haveUpdate(false),
 	moduleState(NULL),
+	moduleGroup(NULL),
 	maxGroupSize(0),
 	priority(LUAMODULE_NUM_PRIORITIES)
 {
@@ -62,6 +63,9 @@ void LuaModule::Release() {
 	if (moduleState != NULL) {
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
 	}
+
+	moduleState = NULL;
+	moduleGroup = NULL;
 
 	ObjectFactory<LuaModule>::Release(this);
 }
