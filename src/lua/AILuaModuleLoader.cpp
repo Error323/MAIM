@@ -164,7 +164,6 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 LuaModuleLoader::LuaModuleLoader() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
-	Logger& log = *(aih->GetLogger());
 
 	const std::string defModuleDirRel = AI_LUA_DIR + "def/";
 	const std::string modModuleDirRel = AI_LUA_DIR + "mod/"; // TODO: use modShortName
@@ -175,26 +174,26 @@ LuaModuleLoader::LuaModuleLoader() {
 	std::vector<std::string> modModuleFiles;
 	std::set<std::string> moduleFiles;
 
-	log.Log("[LuaModuleLoader] loading custom Lua scripts from " + modModuleDirAbs + "\n");
+	LOG_BASIC("[LuaModuleLoader] loading custom Lua scripts from " << modModuleDirAbs << "\n");
 
 	if (util::GetFilesInDir(modModuleDirAbs, modModuleFiles) == 0) {
-		log.Log("\tfound ").Log(modModuleFiles.size()).Log(" custom scripts\n");
+		LOG_BASIC("\tfound " << modModuleFiles.size() << " custom scripts\n");
 
 		for (unsigned int i = 0;i < modModuleFiles.size(); i++) {
-			log.Log("\t\tloading" + modModuleFiles[i] + "\n");
+			LOG_BASIC("\t\tloading " << modModuleFiles[i] << "\n");
 
 			moduleFiles.insert(modModuleFiles[i]);
 		}
 	}
 
-	log.Log("[LuaModuleLoader] loading default Lua scripts from " + defModuleDirAbs + "\n");
+	LOG_BASIC("[LuaModuleLoader] loading default Lua scripts from " << defModuleDirAbs << "\n");
 
 	if (util::GetFilesInDir(defModuleDirAbs, defModuleFiles) == 0) {
-		log.Log("\tfound ").Log(defModuleFiles.size()).Log(" default scripts\n");
+		LOG_BASIC("\tfound " << defModuleFiles.size() << " default scripts\n");
 
 		for (unsigned int i = 0;i < defModuleFiles.size(); i++) {
 			if (moduleFiles.find(defModuleFiles[i]) == moduleFiles.end()) {
-				log.Log("\t\tloading" + defModuleFiles[i] + "\n");
+				LOG_BASIC("\t\tloading " << defModuleFiles[i] << "\n");
 
 				// default module is not overridden, load it
 				moduleFiles.insert(defModuleFiles[i]);
