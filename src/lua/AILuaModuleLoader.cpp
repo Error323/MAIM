@@ -1,5 +1,5 @@
+#include <string>
 #include <fstream>
-#include <map>
 
 #include "../main/HAIInterface.hpp"
 
@@ -9,6 +9,7 @@
 #include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../main/DFolders.hpp"
+#include "../units/AIUnitDef.hpp"
 #include "../utils/Debugger.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/ObjectFactory.hpp"
@@ -17,33 +18,53 @@
 
 
 LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priority) {
-	LuaModule* module = ObjectFactory<LuaModule>::Instance();
+	lua_State* moduleState = NULL;
+	LuaModule* module = NULL;
+	LuaModuleClass moduleClass;
+		moduleClass.typeMask = def->typeMask;
+		moduleClass.terrMask = def->terrainMask;
+		moduleClass.weapMask = def->weaponMask;
+		moduleClass.roleMask = def->roleMask;
 
-	/*
-	// need to check these against registry (built at load-time)
-	// of class-masks advertised by available Lua script modules
-	//     def->typeMask
-	//     def->terrainMask
-	//     def->weaponMask
-	//     def->roleMask
-	// const std::string& moduleScript = GetModuleScriptName(def, priority);
+	if (luaModules.find(moduleClass) != luaModules.end()) {
+		module = luaModules[moduleClass][priority];
+		moduleState = luaModuleStates[moduleClass][priority];
+	} else {
+		module = ObjectFactory<LuaModule>::Instance();
 
-	module->LoadState(moduleScript, priority);
+		typedef std::map<LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
+		typedef std::map<LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
 
-	MAI_ASSERT(module->IsValid());
-	*/
+		for (LuaStateMapIt it = luaModuleStates.begin(); it != luaModuleStates.end(); ++it) {
+			const LuaModuleClass& lmc = it->first;
+			const std::vector<lua_State*>& lmsv = it->second;
+
+			if (!IS_BINARY_SUBSET(moduleClass.typeMask, lmc.typeMask)) { continue; }
+			if (!IS_BINARY_SUBSET(moduleClass.terrMask, lmc.terrMask)) { continue; }
+			if (!IS_BINARY_SUBSET(moduleClass.weapMask, lmc.weapMask)) { continue; }
+			if (!IS_BINARY_SUBSET(moduleClass.roleMask, lmc.roleMask)) { continue; }
+
+			// NOTE: what if multiple module-classes are suitable?
+			moduleState = lmsv[priority];
+			break;
+		}
+	}
+
+	// NOTE:
+	//   moduleState can be NULL, which means we have a group of units
+	//   of type <def> whose class-mask does not map to *any* registered
+	//   Lua script (for any priority-level)
+	module->SetLuaState(moduleState);
 	module->SetPriority(priority);
+
 	return module;
 }
 
-lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
-	if (luaStates.find(moduleBaseName) != luaStates.end()) {
-		return luaStates[moduleBaseName];
-	}
-
+lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
 
+	/*
 	const std::string modFileName = util::StringStripSpaces(rcb->GetModName());
 
 	const std::string defModuleFileNameRel = (AI_LUA_DIR                    ) + ("Def" + moduleBaseName + ".lua");
@@ -72,13 +93,11 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& moduleBaseName) {
 
 	defModuleFileStream.close();
 	modModuleFileStream.close();
+	*/
 
 
 	lua_State* luaState = lua_open();
 	luaL_openlibs(luaState);
-
-	luaStates[moduleBaseName] = luaState;
-
 
 	int loadErr = 0;   // 0 | LUA_ERRFILE | LUA_ERRSYNTAX | LUA_ERRMEM
 	int callErr = 0;   // 0 | LUA_ERRRUN  | LUA_ERRMEM    | LUA_ERRERR
@@ -152,16 +171,7 @@ LuaModuleLoader::LuaModuleLoader() {
 
 	std::vector<std::string> defModuleFiles;
 	std::vector<std::string> modModuleFiles;
-
-	log.Log("[LuaModuleLoader] loading default Lua scripts from " + defModuleDirAbs + "\n");
-
-	if (util::GetFilesInDir(defModuleDirAbs, defModuleFiles) == 0) {
-		log.Log("\tfound ").Log(defModuleFiles.size()).Log(" default scripts\n");
-
-		for (unsigned int i = 0;i < defModuleFiles.size(); i++) {
-			log.Log("\t\t" + defModuleFiles[i] + "\n");
-		}
-	}
+	std::set<std::string> moduleFiles;
 
 	log.Log("[LuaModuleLoader] loading custom Lua scripts from " + modModuleDirAbs + "\n");
 
@@ -169,16 +179,71 @@ LuaModuleLoader::LuaModuleLoader() {
 		log.Log("\tfound ").Log(modModuleFiles.size()).Log(" custom scripts\n");
 
 		for (unsigned int i = 0;i < modModuleFiles.size(); i++) {
-			log.Log("\t\t" + modModuleFiles[i] + "\n");
+			log.Log("\t\tloading" + modModuleFiles[i] + "\n");
+
+			moduleFiles.insert(modModuleFiles[i]);
+		}
+	}
+
+	log.Log("[LuaModuleLoader] loading default Lua scripts from " + defModuleDirAbs + "\n");
+
+	if (util::GetFilesInDir(defModuleDirAbs, defModuleFiles) == 0) {
+		log.Log("\tfound ").Log(defModuleFiles.size()).Log(" default scripts\n");
+
+		for (unsigned int i = 0;i < defModuleFiles.size(); i++) {
+			if (moduleFiles.find(defModuleFiles[i]) == moduleFiles.end()) {
+				log.Log("\t\tloading" + defModuleFiles[i] + "\n");
+
+				// default module is not overridden, load it
+				moduleFiles.insert(defModuleFiles[i]);
+			}
+		}
+	}
+
+	for (std::set<std::string>::const_iterator it = moduleFiles.begin(); it != moduleFiles.end(); ++it) {
+		lua_State* moduleState = LoadLuaModule(*it);
+
+		// TODO:
+		//     now we need the script's masks, which means running callins
+		//
+		//     however, we do not have any actual LuaModule instances here
+		//     (those are created on-demand by groups calling GetModule())
+		LuaModuleClass moduleClass;
+			moduleClass.typeMask = 0;
+			moduleClass.terrMask = 0;
+			moduleClass.weapMask = 0;
+			moduleClass.roleMask = 0;
+		unsigned int priority = LuaModule::LUAMODULE_NUM_PRIORITIES;
+
+		if (luaModuleStates.find(moduleClass) == luaModuleStates.end()) {
+			luaModuleStates[moduleClass] = std::vector<lua_State*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
+			luaModuleStates[moduleClass][priority] = moduleState;
+		} else {
+			if (luaModuleStates[moduleClass][priority] != NULL) {
+				// two or more .lua scripts have the same class-mask _and_
+				// the same priority, so we don't require a new lua_State*
+				lua_close(moduleState);
+			} else {
+				luaModuleStates[moduleClass][priority] = moduleState;
+			}
 		}
 	}
 }
 
 LuaModuleLoader::~LuaModuleLoader() {
-	// close all cached Lua states
-	for (std::map<std::string, lua_State*>::iterator it = luaStates.begin(); it != luaStates.end(); it++) {
-		lua_close(it->second);
+	// close all cached unique Lua states
+	typedef std::map<LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
+	typedef std::map<LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
+
+	for (LuaStateMapIt mit = luaModuleStates.begin(); mit != luaModuleStates.end(); mit++) {
+		std::vector<lua_State*>& luaStateVec = mit->second;
+
+		for (std::vector<lua_State*>::iterator vit = luaStateVec.begin(); vit != luaStateVec.end(); ++vit) {
+			lua_close(*vit);
+		}
+
+		luaStateVec.clear();
 	}
 
-	luaStates.clear();
+	luaModuleStates.clear();
 }

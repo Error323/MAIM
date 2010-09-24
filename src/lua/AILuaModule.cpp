@@ -11,11 +11,11 @@
 #include "../utils/Debugger.hpp"
 
 LuaModule::LuaModule(): 
-	isValid(false), 
-	haveGetName(false), 
-	haveCanRun(false), 
-	haveUpdate(false), 
-	luaState(NULL), 
+	isValid(false),
+	haveGetName(false),
+	haveCanRun(false),
+	haveUpdate(false),
+	luaState(NULL),
 	maxGroupSize(0),
 	priority(LUAMODULE_NUM_PRIORITIES)
 {
@@ -25,8 +25,8 @@ LuaModule::LuaModule():
 // of a module's lifetime; underlying Lua script
 // code that is executed depends on the current
 // luaState
-bool LuaModule::LoadState(const std::string& moduleName) {
-	luaState = AIHelper::GetActiveInstance()->GetLuaModuleLoader()->LoadLuaModule(moduleName);
+bool LuaModule::SetLuaState(lua_State* L) {
+	luaState = L;
 
 	if (luaState != NULL) {
 		MAI_ASSERT(lua_gettop(luaState) == 0);
@@ -50,7 +50,7 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 		haveUpdate  = false;
 	}
 
-	LOG_BASIC("[LuaModule::LoadState(" << moduleName << ")]\n");
+	LOG_BASIC("[LuaModule::SetLuaState()]\n");
 	LOG_BASIC("\tHaveGetName(): " << (HaveGetName()) << "\n");
 	LOG_BASIC("\tHaveCanRun():  " << (HaveCanRun())  << "\n");
 	LOG_BASIC("\tHaveUpdate():  " << (HaveUpdate()) << "\n");
@@ -59,7 +59,10 @@ bool LuaModule::LoadState(const std::string& moduleName) {
 }
 
 void LuaModule::Release() {
-	MAI_ASSERT(lua_gettop(luaState) == 0);
+	if (luaState != NULL) {
+		MAI_ASSERT(lua_gettop(luaState) == 0);
+	}
+
 	ObjectFactory<LuaModule>::Release(this);
 }
 

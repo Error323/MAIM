@@ -34,7 +34,7 @@ public:
 	bool HaveCanRun() const { return haveCanRun; }
 	bool HaveUpdate() const { return haveUpdate; }
 
-	void SetLuaState(lua_State* L) { luaState = L; }
+	bool SetLuaState(lua_State*);
 	lua_State* GetLuaState() const { return luaState; }
 
 	// note: order matters
