@@ -53,15 +53,15 @@ namespace util {
 	}
 
 
-	inline void StringToLowerInPlace(rString s) {
+	void StringToLowerInPlace(rString s) {
 		std::transform(s.begin(), s.end(), s.begin(), (int (*)(int))tolower);
 	}
-	inline String StringToLower(String s) {
+	String StringToLower(String s) {
 		StringToLowerInPlace(s);
 		return s;
 	}
 
-	inline String StringStripSpaces(rcString s1) {
+	String StringStripSpaces(rcString s1) {
 		String s2(s1);
 		s2.erase(remove_if(s2.begin(), s2.end(), isspace), s2.end());
 		return s2;
@@ -78,6 +78,7 @@ namespace util {
 
 		return wavg;
 	}
+
 
 	bool AreSuitedSubjects(rcvUint32 subjects, rcvUint32 includes, rcvUint32 excludes) {
 		cUint32 n = subjects.size();
@@ -96,23 +97,12 @@ namespace util {
 		return true;
 	}
 
-	inline bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude) {
+	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude) {
 		return (IS_BINARY_SUBSET(include, subject) && IS_EMPTY_BINARY_INTERSECTION(subject, exclude));
 	}
 
-	inline unsigned int CountOneBits(cUint32 n) {
-		cInt S[] = {1, 2, 4, 8, 16};
-		cInt B[] = {0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0x0000FFFF};
-		int c = n;
-		c = ((c >> S[0]) & B[0]) + (c & B[0]);
-		c = ((c >> S[1]) & B[1]) + (c & B[1]);
-		c = ((c >> S[2]) & B[2]) + (c & B[2]);
-		c = ((c >> S[3]) & B[3]) + (c & B[3]);
-		c = ((c >> S[4]) & B[4]) + (c & B[4]);
-		return c;
-	}
 
-	inline float GaussDens(cFloat x, cFloat mu, cFloat sigma) {
+	float GaussDens(cFloat x, cFloat mu, cFloat sigma) {
 		cFloat a = 1.0f / (sigma * std::sqrt(2.0f * M_PI));
 		cFloat b = std::exp(-(((x - mu) * (x - mu)) / (2.0f * sigma * sigma)));
 		return (a * b);
