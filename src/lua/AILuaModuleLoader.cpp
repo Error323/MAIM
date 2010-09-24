@@ -70,38 +70,6 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
 
-	/*
-	const std::string modFileName = util::StringStripSpaces(rcb->GetModName());
-
-	const std::string defModuleFileNameRel = (AI_LUA_DIR                    ) + ("Def" + moduleBaseName + ".lua");
-	const std::string modModuleFileNameRel = (AI_LUA_DIR + modFileName + "/") + ("Mod" + moduleBaseName + ".lua");
-	const std::string defModuleFileNameAbs = util::GetAbsFileName(rcb, defModuleFileNameRel, true);
-	const std::string modModuleFileNameAbs = util::GetAbsFileName(rcb, modModuleFileNameRel, true);
-
-	std::ifstream defModuleFileStream; defModuleFileStream.open(defModuleFileNameAbs.c_str());
-	std::ifstream modModuleFileStream; modModuleFileStream.open(modModuleFileNameAbs.c_str());
-
-	std::string luaScript;
-
-	// either an AI-default or a mod-specific module should exist
-	MAI_ASSERT(defModuleFileStream.good() || modModuleFileStream.good());
-
-	if (modModuleFileStream.good()) {
-		aih->GetLogger()->Log("[LuaModuleLoader] loading mod-specific module file \"");
-		aih->GetLogger()->Log(modModuleFileNameAbs + "\n");
-		luaScript = modModuleFileNameAbs;
-	} else if (defModuleFileStream.good()) {
-		// load the AI-default module only if no mod-specific one is present
-		aih->GetLogger()->Log("[LuaModuleLoader] loading AI-default module file \"");
-		aih->GetLogger()->Log(defModuleFileNameAbs + "\n");
-		luaScript = defModuleFileNameAbs;
-	}
-
-	defModuleFileStream.close();
-	modModuleFileStream.close();
-	*/
-
-
 	lua_State* luaState = lua_open();
 	luaL_openlibs(luaState);
 
@@ -109,7 +77,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 	int callErr = 0;   // 0 | LUA_ERRRUN  | LUA_ERRMEM    | LUA_ERRERR
 
 	if ((loadErr = luaL_loadfile(luaState, luaScript.c_str())) != 0 || (callErr = lua_pcall(luaState, 0, 0, 0)) != 0) {
-		aih->GetLogger()->Log(std::string(lua_tostring(luaState, -1)) + "\n");
+		LOG_BASIC(std::string(lua_tostring(luaState, -1)) + "\n");
 		lua_pop(luaState, 1);
 		return NULL;
 	} else {
@@ -165,6 +133,8 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 	}
 }
 
+
+
 LuaModuleLoader::LuaModuleLoader() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
@@ -208,9 +178,15 @@ LuaModuleLoader::LuaModuleLoader() {
 	for (std::set<std::string>::const_iterator it = moduleFiles.begin(); it != moduleFiles.end(); ++it) {
 		lua_State* moduleState = LoadLuaModule(*it);
 
+		if (moduleState == NULL) {
+			// bad script
+			continue;
+		}
+
 		LuaModule::LuaModuleClass moduleClass;
 		unsigned int modulePriority = LuaModule::LUAMODULE_NUM_PRIORITIES;
 
+		// note: asumes <inArgs> is 0
 		#define CALL_LUA_FUNC_BEG(L, name, inArgs, outArgs) \
 			MAI_ASSERT(lua_gettop(L) == 0);                 \
 			lua_getglobal(L, name);                         \
