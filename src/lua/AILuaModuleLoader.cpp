@@ -140,8 +140,8 @@ LuaModuleLoader::LuaModuleLoader() {
 	cString modModuleDirRel = AI_LUA_DIR + rcb->GetModShortName();
 
 	// Modules get installed in the readonly directory, so load them from there
-	cString defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, true);
-	cString modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, true);
+	cString defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, NULL, true);
+	cString modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, NULL, true);
 
 	vString defModuleFiles;
 	vString modModuleFiles;

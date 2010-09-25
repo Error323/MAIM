@@ -102,8 +102,8 @@ AIUnitDefHandler::AIUnitDefHandler() {
 		std::set<int>& boUDIDs = aiUnitDef->buildOptionUDIDs;
 		std::set<int>::const_iterator boUDIDsIt;
 
-		bool isStaticBuilder  = ((aiUnitDef->typeMask & MASK_BUILDER_STATIC) != 0);
-		bool isMobileBuilder  = ((aiUnitDef->typeMask & MASK_BUILDER_MOBILE) != 0);
+		bool isStaticBuilder  = ((aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC) != 0);
+		bool isMobileBuilder  = ((aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_MOBILE) != 0);
 		bool isSpecialBuilder = (isStaticBuilder || isMobileBuilder);
 
 		if (isStaticBuilder || isMobileBuilder) {
@@ -125,12 +125,12 @@ AIUnitDefHandler::AIUnitDefHandler() {
 					aiUnitDef->boMoveDataMask |= MOVEDATA_MF2MASK(sprBuildOptionDef->movedata->moveFamily);
 					aiUnitDef->boMoveDataMask |= MOVEDATA_TC2MASK(sprBuildOptionDef->movedata->terrainClass);
 				} else if (aiBuildOptionDef->isMobile) {
-					aiUnitDef->boMoveDataMask |= MASK_MOVEDATA_MT_AIR;
-					aiUnitDef->boMoveDataMask |= MASK_MOVEDATA_MF_AIR;
-					aiUnitDef->boMoveDataMask |= MASK_MOVEDATA_TC_AIR;
+					aiUnitDef->boMoveDataMask |= AIUnitDef::MASK_MOVEDATA_MT_AIR;
+					aiUnitDef->boMoveDataMask |= AIUnitDef::MASK_MOVEDATA_MF_AIR;
+					aiUnitDef->boMoveDataMask |= AIUnitDef::MASK_MOVEDATA_TC_AIR;
 				}
 
-				if ((aiBuildOptionDef->typeMask & MASK_BUILDER_STATIC) != 0) {
+				if ((aiBuildOptionDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC) != 0) {
 					aiUnitDef->isHubBuilder = true;
 				}
 			}
@@ -187,55 +187,55 @@ void AIUnitDefHandler::WriteLog() {
 		msg << "\n";
 		msg << "\tType, Terrain, Weapon [, Class] Masks:\n";
 
-		if (aiUnitDef->typeMask & MASK_BUILDER_MOBILE   ) { msg << "\t\tMASK_BUILDER_MOBILE    = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_BUILDER_STATIC   ) { msg << "\t\tMASK_BUILDER_STATIC    = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_ASSISTER_MOBILE  ) { msg << "\t\tMASK_ASSISTER_MOBILE   = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_ASSISTER_STATIC  ) { msg << "\t\tMASK_ASSISTER_STATIC   = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_E_PRODUCER_MOBILE) { msg << "\t\tMASK_E_PRODUCER_MOBILE = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_E_PRODUCER_STATIC) { msg << "\t\tMASK_E_PRODUCER_STATIC = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_M_PRODUCER_MOBILE) { msg << "\t\tMASK_M_PRODUCER_MOBILE = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_M_PRODUCER_STATIC) { msg << "\t\tMASK_M_PRODUCER_STATIC = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_E_STORAGE_MOBILE ) { msg << "\t\tMASK_E_STORAGE_MOBILE  = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_E_STORAGE_STATIC ) { msg << "\t\tMASK_E_STORAGE_STATIC  = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_M_STORAGE_MOBILE ) { msg << "\t\tMASK_M_STORAGE_MOBILE  = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_M_STORAGE_STATIC ) { msg << "\t\tMASK_M_STORAGE_STATIC  = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_DEFENSE_STATIC   ) { msg << "\t\tMASK_DEFENSE_STATIC    = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_DEFENSE_MOBILE   ) { msg << "\t\tMASK_DEFENSE_MOBILE    = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_OFFENSE_STATIC   ) { msg << "\t\tMASK_OFFENSE_STATIC    = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_OFFENSE_MOBILE   ) { msg << "\t\tMASK_OFFENSE_MOBILE    = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_INTEL_MOBILE     ) { msg << "\t\tMASK_INTEL_MOBILE      = 1\n"; }
-		if (aiUnitDef->typeMask & MASK_INTEL_STATIC     ) { msg << "\t\tMASK_INTEL_STATIC      = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_MOBILE   ) { msg << "\t\tMASK_BUILDER_MOBILE    = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC   ) { msg << "\t\tMASK_BUILDER_STATIC    = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_ASSISTER_MOBILE  ) { msg << "\t\tMASK_ASSISTER_MOBILE   = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_ASSISTER_STATIC  ) { msg << "\t\tMASK_ASSISTER_STATIC   = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_PRODUCER_MOBILE) { msg << "\t\tMASK_E_PRODUCER_MOBILE = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_PRODUCER_STATIC) { msg << "\t\tMASK_E_PRODUCER_STATIC = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_PRODUCER_MOBILE) { msg << "\t\tMASK_M_PRODUCER_MOBILE = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_PRODUCER_STATIC) { msg << "\t\tMASK_M_PRODUCER_STATIC = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_STORAGE_MOBILE ) { msg << "\t\tMASK_E_STORAGE_MOBILE  = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_STORAGE_STATIC ) { msg << "\t\tMASK_E_STORAGE_STATIC  = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_STORAGE_MOBILE ) { msg << "\t\tMASK_M_STORAGE_MOBILE  = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_STORAGE_STATIC ) { msg << "\t\tMASK_M_STORAGE_STATIC  = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_DEFENSE_STATIC   ) { msg << "\t\tMASK_DEFENSE_STATIC    = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_DEFENSE_MOBILE   ) { msg << "\t\tMASK_DEFENSE_MOBILE    = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_OFFENSE_STATIC   ) { msg << "\t\tMASK_OFFENSE_STATIC    = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_OFFENSE_MOBILE   ) { msg << "\t\tMASK_OFFENSE_MOBILE    = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_INTEL_MOBILE     ) { msg << "\t\tMASK_INTEL_MOBILE      = 1\n"; }
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_INTEL_STATIC     ) { msg << "\t\tMASK_INTEL_STATIC      = 1\n"; }
 
-		if (aiUnitDef->terrainMask & MASK_LAND           ) { msg << "\t\tMASK_LAND              = 1\n"; }
-		if (aiUnitDef->terrainMask & MASK_WATER_SURFACE  ) { msg << "\t\tMASK_WATER_SURFACE     = 1\n"; }
-		if (aiUnitDef->terrainMask & MASK_WATER_SUBMERGED) { msg << "\t\tMASK_WATER_SUBMERGED   = 1\n"; }
-		if (aiUnitDef->terrainMask & MASK_AIR            ) { msg << "\t\tMASK_AIR               = 1\n"; }
+		if (aiUnitDef->terrainMask & AIUnitDef::MASK_LAND           ) { msg << "\t\tMASK_LAND              = 1\n"; }
+		if (aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SURFACE  ) { msg << "\t\tMASK_WATER_SURFACE     = 1\n"; }
+		if (aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SUBMERGED) { msg << "\t\tMASK_WATER_SUBMERGED   = 1\n"; }
+		if (aiUnitDef->terrainMask & AIUnitDef::MASK_AIR            ) { msg << "\t\tMASK_AIR               = 1\n"; }
 
-		if (aiUnitDef->weaponMask & MASK_ARMED     ) { msg << "\t\tMASK_ARMED             = 1\n"; }
-		if (aiUnitDef->weaponMask & MASK_NUKE      ) { msg << "\t\tMASK_NUKE              = 1\n"; }
-		if (aiUnitDef->weaponMask & MASK_ANTINUKE  ) { msg << "\t\tMASK_ANTINUKE          = 1\n"; }
-		if (aiUnitDef->weaponMask & MASK_SHIELD    ) { msg << "\t\tMASK_SHIELD            = 1\n"; }
-	//	if (aiUnitDef->weaponMask & MASK_STOCKPILE ) { msg << "\t\t\n"; }
-	//	if (aiUnitDef->weaponMask & MASK_MANUALFIRE) { msg << "\t\t\n"; }
+		if (aiUnitDef->weaponMask & AIUnitDef::MASK_ARMED     ) { msg << "\t\tMASK_ARMED             = 1\n"; }
+		if (aiUnitDef->weaponMask & AIUnitDef::MASK_NUKE      ) { msg << "\t\tMASK_NUKE              = 1\n"; }
+		if (aiUnitDef->weaponMask & AIUnitDef::MASK_ANTINUKE  ) { msg << "\t\tMASK_ANTINUKE          = 1\n"; }
+		if (aiUnitDef->weaponMask & AIUnitDef::MASK_SHIELD    ) { msg << "\t\tMASK_SHIELD            = 1\n"; }
+		if (aiUnitDef->weaponMask & AIUnitDef::MASK_STOCKPILE ) { msg << "\t\tMASK_STOCKPILE         = 1\n"; }
+		if (aiUnitDef->weaponMask & AIUnitDef::MASK_MANUALFIRE) { msg << "\t\tMASK_MANUALFIRE        = 1\n"; }
 
-		if (aiUnitDef->typeMask & MASK_BUILDER_STATIC) {
+		if (aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC) {
 			msg << "\n\tBuildOption MoveData Masks:\n";
 
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MT_GND) { msg << "\t\tMASK_MOVEDATA_MT_GND   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MT_HVR) { msg << "\t\tMASK_MOVEDATA_MT_HVR   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MT_SHP) { msg << "\t\tMASK_MOVEDATA_MT_SHP   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MT_AIR) { msg << "\t\tMASK_MOVEDATA_MT_AIR   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MT_GND) { msg << "\t\tMASK_MOVEDATA_MT_GND   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MT_HVR) { msg << "\t\tMASK_MOVEDATA_MT_HVR   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MT_SHP) { msg << "\t\tMASK_MOVEDATA_MT_SHP   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MT_AIR) { msg << "\t\tMASK_MOVEDATA_MT_AIR   = 1\n"; }
 
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MF_TNK) { msg << "\t\tMASK_MOVEDATA_MF_TNK   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MF_KBT) { msg << "\t\tMASK_MOVEDATA_MF_KBT   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MF_HVR) { msg << "\t\tMASK_MOVEDATA_MF_HVR   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MF_SHP) { msg << "\t\tMASK_MOVEDATA_MF_SHP   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_MF_AIR) { msg << "\t\tMASK_MOVEDATA_MF_AIR   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MF_TNK) { msg << "\t\tMASK_MOVEDATA_MF_TNK   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MF_KBT) { msg << "\t\tMASK_MOVEDATA_MF_KBT   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MF_HVR) { msg << "\t\tMASK_MOVEDATA_MF_HVR   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MF_SHP) { msg << "\t\tMASK_MOVEDATA_MF_SHP   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MF_AIR) { msg << "\t\tMASK_MOVEDATA_MF_AIR   = 1\n"; }
 
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_LND) { msg << "\t\tMASK_MOVEDATA_TC_LND   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_WTR) { msg << "\t\tMASK_MOVEDATA_TC_WTR   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_MXD) { msg << "\t\tMASK_MOVEDATA_TC_MXD   = 1\n"; }
-			if (aiUnitDef->boMoveDataMask & MASK_MOVEDATA_TC_AIR) { msg << "\t\tMASK_MOVEDATA_TC_AIR   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_TC_LND) { msg << "\t\tMASK_MOVEDATA_TC_LND   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_TC_WTR) { msg << "\t\tMASK_MOVEDATA_TC_WTR   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_TC_MXD) { msg << "\t\tMASK_MOVEDATA_TC_MXD   = 1\n"; }
+			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_TC_AIR) { msg << "\t\tMASK_MOVEDATA_TC_AIR   = 1\n"; }
 		}
 
 		msg << "\n";
@@ -253,42 +253,42 @@ bool AIUnitDefHandler::CanBuild(unsigned int typeMaskBit, unsigned int terrMaskB
 	bool b2 = false;
 
 	switch (typeMaskBit) {
-		case MASK_BUILDER_MOBILE:    { b0 = (!mobileBuilderUnitDefIDs.empty());   } break;
-		case MASK_BUILDER_STATIC:    { b0 = (!staticBuilderUnitDefIDs.empty());   } break;
-		case MASK_ASSISTER_MOBILE:   { b0 = (!mobileAssisterUnitDefIDs.empty());  } break;
-		case MASK_ASSISTER_STATIC:   { b0 = (!staticAssisterUnitDefIDs.empty());  } break;
-		case MASK_E_PRODUCER_MOBILE: { b0 = (!mobileEProducerUnitDefIDs.empty()); } break;
-		case MASK_E_PRODUCER_STATIC: { b0 = (!staticEProducerUnitDefIDs.empty()); } break;
-		case MASK_M_PRODUCER_MOBILE: { b0 = (!mobileMProducerUnitDefIDs.empty()); } break;
-		case MASK_M_PRODUCER_STATIC: { b0 = (!staticMProducerUnitDefIDs.empty()); } break;
-		case MASK_E_STORAGE_MOBILE:  { b0 = (!mobileEStorageUnitDefIDs.empty());  } break;
-		case MASK_E_STORAGE_STATIC:  { b0 = (!staticEStorageUnitDefIDs.empty());  } break;
-		case MASK_M_STORAGE_MOBILE:  { b0 = (!mobileMStorageUnitDefIDs.empty());  } break;
-		case MASK_M_STORAGE_STATIC:  { b0 = (!staticMStorageUnitDefIDs.empty());  } break;
-		case MASK_DEFENSE_STATIC:    { b0 = (!staticDefenseUnitDefIDs.empty());   } break;
-		case MASK_DEFENSE_MOBILE:    { b0 = (!mobileDefenseUnitDefIDs.empty());   } break;
-		case MASK_OFFENSE_STATIC:    { b0 = (!staticOffenseUnitDefIDs.empty());   } break;
-		case MASK_OFFENSE_MOBILE:    { b0 = (!mobileOffenseUnitDefIDs.empty());   } break;
-		case MASK_INTEL_MOBILE:      { b0 = (!mobileIntelUnitDefIDs.empty());     } break;
-		case MASK_INTEL_STATIC:      { b0 = (!staticIntelUnitDefIDs.empty());     } break;
+		case AIUnitDef::MASK_BUILDER_MOBILE:    { b0 = (!mobileBuilderUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_BUILDER_STATIC:    { b0 = (!staticBuilderUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_ASSISTER_MOBILE:   { b0 = (!mobileAssisterUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_ASSISTER_STATIC:   { b0 = (!staticAssisterUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_E_PRODUCER_MOBILE: { b0 = (!mobileEProducerUnitDefIDs.empty()); } break;
+		case AIUnitDef::MASK_E_PRODUCER_STATIC: { b0 = (!staticEProducerUnitDefIDs.empty()); } break;
+		case AIUnitDef::MASK_M_PRODUCER_MOBILE: { b0 = (!mobileMProducerUnitDefIDs.empty()); } break;
+		case AIUnitDef::MASK_M_PRODUCER_STATIC: { b0 = (!staticMProducerUnitDefIDs.empty()); } break;
+		case AIUnitDef::MASK_E_STORAGE_MOBILE:  { b0 = (!mobileEStorageUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_E_STORAGE_STATIC:  { b0 = (!staticEStorageUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_M_STORAGE_MOBILE:  { b0 = (!mobileMStorageUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_M_STORAGE_STATIC:  { b0 = (!staticMStorageUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_DEFENSE_STATIC:    { b0 = (!staticDefenseUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_DEFENSE_MOBILE:    { b0 = (!mobileDefenseUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_OFFENSE_STATIC:    { b0 = (!staticOffenseUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_OFFENSE_MOBILE:    { b0 = (!mobileOffenseUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_INTEL_MOBILE:      { b0 = (!mobileIntelUnitDefIDs.empty());     } break;
+		case AIUnitDef::MASK_INTEL_STATIC:      { b0 = (!staticIntelUnitDefIDs.empty());     } break;
 		default:                     { } break;
 	}
 
 	switch (terrMaskBit) {
-		case MASK_LAND:            { b1 = (!landUnitDefIDs.empty());           } break;
-		case MASK_WATER_SURFACE:   { b1 = (!surfaceWaterUnitDefIDs.empty());   } break;
-		case MASK_WATER_SUBMERGED: { b1 = (!submergedWaterUnitDefIDs.empty()); } break;
-		case MASK_AIR:             { b1 = (!airUnitDefIDs.empty());            } break;
+		case AIUnitDef::MASK_LAND:            { b1 = (!landUnitDefIDs.empty());           } break;
+		case AIUnitDef::MASK_WATER_SURFACE:   { b1 = (!surfaceWaterUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_WATER_SUBMERGED: { b1 = (!submergedWaterUnitDefIDs.empty()); } break;
+		case AIUnitDef::MASK_AIR:             { b1 = (!airUnitDefIDs.empty());            } break;
 		default:                   { } break;
 	}
 
 	switch (weapMaskBit) {
-		case MASK_ARMED:      { b2 = (!armedUnitDefIDs.empty());    } break;
-		case MASK_NUKE:       { b2 = (!nukeUnitDefIDs.empty());     } break;
-		case MASK_ANTINUKE:   { b2 = (!antiNukeUnitDefIDs.empty()); } break;
-		case MASK_SHIELD:     { b2 = (!shieldUnitDefIDs.empty());   } break;
-//		case MASK_STOCKPILE:  { } break;
-//		case MASK_MANUALFIRE: { } break;
+		case AIUnitDef::MASK_ARMED:      { b2 = (!armedUnitDefIDs.empty());      } break;
+		case AIUnitDef::MASK_NUKE:       { b2 = (!nukeUnitDefIDs.empty());       } break;
+		case AIUnitDef::MASK_ANTINUKE:   { b2 = (!antiNukeUnitDefIDs.empty());   } break;
+		case AIUnitDef::MASK_SHIELD:     { b2 = (!shieldUnitDefIDs.empty());     } break;
+		case AIUnitDef::MASK_STOCKPILE:  { b2 = (!stockpileUnitDefIDs.empty());  } break;
+		case AIUnitDef::MASK_MANUALFIRE: { b2 = (!manualFireUnitDefIDs.empty()); } break;
 		default:              { } break;
 	}
 
@@ -317,40 +317,40 @@ std::list<std::set<int>* > AIUnitDefHandler::GetUnitDefIDSetsForMask(unsigned in
 	std::list< std::set<int>* > uSets;
 
 	if (typeMaskBits != 0) {
-		if (typeMaskBits & MASK_BUILDER_MOBILE   ) { uSets.push_back(&mobileBuilderUnitDefIDs); }
-		if (typeMaskBits & MASK_BUILDER_STATIC   ) { uSets.push_back(&staticBuilderUnitDefIDs); }
-		if (typeMaskBits & MASK_ASSISTER_MOBILE  ) { uSets.push_back(&mobileAssisterUnitDefIDs); }
-		if (typeMaskBits & MASK_ASSISTER_STATIC  ) { uSets.push_back(&staticAssisterUnitDefIDs); }
-		if (typeMaskBits & MASK_E_PRODUCER_MOBILE) { uSets.push_back(&mobileEProducerUnitDefIDs); }
-		if (typeMaskBits & MASK_E_PRODUCER_STATIC) { uSets.push_back(&staticEProducerUnitDefIDs); }
-		if (typeMaskBits & MASK_M_PRODUCER_MOBILE) { uSets.push_back(&mobileMProducerUnitDefIDs); }
-		if (typeMaskBits & MASK_M_PRODUCER_STATIC) { uSets.push_back(&staticMProducerUnitDefIDs); }
-		if (typeMaskBits & MASK_E_STORAGE_MOBILE ) { uSets.push_back(&mobileEStorageUnitDefIDs); }
-		if (typeMaskBits & MASK_E_STORAGE_STATIC ) { uSets.push_back(&staticEStorageUnitDefIDs); }
-		if (typeMaskBits & MASK_M_STORAGE_MOBILE ) { uSets.push_back(&mobileMStorageUnitDefIDs); }
-		if (typeMaskBits & MASK_M_STORAGE_STATIC ) { uSets.push_back(&staticMStorageUnitDefIDs); }
-		if (typeMaskBits & MASK_DEFENSE_STATIC   ) { uSets.push_back(&staticDefenseUnitDefIDs); }
-		if (typeMaskBits & MASK_DEFENSE_MOBILE   ) { uSets.push_back(&mobileDefenseUnitDefIDs); }
-		if (typeMaskBits & MASK_OFFENSE_STATIC   ) { uSets.push_back(&staticOffenseUnitDefIDs); }
-		if (typeMaskBits & MASK_OFFENSE_MOBILE   ) { uSets.push_back(&mobileOffenseUnitDefIDs); }
-		if (typeMaskBits & MASK_INTEL_MOBILE     ) { uSets.push_back(&mobileIntelUnitDefIDs); }
-		if (typeMaskBits & MASK_INTEL_STATIC     ) { uSets.push_back(&staticIntelUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_BUILDER_MOBILE   ) { uSets.push_back(&mobileBuilderUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_BUILDER_STATIC   ) { uSets.push_back(&staticBuilderUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_ASSISTER_MOBILE  ) { uSets.push_back(&mobileAssisterUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_ASSISTER_STATIC  ) { uSets.push_back(&staticAssisterUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_E_PRODUCER_MOBILE) { uSets.push_back(&mobileEProducerUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_E_PRODUCER_STATIC) { uSets.push_back(&staticEProducerUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_M_PRODUCER_MOBILE) { uSets.push_back(&mobileMProducerUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_M_PRODUCER_STATIC) { uSets.push_back(&staticMProducerUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_E_STORAGE_MOBILE ) { uSets.push_back(&mobileEStorageUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_E_STORAGE_STATIC ) { uSets.push_back(&staticEStorageUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_M_STORAGE_MOBILE ) { uSets.push_back(&mobileMStorageUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_M_STORAGE_STATIC ) { uSets.push_back(&staticMStorageUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_DEFENSE_STATIC   ) { uSets.push_back(&staticDefenseUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_DEFENSE_MOBILE   ) { uSets.push_back(&mobileDefenseUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_OFFENSE_STATIC   ) { uSets.push_back(&staticOffenseUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_OFFENSE_MOBILE   ) { uSets.push_back(&mobileOffenseUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_INTEL_MOBILE     ) { uSets.push_back(&mobileIntelUnitDefIDs); }
+		if (typeMaskBits & AIUnitDef::MASK_INTEL_STATIC     ) { uSets.push_back(&staticIntelUnitDefIDs); }
 	}
 
 	if (terrMaskBits != 0) {
-		if (terrMaskBits & MASK_LAND           ) { uSets.push_back(&landUnitDefIDs); }
-		if (terrMaskBits & MASK_WATER_SURFACE  ) { uSets.push_back(&surfaceWaterUnitDefIDs); }
-		if (terrMaskBits & MASK_WATER_SUBMERGED) { uSets.push_back(&submergedWaterUnitDefIDs); }
-		if (terrMaskBits & MASK_AIR            ) { uSets.push_back(&airUnitDefIDs); }
+		if (terrMaskBits & AIUnitDef::MASK_LAND           ) { uSets.push_back(&landUnitDefIDs); }
+		if (terrMaskBits & AIUnitDef::MASK_WATER_SURFACE  ) { uSets.push_back(&surfaceWaterUnitDefIDs); }
+		if (terrMaskBits & AIUnitDef::MASK_WATER_SUBMERGED) { uSets.push_back(&submergedWaterUnitDefIDs); }
+		if (terrMaskBits & AIUnitDef::MASK_AIR            ) { uSets.push_back(&airUnitDefIDs); }
 	}
 
 	if (weapMaskBits != 0) {
-		if (weapMaskBits & MASK_ARMED     ) { uSets.push_back(&armedUnitDefIDs); }
-		if (weapMaskBits & MASK_NUKE      ) { uSets.push_back(&nukeUnitDefIDs); }
-		if (weapMaskBits & MASK_ANTINUKE  ) { uSets.push_back(&antiNukeUnitDefIDs); }
-		if (weapMaskBits & MASK_SHIELD    ) { uSets.push_back(&shieldUnitDefIDs); }
-	//	if (wMaskBits & MASK_STOCKPILE ) { uSets.push_back(&stockpileUnitDefIDs); }
-	//	if (wMaskBits & MASK_MANUALFIRE) { uSets.push_back(&manualFireUnitDefIDs); }
+		if (weapMaskBits & AIUnitDef::MASK_ARMED     ) { uSets.push_back(&armedUnitDefIDs); }
+		if (weapMaskBits & AIUnitDef::MASK_NUKE      ) { uSets.push_back(&nukeUnitDefIDs); }
+		if (weapMaskBits & AIUnitDef::MASK_ANTINUKE  ) { uSets.push_back(&antiNukeUnitDefIDs); }
+		if (weapMaskBits & AIUnitDef::MASK_SHIELD    ) { uSets.push_back(&shieldUnitDefIDs); }
+	//	if (wMaskBits & AIUnitDef::MASK_STOCKPILE ) { uSets.push_back(&stockpileUnitDefIDs); }
+	//	if (wMaskBits & AIUnitDef::MASK_MANUALFIRE) { uSets.push_back(&manualFireUnitDefIDs); }
 	}
 
 	return uSets;
@@ -498,51 +498,51 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 	if (!aiUnitDef->isBuilder) {
 		if (sprUnitDef->canAssist || sprUnitDef->canRepair) {
-			aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_ASSISTER_MOBILE: MASK_ASSISTER_STATIC);
+			aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_ASSISTER_MOBILE: AIUnitDef::MASK_ASSISTER_STATIC);
 		}
 	} else {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_BUILDER_MOBILE: MASK_BUILDER_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_BUILDER_MOBILE: AIUnitDef::MASK_BUILDER_STATIC);
 	}
 
 
 	// intelligence
 	if ((sprUnitDef->radarRadius > 0 || sprUnitDef->jammerRadius  > 0)) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_INTEL_MOBILE: MASK_INTEL_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
 	}
 	if ((sprUnitDef->sonarRadius  > 0 || sprUnitDef->sonarJamRadius > 0)) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_INTEL_MOBILE: MASK_INTEL_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
 	}
 	if ((sprUnitDef->seismicRadius > 0)) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_INTEL_MOBILE: MASK_INTEL_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
 	}
 
 
 	/* Should this be unavailable?
 	// resources (metal)
 	if (aiUnitDef->ResMakeOff('M', 0.0f, 0.0f) > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_M_PRODUCER_MOBILE: MASK_M_PRODUCER_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_PRODUCER_MOBILE: AIUnitDef::MASK_M_PRODUCER_STATIC);
 	}
 	if (aiUnitDef->IsResGenerator('M')) {
 		// extractor or maker (when active)
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_M_PRODUCER_MOBILE: MASK_M_PRODUCER_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_PRODUCER_MOBILE: AIUnitDef::MASK_M_PRODUCER_STATIC);
 	}
 
 	// resources (energy)
 	if (aiUnitDef->ResMakeOff('E', 0.0f, 0.0f) > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_E_PRODUCER_MOBILE: MASK_E_PRODUCER_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_PRODUCER_MOBILE: AIUnitDef::MASK_E_PRODUCER_STATIC);
 	}
 	if (aiUnitDef->IsResGenerator('E')) {
 		// wind or tidal
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_E_PRODUCER_MOBILE: MASK_E_PRODUCER_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_PRODUCER_MOBILE: AIUnitDef::MASK_E_PRODUCER_STATIC);
 	}
 	*/
 
 	// resources ({M, E} storage)
 	if (sprUnitDef->metalStorage  > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_M_STORAGE_MOBILE: MASK_M_STORAGE_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_STORAGE_MOBILE: AIUnitDef::MASK_M_STORAGE_STATIC);
 	}
 	if (sprUnitDef->energyStorage > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_E_STORAGE_MOBILE: MASK_E_STORAGE_STATIC);
+		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_STORAGE_MOBILE: AIUnitDef::MASK_E_STORAGE_STATIC);
 	}
 
 
@@ -561,8 +561,8 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 			if (!w->stockpile && !w->noAutoTarget && !w->isShield && !w->targetable && !w->interceptor) {
 				// regular weapon (note the offense/defense switch)
-				aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_OFFENSE_MOBILE: MASK_DEFENSE_STATIC);
-				aiUnitDef->weaponMask |= MASK_ARMED;
+				aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_OFFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
+				aiUnitDef->weaponMask |= AIUnitDef::MASK_ARMED;
 
 				aiUnitDef->minWeaponRange = std::min(aiUnitDef->minWeaponRange, w->range);
 				aiUnitDef->maxWeaponRange = std::max(aiUnitDef->maxWeaponRange, w->range);
@@ -571,18 +571,18 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 				if (w->stockpile) {
 					MAI_ASSERT(sprUnitDef->stockpileWeaponDef != NULL);
 					// weapon that uses ammunition (do we need this?)
-					// aiUnitDef->weaponMask |= MASK_STOCKPILE;
+					aiUnitDef->weaponMask |= AIUnitDef::MASK_STOCKPILE;
 				}
 				if (w->noAutoTarget) {
 					// manual-target weapon (do we need this?)
-					// aiUnitDef->weaponMask |= MASK_MANUALFIRE;
+					aiUnitDef->weaponMask |= AIUnitDef::MASK_MANUALFIRE;
 				}
 
 				if (w->isShield) {
 					MAI_ASSERT(sprUnitDef->shieldWeaponDef != NULL);
 					// (possibly mobile) shield generator
-					aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_DEFENSE_MOBILE: MASK_DEFENSE_STATIC);
-					aiUnitDef->weaponMask |= MASK_SHIELD;
+					aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_DEFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
+					aiUnitDef->weaponMask |= AIUnitDef::MASK_SHIELD;
 				}
 
 				if (!w->interceptor) {
@@ -590,14 +590,14 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 						// (possibly mobile) nuke launcher
 						// (weapon that can be intercepted,
 						// may or may not need stockpiling)
-						aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_OFFENSE_MOBILE: MASK_OFFENSE_STATIC);
-						aiUnitDef->weaponMask |= MASK_NUKE;
+						aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_OFFENSE_MOBILE: AIUnitDef::MASK_OFFENSE_STATIC);
+						aiUnitDef->weaponMask |= AIUnitDef::MASK_NUKE;
 					}
 				} else {
-					aiUnitDef->typeMask |= (aiUnitDef->isMobile? MASK_DEFENSE_MOBILE: MASK_DEFENSE_STATIC);
+					aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_DEFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
 					// (possibly mobile) anti-nuke
 					// there are no anti-anti weapons
-					aiUnitDef->weaponMask |= MASK_ANTINUKE;
+					aiUnitDef->weaponMask |= AIUnitDef::MASK_ANTINUKE;
 				}
 			}
 		}
@@ -610,14 +610,14 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 		// requirements (default {min, max} vals
 		// are -10e6 and +10e6)
 		if ((sprUnitDef->minWaterDepth >= 0.0f) /*&& (sprUnitDef->maxWaterDepth >= sprUnitDef->minWaterDepth)*/) {
-			aiUnitDef->terrainMask |= (sprUnitDef->floater? MASK_WATER_SURFACE: MASK_WATER_SUBMERGED);
+			aiUnitDef->terrainMask |= (sprUnitDef->floater? AIUnitDef::MASK_WATER_SURFACE: AIUnitDef::MASK_WATER_SUBMERGED);
 		} else {
-			aiUnitDef->terrainMask |= MASK_LAND;
+			aiUnitDef->terrainMask |= AIUnitDef::MASK_LAND;
 		}
 	} else {
 		if (sprUnitDef->canfly) {
 			MAI_ASSERT(sprUnitDef->movedata == NULL);
-			aiUnitDef->terrainMask |= MASK_AIR;
+			aiUnitDef->terrainMask |= AIUnitDef::MASK_AIR;
 		} else {
 			MAI_ASSERT(sprUnitDef->movedata != NULL);
 
@@ -629,13 +629,13 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 					MAI_ASSERT(sprUnitDef->movedata->moveType == MoveData::Ground_Move);
 					MAI_ASSERT(sprUnitDef->movedata->followGround);
 
-					aiUnitDef->terrainMask |= MASK_LAND;
+					aiUnitDef->terrainMask |= AIUnitDef::MASK_LAND;
 
 					// in practice, most land units can move into
 					// shallow water, so this is not very useful
 					// (depth here represents maxWaterDepth)
 					if (sprUnitDef->movedata->depth > 0.0f) {
-						aiUnitDef->terrainMask |= MASK_WATER_SUBMERGED;
+						aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SUBMERGED;
 					}
 				} break;
 				case MoveData::Hover: {
@@ -648,8 +648,8 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 					//! for tanks, "minWaterDepth" should be < 0.0f
 					//! for hovers, "maxWaterDepth" should be > 0.0f
 
-					aiUnitDef->terrainMask |= MASK_LAND;
-					aiUnitDef->terrainMask |= MASK_WATER_SURFACE;
+					aiUnitDef->terrainMask |= AIUnitDef::MASK_LAND;
+					aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SURFACE;
 				} break;
 				case MoveData::Ship: {
 					// floater is true if "waterline" key exists, which submarines ALSO have
@@ -661,24 +661,24 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 					// explicit || implicit
 					if (sprUnitDef->movedata->subMarine || (sprUnitDef->waterline >= sprUnitDef->movedata->depth)) {
-						aiUnitDef->terrainMask |= MASK_WATER_SUBMERGED;
+						aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SUBMERGED;
 					} else {
-						aiUnitDef->terrainMask |= MASK_WATER_SURFACE;
+						aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SURFACE;
 					}
 				} break;
 			}
 
 			if (sprUnitDef->movedata->terrainClass == MoveData::Mixed) {
 				MAI_ASSERT(
-					( aiUnitDef->terrainMask & MASK_LAND) &&
-					((aiUnitDef->terrainMask & MASK_WATER_SURFACE) ||
-					( aiUnitDef->terrainMask & MASK_WATER_SUBMERGED))
+					( aiUnitDef->terrainMask & AIUnitDef::MASK_LAND) &&
+					((aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SURFACE) ||
+					( aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SUBMERGED))
 				);
 			}
 		}
 	}
 
-	MAI_ASSERT(!((aiUnitDef->terrainMask & MASK_WATER_SURFACE) && (aiUnitDef->terrainMask & MASK_WATER_SUBMERGED)));
+	MAI_ASSERT(!((aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SURFACE) && (aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SUBMERGED)));
 
 
 	{

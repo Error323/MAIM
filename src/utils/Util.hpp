@@ -13,7 +13,7 @@ DECLARE_CLASS(IAICallback)
 #define IS_BINARY_SUBSET(A, B)             (((A) & (B)) == (A))
 
 namespace util {
-	std::string GetAbsFileName(pIAICallback, rcString, cBool readonly = false);
+	std::string GetAbsFileName(pIAICallback, rcString, pBool, bool);
 	int GetFilesInDir(rcString dir, rvString files);
 
 	void StringToLowerInPlace(rString);
