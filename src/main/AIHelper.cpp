@@ -1,6 +1,7 @@
 #include "./HAIInterface.hpp"
 #include "./AIHelper.hpp"
 #include "./DFolders.hpp"
+#include "./MAI.hpp"
 
 #include "../utils/Logger.hpp"
 #include "../utils/Timer.hpp"
@@ -22,6 +23,8 @@ void AIHelper::Init(pIGlobalAICallback gcb, unsigned int i) {
 	currFrame = initFrame;
 
 	logger           = new Logger(); logger->OpenLog(logger->GetLogName() + "[log].txt");
+	LOG_BASIC("[InitAI] " << String(AI_CODENAME) + "\n\n");
+
 	timer            = new Timer(); timer->OpenLog(logger->GetLogName() + "[timings].txt");
 
 	luaModuleLoader  = new LuaModuleLoader();

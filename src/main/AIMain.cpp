@@ -2,7 +2,6 @@
 
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
-#include "./MAI.hpp"
 
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
@@ -26,15 +25,11 @@ AIMain::~AIMain() {
 	delete aih;
 }
 
-
-
 void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 	aiInstance = aiInstances++;
 
 	AIHelper::SetActiveInstance(aih);
 	aih->Init(gcb, team);
-
-	LOG_BASIC("[InitAI] " << String(AI_CODENAME) + "\n");
 }
 
 void AIMain::ReleaseAI() {

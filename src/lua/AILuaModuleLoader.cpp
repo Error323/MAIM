@@ -214,6 +214,7 @@ LuaModuleLoader::LuaModuleLoader() {
 
 		if (modulePriority >= LuaModule::LUAMODULE_NUM_PRIORITIES) {
 			// illegal priority, can't load this module
+			LOG_ERROR("\t\t" << it->first << " has an invalid priority\n");
 			continue;
 		}
 
