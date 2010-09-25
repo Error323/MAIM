@@ -69,8 +69,6 @@ namespace util {
 
 
 	float WeightedAverage(std::list<float>& V, std::list<float>& W) {
-		MAI_ASSERT(V.size() == W.size());
-
 		float wavg = 0.0f;
 		std::list<float>::const_iterator v, w;
 		for (w = W.begin(), v = V.begin(); v != V.end() && w != W.end(); w++, v++)
