@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "./MAI.hpp"
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
 
@@ -30,6 +31,14 @@ void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 
 	AIHelper::SetActiveInstance(aih);
 	aih->Init(gcb, team);
+
+	std::stringstream initMsg;
+		initMsg << "[InitAI] " << AI_CODENAME << " " << AI_CREDITS;
+		initMsg << (aih->Initialized()? " initialized succesfully": " failed to initialize");
+		initMsg << "\n\n";
+
+	aih->GetLogger()->Log(initMsg.str());
+	aih->GetCallbackHandler()->SendTextMsg((initMsg.str()).c_str(), 0);
 }
 
 void AIMain::ReleaseAI() {
