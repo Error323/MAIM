@@ -59,8 +59,8 @@ public:
 		MASK_NUKE              = (1 << 1),
 		MASK_ANTINUKE          = (1 << 2),
 		MASK_SHIELD            = (1 << 3),
-		MASK_STOCKPILE         = (1 << 4), // n.a.
-		MASK_MANUALFIRE        = (1 << 5), // n.a.
+		MASK_STOCKPILE         = (1 << 4), // depends only on WeaponDef::stockpile (n.a.)
+		MASK_MANUALFIRE        = (1 << 5), // depends only on WeaponDef::noAutoFire (n.a.)
 		NUM_WEAPON_MASKS       = 6
 	};
 
