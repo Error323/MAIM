@@ -139,10 +139,11 @@ LuaModuleLoader::LuaModuleLoader() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
 
+	// TODO: use modShortName instead of "mod/"
 	const std::string defModuleDirRel = AI_LUA_DIR + "def/";
-	const std::string modModuleDirRel = AI_LUA_DIR + "mod/"; // TODO: use modShortName
-	const std::string defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, true);
-	const std::string modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, true);
+	const std::string modModuleDirRel = AI_LUA_DIR + "mod/";
+	const std::string defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, false);
+	const std::string modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, false);
 
 	std::vector<std::string> defModuleFiles;
 	std::vector<std::string> modModuleFiles;
@@ -154,7 +155,7 @@ LuaModuleLoader::LuaModuleLoader() {
 		LOG_BASIC("\tfound " << modModuleFiles.size() << " custom scripts\n");
 
 		for (unsigned int i = 0;i < modModuleFiles.size(); i++) {
-			LOG_BASIC("\t\tloading " << (modModuleDirAbs + modModuleFiles[i]) << "\n");
+			LOG_BASIC("\t\tadding " << (modModuleDirAbs + modModuleFiles[i]) << "\n");
 
 			moduleFiles[modModuleFiles[i]] = modModuleDirAbs;
 		}
@@ -167,7 +168,7 @@ LuaModuleLoader::LuaModuleLoader() {
 
 		for (unsigned int i = 0;i < defModuleFiles.size(); i++) {
 			if (moduleFiles.find(defModuleFiles[i]) == moduleFiles.end()) {
-				LOG_BASIC("\t\tloading " << (defModuleDirAbs + defModuleFiles[i]) << "\n");
+				LOG_BASIC("\t\tadding " << (defModuleDirAbs + defModuleFiles[i]) << "\n");
 
 				// default module is not overridden, load it
 				moduleFiles[defModuleFiles[i]] = defModuleDirAbs;
@@ -175,7 +176,11 @@ LuaModuleLoader::LuaModuleLoader() {
 		}
 	}
 
+	LOG_BASIC("[LuaModuleLoader] found " << moduleFiles.size() << " unique scripts\n");
+
 	for (std::map<std::string, std::string>::const_iterator it = moduleFiles.begin(); it != moduleFiles.end(); ++it) {
+		LOG_BASIC("\tloading " << (it->second + it->first) << "\n");
+
 		lua_State* moduleState = LoadLuaModule(it->second + it->first);
 
 		if (moduleState == NULL) {
