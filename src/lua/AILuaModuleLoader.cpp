@@ -67,9 +67,6 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 }
 
 lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
-	AIHelper* aih = AIHelper::GetActiveInstance();
-	IAICallback* rcb = aih->GetCallbackHandler();
-
 	lua_State* luaState = lua_open();
 	luaL_openlibs(luaState);
 
@@ -139,14 +136,15 @@ LuaModuleLoader::LuaModuleLoader() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
 
-	// TODO: use modShortName instead of "mod/"
-	const std::string defModuleDirRel = AI_LUA_DIR + "def/";
-	const std::string modModuleDirRel = AI_LUA_DIR + "mod/";
-	const std::string defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, false);
-	const std::string modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, false);
+	cString defModuleDirRel = AI_LUA_DIR + "def/";
+	cString modModuleDirRel = AI_LUA_DIR + rcb->GetModShortName();
 
-	std::vector<std::string> defModuleFiles;
-	std::vector<std::string> modModuleFiles;
+	// Modules get installed in the readonly directory, so load them from there
+	cString defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, true);
+	cString modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, true);
+
+	vString defModuleFiles;
+	vString modModuleFiles;
 	std::map<std::string, std::string> moduleFiles;
 
 	LOG_BASIC("[LuaModuleLoader] loading custom Lua scripts from " << modModuleDirAbs << "\n");
