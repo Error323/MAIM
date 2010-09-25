@@ -97,7 +97,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
 				MAI_ASSERT(lua_gettop(luaState) == 3);
-			lua_settable(luaState, -3); // AI["EcoState"] = EcoState
+			lua_settable(luaState, -3); // CALLBACKS["EcoState"] = EcoState
 			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 			lua_pushstring(luaState, "GameMap");
@@ -115,12 +115,85 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
 				MAI_ASSERT(lua_gettop(luaState) == 3);
-			lua_settable(luaState, -3); // AI["GameMap"] = GameMap
+			lua_settable(luaState, -3); // CALLBACKS["GameMap"] = GameMap
 			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 		// add the AI root table to the global environment
-		lua_setglobal(luaState, "AI");
+		lua_setglobal(luaState, "AICallOuts");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
+
+
+		#define PUSH_LUA_CONSTANT(L, c)      \
+			lua_pushstring(L, #c);           \
+			lua_pushnumber(L, AIUnitDef::c); \
+			lua_rawset(L, -3);
+
+		lua_newtable(luaState);
+			lua_pushstring(luaState, "TypeMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, MASK_BUILDER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_BUILDER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_ASSISTER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_ASSISTER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_E_PRODUCER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_E_PRODUCER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_M_PRODUCER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_M_PRODUCER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_E_STORAGE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_E_STORAGE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_M_STORAGE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_M_STORAGE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_DEFENSE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_DEFENSE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_OFFENSE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, MASK_OFFENSE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_INTEL_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_INTEL_STATIC);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "TerrainMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, MASK_LAND);
+				PUSH_LUA_CONSTANT(luaState, MASK_WATER_SURFACE);
+				PUSH_LUA_CONSTANT(luaState, MASK_WATER_SUBMERGED);
+				PUSH_LUA_CONSTANT(luaState, MASK_AIR);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "WeaponMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, MASK_ARMED);
+				PUSH_LUA_CONSTANT(luaState, MASK_NUKE);
+				PUSH_LUA_CONSTANT(luaState, MASK_ANTINUKE);
+				PUSH_LUA_CONSTANT(luaState, MASK_SHIELD);
+				PUSH_LUA_CONSTANT(luaState, MASK_STOCKPILE);
+				PUSH_LUA_CONSTANT(luaState, MASK_MANUALFIRE);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "RoleMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, MASK_SCOUT);
+				PUSH_LUA_CONSTANT(luaState, MASK_RAIDER);
+				PUSH_LUA_CONSTANT(luaState, MASK_ASSAULT);
+				PUSH_LUA_CONSTANT(luaState, MASK_ARTILLERY);
+				PUSH_LUA_CONSTANT(luaState, MASK_ANTIAIR);
+				PUSH_LUA_CONSTANT(luaState, MASK_STRIKER);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+		lua_setglobal(luaState, "UnitDefClassMasks");
+		MAI_ASSERT(lua_gettop(luaState) == 0);
+
+		#undef PUSH_CONSTANT
 
 		// lua_register(L, name, func) is short-hand macro for
 		// lua_pushcfunction(L, func) + lua_setglobal(L, name)
