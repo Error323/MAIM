@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 #include "./ILogger.hpp"
 
@@ -31,12 +32,15 @@ public:
 		switch (lvl) {
 			case LOG_BASIC: {
 				log << "[BASIC] " << t;
+				std::cout << "\E[0m[BASIC] " << t << "\E[0m";
 			} break;
 			case LOG_DEBUG: {
 				log << "[DEBUG] " << t;
+				std::cout << "\E[0m\E[33m[DEBUG] " << t << "\E[0m";
 			} break;
 			case LOG_ERROR: {
 				log << "[ERROR] " << t;
+				std::cout << "\E[0m\E[31m[ERROR] " << t << "\E[0m";
 			} break;
 			default: {
 			} break;

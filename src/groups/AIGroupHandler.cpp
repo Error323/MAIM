@@ -1,8 +1,10 @@
 #include "./AIGroupHandler.hpp"
 #include "./AIGroup.hpp"
 
+#include "../main/AIHelper.hpp"
 #include "../units/AIUnit.hpp"
 #include "../utils/Debugger.hpp"
+#include "../utils/Logger.hpp"
 #include "../utils/ObjectFactory.hpp"
 
 void AIGroupHandler::UnitFinished(pAIUnit unit) {

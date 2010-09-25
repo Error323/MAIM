@@ -39,6 +39,7 @@ public:
 	cInt GetID() const { return unitID; }
 	cInt GetCurrCmdID() const { return currCmdID; }
 	cUint32 GetAge() const { return age; }
+	cInt GetBuilderID() const { return builderID; }
 
 	cBool HasCommand() const;
 	cBool CanGiveCommand(int) const;
@@ -49,6 +50,8 @@ public:
 	void Move(rcFloat3);
 	void Stop();
 	void Wait(cBool);
+
+	friend std::ostream& operator<<(std::ostream&, rcAIUnit);
 
 private:
 	void UpdatePosition();

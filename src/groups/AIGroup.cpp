@@ -1,5 +1,7 @@
 #include "./AIGroup.hpp"
 
+#include <sstream>
+
 #include "../lua/AILuaModule.hpp"
 #include "../lua/AILuaModuleLoader.hpp"
 #include "../main/AIHelper.hpp"
@@ -11,8 +13,8 @@
 
 int AIGroup::sGroupCounter = 0;
 
-AIGroup::AIGroup(): gid(sGroupCounter) {
-	SetGroupDestroyedSubjectID(gid); 
+AIGroup::AIGroup(): groupID(sGroupCounter) {
+	SetGroupDestroyedSubjectID(groupID); 
 	sGroupCounter++; 
 	activeModule = NULL;
 	modules.resize(LuaModule::LUAMODULE_NUM_PRIORITIES);
@@ -132,4 +134,35 @@ void AIGroup::UnitDestroyed(int unit) {
 	units.erase(unit);
 	if (units.empty())
 		Release();
+}
+
+std::ostream& operator<<(std::ostream &out, rcAIGroup group) {
+	out << "\nGroup{id:";
+	out << group.groupID;
+	out << "}\n\n";
+
+	for (Uint32 i = 0; i < group.modules.size(); i++)
+	{
+		if (group.modules[i] == NULL)
+			out << "\tNone\n";
+		else
+			out << "\t" << (*group.modules[i]) << "\n";
+	}
+
+	out << "\n\tActive: ";
+	if (group.activeModule == NULL)
+		out << "None";
+	else
+		out << (*group.activeModule);
+	out << "\n\n";
+
+	std::map<int, pAIUnit>::const_iterator i;
+	for (i = group.units.begin(); i != group.units.end(); i++)
+	{
+		out << "\t" << *(i->second) << "\n";
+	}
+
+	out << "\n";
+
+	return out;
 }

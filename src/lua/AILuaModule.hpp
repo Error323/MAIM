@@ -2,11 +2,13 @@
 #define AI_LUA_MODULE_HDR
 
 #include <map>
+#include "../main/Types.hpp"
 
-struct lua_State;
-class AIHelper;
-class AIUnit;
-class AIGroup;
+DECLARE_STRUCT(lua_State)
+DECLARE_CLASS(AIHelper)
+DECLARE_CLASS(AIUnit)
+DECLARE_CLASS(AIGroup)
+DECLARE_CLASS(LuaModule)
 
 class LuaModule {
 public:
@@ -40,17 +42,18 @@ public:
 		LUAMODULE_NUM_PRIORITIES     = 3,
 	};
 
+	DECLARE_STRUCT(LuaModuleClass)
 	struct LuaModuleClass {
 		LuaModuleClass(): typeMask(0), terrMask(0), weapMask(0), roleMask(0) {
 		}
 
-		bool operator < (const LuaModuleClass& mc) const {
+		bool operator < (rcLuaModuleClass mc) const {
 			return (typeMask < mc.typeMask && terrMask < mc.terrMask && weapMask < mc.weapMask);
 		}
-		bool operator == (const LuaModuleClass& mc) const {
+		bool operator == (rcLuaModuleClass mc) const {
 			return (typeMask == mc.typeMask && terrMask == mc.terrMask && weapMask == mc.weapMask);
 		}
-		LuaModuleClass& operator = (const LuaModuleClass& mc) {
+		rLuaModuleClass operator = (rcLuaModuleClass mc) {
 			typeMask = mc.typeMask;
 			terrMask = mc.terrMask;
 			weapMask = mc.weapMask;
@@ -58,14 +61,18 @@ public:
 			return *this;
 		}
 
-		unsigned int typeMask;
-		unsigned int terrMask;
-		unsigned int weapMask;
-		unsigned int roleMask;
+		Uint32 typeMask;
+		Uint32 terrMask;
+		Uint32 weapMask;
+		Uint32 roleMask;
+
+		friend std::ostream& operator<<(std::ostream&, rcLuaModuleClass);
 	};
 
-	void SetModuleClass(const LuaModuleClass& c) { moduleClass = c; }
-	const LuaModuleClass& GetModuleClass() const { return moduleClass; }
+	void SetModuleClass(rcLuaModuleClass c) { moduleClass = c; }
+	rcLuaModuleClass GetModuleClass() const { return moduleClass; }
+
+	friend std::ostream& operator<<(std::ostream&, rcLuaModule);
 
 private:
 	bool isValid;
@@ -78,10 +85,10 @@ private:
 	LuaModuleClass moduleClass;
 
 	// Should be read from <module>.lua
-	unsigned int maxGroupSize;
+	Uint32 maxGroupSize;
 
 	// LUAMODULE_PRIORITY_*
-	unsigned int priority;
+	Uint32 priority;
 };
 
 #endif

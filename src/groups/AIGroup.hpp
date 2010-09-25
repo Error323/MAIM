@@ -25,11 +25,13 @@ public:
 	cBool CanBeAdded(pAIUnit) const;
 
 	float3 GetPos();
-	int GetID() { return gid; }
+	int GetID() { return groupID; }
 	
+	friend std::ostream& operator<<(std::ostream&, rcAIGroup);
+
 private:
 	static int sGroupCounter;
-	cInt gid;
+	cInt groupID;
 
 	std::map<int, pAIUnit> units;
 	vpLuaModule modules;

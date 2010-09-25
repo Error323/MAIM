@@ -5,6 +5,7 @@
 #include "./AILuaModuleLoader.hpp"
 #include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
+#include "../units/AIUnitDef.hpp"
 #include "../utils/ObjectFactory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
@@ -124,4 +125,67 @@ bool LuaModule::Update() {
 	}
 
 	return ret;
+}
+
+std::ostream& operator<<(std::ostream &out, rcLuaModule module) {
+	out << "Module{name:";
+	//out << module.GetName(); FIXME
+	out << ", priority:";
+	out << module.GetPriority();
+	out << ", valid:";
+	out << module.IsValid();
+	out << ", moduleclass:[";
+	out << module.GetModuleClass();
+	out << "]}";
+
+	return out;
+}
+
+std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& moduleClass) {
+	std::stringstream ss;
+
+	out << "types:";
+	for (Uint32 i = 0; i < NUM_TYPE_MASKS; i++)
+	{
+		Uint32 mask = (1 << i);
+		if (mask&moduleClass.typeMask)
+		{
+			ss << AIUnitDef::GetTypeMaskName(mask) << "|";
+		}
+	}
+	out << ss.str().substr(0,ss.str().length()-1);
+	out << ", terrains:";
+	ss.str("");
+	for (Uint32 i = 0; i < NUM_TERRAIN_MASKS; i++)
+	{
+		Uint32 mask = (1 << i);
+		if (mask&moduleClass.terrMask)
+		{
+			ss << AIUnitDef::GetTerrainMaskName(mask) << "|";
+		}
+	}
+	out << ss.str().substr(0,ss.str().length()-1);
+	out << ", weapons:";
+	ss.str("");
+	for (Uint32 i = 0; i < NUM_WEAPON_MASKS; i++)
+	{
+		Uint32 mask = (1 << i);
+		if (mask&moduleClass.weapMask)
+		{
+			ss << AIUnitDef::GetWeaponMaskName(mask) << "|";
+		}
+	}
+	out << ss.str().substr(0,ss.str().length()-1);
+	out << ", roles:";
+	ss.str("");
+	for (Uint32 i = 0; i < NUM_ROLE_MASKS; i++)
+	{
+		Uint32 mask = (1 << i);
+		if (mask&moduleClass.roleMask)
+		{
+			ss << AIUnitDef::GetRoleMaskName(mask) << "|";
+		}
+	}
+	out << ss.str().substr(0,ss.str().length()-1);
+	return out;
 }

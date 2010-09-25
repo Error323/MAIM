@@ -183,3 +183,19 @@ void AIUnit::Move(rcFloat3 goal) {
 		TryGiveCommand(&c);
 	}
 }
+
+std::ostream& operator<<(std::ostream &out, rcAIUnit unit) {
+	out << "Unit{name:";
+	out << unit.unitDef->GetName();
+	out << ", id:";
+	out << unit.unitID;
+	out << ", builderid:";
+	out << unit.builderID;
+	out << ", age:";
+	out << unit.age;
+	out << ", limbo:";
+	out << unit.limboTime;
+	out << "}";
+
+	return out;
+}
