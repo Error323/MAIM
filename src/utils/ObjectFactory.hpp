@@ -6,6 +6,9 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "../main/AIHelper.hpp"
+#include "./Logger.hpp"
+
 template<class Object> 
 class ObjectFactory
 {
@@ -43,15 +46,14 @@ void ObjectFactory<Object>::Free()
 		delete *j;
 	}
 
-	std::cout 
-		<< "ObjectFactory<"
+	LOG_DEBUG("ObjectFactory<"
 		<< typeid(Object).name()
 		<< ">::Free() destroyed " 
 		<< sAll.size() + sSingletons.size()
 		<< " objects, " 
 		<< bytes 
 		<< " bytes."
-		<< std::endl;
+		<< std::endl);
 
 	sFree.clear();
 	sAll.clear();
