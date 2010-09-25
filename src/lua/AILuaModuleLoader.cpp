@@ -97,7 +97,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
 				MAI_ASSERT(lua_gettop(luaState) == 3);
-			lua_settable(luaState, -3); // CALLBACKS["EcoState"] = EcoState
+			lua_settable(luaState, -3); // AICallOuts["EcoState"] = EcoState
 			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 			lua_pushstring(luaState, "GameMap");
@@ -115,7 +115,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
 				MAI_ASSERT(lua_gettop(luaState) == 3);
-			lua_settable(luaState, -3); // CALLBACKS["GameMap"] = GameMap
+			lua_settable(luaState, -3); // AICallOuts["GameMap"] = GameMap
 			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 		// add the AI root table to the global environment

@@ -128,16 +128,18 @@ void AIGroup::Update() {
 	}
 }
 
-void AIGroup::UnitDestroyed(int unit) {
-	MAI_ASSERT(units.find(unit) != units.end());
-	units[unit]->DetachObserver(this);
-	units.erase(unit);
+void AIGroup::UnitDestroyed(int unitID) {
+	MAI_ASSERT(units.find(unitID) != units.end());
+
+	units[unitID]->DetachObserver(this);
+	units.erase(unitID);
+
 	if (units.empty())
 		Release();
 }
 
-std::ostream& operator<<(std::ostream &out, rcAIGroup group) {
-	out << "\nGroup{id:";
+std::ostream& operator << (std::ostream& out, rcAIGroup group) {
+	out << "\nGroup{id: ";
 	out << group.groupID;
 	out << "}\n\n";
 
@@ -150,10 +152,12 @@ std::ostream& operator<<(std::ostream &out, rcAIGroup group) {
 	}
 
 	out << "\n\tActive: ";
+
 	if (group.activeModule == NULL)
 		out << "None";
 	else
 		out << (*group.activeModule);
+
 	out << "\n\n";
 
 	std::map<int, pAIUnit>::const_iterator i;

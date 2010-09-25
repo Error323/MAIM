@@ -127,25 +127,25 @@ bool LuaModule::Update() {
 	return ret;
 }
 
-std::ostream& operator<<(std::ostream &out, rcLuaModule module) {
-	out << "Module{name:";
-	//out << module.GetName(); FIXME
-	out << ", priority:";
+std::ostream& operator << (std::ostream& out, rcLuaModule module) {
+	out << "Module{name: ";
+	// out << module.GetName(); FIXME
+	out << ", priority: ";
 	out << module.GetPriority();
-	out << ", valid:";
+	out << ", valid: ";
 	out << module.IsValid();
-	out << ", moduleclass:[";
+	out << ", moduleclass: [";
 	out << module.GetModuleClass();
 	out << "]}";
 
 	return out;
 }
 
-std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& moduleClass) {
-	std::stringstream types; types << "types[";
-	std::stringstream terrains; terrains << "terrains[";
-	std::stringstream weapons; weapons << "weapons[";
-	std::stringstream roles; roles << "roles[";
+std::ostream& operator << (std::ostream& out, const LuaModule::LuaModuleClass& moduleClass) {
+	std::stringstream type_mask_ss; type_mask_ss << "typeMasks[";
+	std::stringstream terr_mask_ss; terr_mask_ss << "terrMasks[";
+	std::stringstream weap_mask_ss; weap_mask_ss << "weapMasks[";
+	std::stringstream role_mask_ss; role_mask_ss << "roleMasks[";
 
 	static cUint32 max_bits = 
 		std::max<Uint32>(AIUnitDef::NUM_TYPE_MASKS,
@@ -154,37 +154,45 @@ std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& mod
 		AIUnitDef::NUM_ROLE_MASKS))
 	);
 
-	int a, b, c, d;
-	a = b = c = d = 0;
+	Uint32
+		a = 0,
+		b = 0,
+		c = 0,
+		d = 0;
+
 	for (Uint32 i = 0; i < max_bits; i++)
 	{
-		Uint32 mask = (1 << i);
-		if (mask&moduleClass.typeMask)
+		cUint32 mask = (1 << i);
+
+		if (mask & moduleClass.typeMask)
 		{
-			types << AIUnitDef::GetTypeMaskName(mask) << "|";
+			type_mask_ss << AIUnitDef::GetTypeMaskName(mask) << "|";
 			a = 1;
 		}
-		if (mask&moduleClass.terrMask)
+
+		if (mask & moduleClass.terrMask)
 		{
-			terrains << AIUnitDef::GetTerrainMaskName(mask) << "|";
+			terr_mask_ss << AIUnitDef::GetTerrainMaskName(mask) << "|";
 			b = 1;
 		}
-		if (mask&moduleClass.weapMask)
+
+		if (mask & moduleClass.weapMask)
 		{
-			weapons << AIUnitDef::GetWeaponMaskName(mask) << "|";
+			weap_mask_ss << AIUnitDef::GetWeaponMaskName(mask) << "|";
 			c = 1;
 		}
-		if (mask&moduleClass.roleMask)
+
+		if (mask & moduleClass.roleMask)
 		{
-			roles << AIUnitDef::GetRoleMaskName(mask) << "|";
+			role_mask_ss << AIUnitDef::GetRoleMaskName(mask) << "|";
 			d = 1;
 		}
 	}
 
-	out << types.str().substr(0,types.str().length()-a) << "], ";
-	out << terrains.str().substr(0,terrains.str().length()-b) << "], ";
-	out << weapons.str().substr(0,weapons.str().length()-c) << "], ";
-	out << roles.str().substr(0, roles.str().length()-d) << "]";
+	out << (type_mask_ss.str()).substr(0, type_mask_ss.str().length() - a) << "], ";
+	out << (terr_mask_ss.str()).substr(0, terr_mask_ss.str().length() - b) << "], ";
+	out << (weap_mask_ss.str()).substr(0, weap_mask_ss.str().length() - c) << "], ";
+	out << (role_mask_ss.str()).substr(0, role_mask_ss.str().length() - d) << "]";
 
 	return out;
 }

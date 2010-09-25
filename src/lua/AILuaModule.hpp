@@ -66,7 +66,7 @@ public:
 		Uint32 weapMask;
 		Uint32 roleMask;
 
-		friend std::ostream& operator<<(std::ostream&, rcLuaModuleClass);
+		friend std::ostream& operator << (std::ostream&, rcLuaModuleClass);
 	};
 
 	void SetModuleClass(rcLuaModuleClass c) { moduleClass = c; }

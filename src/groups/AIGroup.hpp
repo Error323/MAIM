@@ -27,7 +27,7 @@ public:
 	float3 GetPos();
 	int GetID() { return groupID; }
 	
-	friend std::ostream& operator<<(std::ostream&, rcAIGroup);
+	friend std::ostream& operator << (std::ostream&, rcAIGroup);
 
 private:
 	static int sGroupCounter;
@@ -38,7 +38,7 @@ private:
 	pLuaModule activeModule;
 
 	// implementation
-	void UnitDestroyed(int unit);
+	void UnitDestroyed(int unitID);
 
 	void AddModule(pLuaModule);
 	void PushModule(pLuaModule);
