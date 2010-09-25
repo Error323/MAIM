@@ -8,6 +8,7 @@
 #include "../main/HAIInterface.hpp"
 #include "../main/AIHelper.hpp"
 #include "../groups/AIGroup.hpp"
+#include "../utils/Logger.hpp"
 
 #define ID(x, z) ((z) * X + (x))
 #define METAL_THRESHOLD 32
@@ -24,6 +25,17 @@ void GameMap::Init() {
 
 	CalcMapHeightFeatures();
 	CalcMetalSpots();
+	LOG_BASIC("[GameMap::HasMetalSpots] " << HasMetalSpots() << "\n");
+	LOG_BASIC("[GameMap::HasGeoSpots] " << HasGeoSpots() << "\n");
+	LOG_BASIC("[GameMap::HasEnergyFeatures] " << HasEnergyFeatures() << "\n");
+	LOG_BASIC("[GameMap::HasMetalFeatures] " << HasMetalFeatures() << "\n");
+	LOG_BASIC("[GameMap::IsKbotMap] " << IsKbotMap() << "\n");
+	LOG_BASIC("[GameMap::IsVehicleMap] " << IsVehicleMap() << "\n");
+	LOG_BASIC("[GameMap::IsMetalMap] " << IsMetalMap() << "\n");
+	LOG_BASIC("[GameMap::HeightVariance] " << GetHeightVariance() << "\n");
+	LOG_BASIC("[GameMap::GetAmountOfWater] " << GetAmountOfWater() << "\n");
+	LOG_BASIC("[GameMap::GetAmountOfLand] " << GetAmountOfLand() << "\n");
+	LOG_BASIC("[GameMap::CalcMetalSpots] found " << metalspots.size() << " metalspots\n");
 }
 
 float3 GameMap::GetClosestOpenMetalSpot(pAIGroup group) {

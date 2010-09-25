@@ -43,9 +43,7 @@ void AIMain::InitAI(pIGlobalAICallback gcb, int team) {
 
 void AIMain::ReleaseAI() {
 	aiInstances--;
-
 	AIHelper::SetActiveInstance(aih);
-	aih->Release();
 
 	if (aiInstances == 0)
 	{
@@ -57,6 +55,8 @@ void AIMain::ReleaseAI() {
 
 		Debugger::FreeInstance(Debugger::GetInstance());
 	}
+
+	aih->Release();
 }
 
 

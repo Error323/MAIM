@@ -37,7 +37,7 @@ class GameMap {
 		float GetAmountOfLand() { return (1.0f - waterAmount); }
 
 
-		bool HasMetalSpots() { return metalAmount > 0.0f; }
+		bool HasMetalSpots() { return metalspots.size() > 0; }
 		bool HasGeoSpots() { return geospots.size() > 0; }
 		bool HasMetalFeatures() { return metalfeatures.size() > 0; }
 		bool HasEnergyFeatures() { return energyfeatures.size() > 0; }
