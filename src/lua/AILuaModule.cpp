@@ -154,11 +154,7 @@ std::ostream& operator << (std::ostream& out, const LuaModule::LuaModuleClass& m
 		AIUnitDef::NUM_ROLE_MASKS))
 	);
 
-	Uint32
-		a = 0,
-		b = 0,
-		c = 0,
-		d = 0;
+	vUint32 indent(4, 0);
 
 	for (Uint32 i = 0; i < max_bits; i++)
 	{
@@ -167,32 +163,32 @@ std::ostream& operator << (std::ostream& out, const LuaModule::LuaModuleClass& m
 		if (mask & moduleClass.typeMask)
 		{
 			type_mask_ss << AIUnitDef::GetTypeMaskName(mask) << "|";
-			a = 1;
+			indent[0] = 1;
 		}
 
 		if (mask & moduleClass.terrMask)
 		{
 			terr_mask_ss << AIUnitDef::GetTerrainMaskName(mask) << "|";
-			b = 1;
+			indent[1] = 1;
 		}
 
 		if (mask & moduleClass.weapMask)
 		{
 			weap_mask_ss << AIUnitDef::GetWeaponMaskName(mask) << "|";
-			c = 1;
+			indent[2] = 1;
 		}
 
 		if (mask & moduleClass.roleMask)
 		{
 			role_mask_ss << AIUnitDef::GetRoleMaskName(mask) << "|";
-			d = 1;
+			indent[3] = 1;
 		}
 	}
 
-	out << (type_mask_ss.str()).substr(0, type_mask_ss.str().length() - a) << "], ";
-	out << (terr_mask_ss.str()).substr(0, terr_mask_ss.str().length() - b) << "], ";
-	out << (weap_mask_ss.str()).substr(0, weap_mask_ss.str().length() - c) << "], ";
-	out << (role_mask_ss.str()).substr(0, role_mask_ss.str().length() - d) << "]";
+	out << (type_mask_ss.str()).substr(0, type_mask_ss.str().length() - indent[0]) << "], ";
+	out << (terr_mask_ss.str()).substr(0, terr_mask_ss.str().length() - indent[1]) << "], ";
+	out << (weap_mask_ss.str()).substr(0, weap_mask_ss.str().length() - indent[2]) << "], ";
+	out << (role_mask_ss.str()).substr(0, role_mask_ss.str().length() - indent[3]) << "]";
 
 	return out;
 }
