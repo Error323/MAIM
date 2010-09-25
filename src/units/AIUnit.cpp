@@ -34,7 +34,7 @@ void AIUnit::Init(unsigned int _unitID, int unsigned _builderID) {
 	currCmdID = 0;
 
 	age = 0;
-	limboTime = 0;
+	idleTime = 0;
 
 	waiting = false;
 
@@ -65,15 +65,15 @@ void AIUnit::UpdatePosition() {
 	pIAICallback rcb = aih->GetCallbackHandler();
 
 	if (rcb->GetUnitPos(unitID) == pos) {
-		limboTime += 1;
+		idleTime += 1;
 	} else {
-		limboTime = 0;
+		idleTime = 0;
 	}
 
 	vel = rcb->GetUnitVel(unitID);
 	pos = rcb->GetUnitPos(unitID);
 	dir = (vel != ZeroVector)? (vel / vel.Length()): ZeroVector;
-	spd = (limboTime == 0)? (vel.Length() * GAME_SPEED): 0.0f;
+	spd = (idleTime == 0)? (vel.Length() * GAME_SPEED): 0.0f;
 }
 
 void AIUnit::UpdateCommand() {
@@ -85,7 +85,7 @@ void AIUnit::UpdateCommand() {
 
 void AIUnit::UpdateWait() {
 	if (currCmdID == 0) {
-		if (limboTime >= (GAME_SPEED * 5)) {
+		if (idleTime >= (GAME_SPEED * 5)) {
 			// this unit has been doing nothing for at least 5
 			// seconds, force it to be re-registered as idle by
 			// by triggering the engine to fire a UnitIdle event
@@ -161,7 +161,7 @@ void AIUnit::Stop() {
 		c.id = CMD_STOP;
 	GiveCommand(&c);
 
-	limboTime = 0;
+	idleTime = 0;
 }
 
 void AIUnit::Wait(cBool w) {
@@ -193,8 +193,8 @@ std::ostream& operator<<(std::ostream &out, rcAIUnit unit) {
 	out << unit.builderID;
 	out << ", age:";
 	out << unit.age;
-	out << ", limbo:";
-	out << unit.limboTime;
+	out << ", idle:";
+	out << unit.idleTime;
 	out << "}";
 
 	return out;

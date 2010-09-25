@@ -71,7 +71,7 @@ private:
 	bool waiting;
 
 	Uint32 age;
-	Uint32 limboTime;
+	Uint32 idleTime;
 
 	pcAIUnitDef unitDef;
 };

@@ -10,22 +10,30 @@
 #include "./Debugger.hpp"
 
 namespace util {
-	String GetAbsFileName(pIAICallback cb, rcString relFileName, cBool readonly) {
-		char   dst[1024] = {0};
-		pcChar src       = relFileName.c_str();
-		cInt   len       = relFileName.size();
+	String GetAbsFileName(pIAICallback cb, rcString fileName, pBool rret, bool readOnly) {
+		char dst[1024] = {0};
+		bool ret = false;
 
-		// last char ('\0') in dst
+		// last char ('\0') in <dst>
 		// should not be overwritten
-		MAI_ASSERT(len < (1024 - 1));
-		memcpy(dst, src, len);
+		MAI_ASSERT(fileName.size() < (1024 - 1));
+		memcpy(dst, fileName.c_str(), fileName.size());
 
 		// get the absolute path to the file
 		// (and create folders along the way)
-		if (readonly) {
-			cb->GetValue(AIVAL_LOCATE_FILE_R, dst);
+		// <fileName> is assumed to be given
+		// relative to the AI data directory
+		//
+		//   GetAbsFile(..., ro=true) returns either RWdir/filename or ROdir/filename
+		//   GetAbsFile(..., ro=false) returns RWdir/filename and creates directories
+		if (readOnly) {
+			ret = cb->GetValue(AIVAL_LOCATE_FILE_R, dst);
 		} else {
-			cb->GetValue(AIVAL_LOCATE_FILE_W, dst);
+			ret = cb->GetValue(AIVAL_LOCATE_FILE_W, dst);
+		}
+
+		if (rret != NULL) {
+			*rret = ret;
 		}
 
 		return (String(dst));

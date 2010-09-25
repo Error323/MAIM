@@ -97,7 +97,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
 				MAI_ASSERT(lua_gettop(luaState) == 3);
-			lua_settable(luaState, -3); // AI["EcoState"] = EcoState
+			lua_settable(luaState, -3); // CALLBACKS["EcoState"] = EcoState
 			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 			lua_pushstring(luaState, "GameMap");
@@ -115,12 +115,92 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3); // GameMap["GetAmountOfWater"] = func
 				MAI_ASSERT(lua_gettop(luaState) == 3);
-			lua_settable(luaState, -3); // AI["GameMap"] = GameMap
+			lua_settable(luaState, -3); // CALLBACKS["GameMap"] = GameMap
 			MAI_ASSERT(lua_gettop(luaState) == 1);
 
 		// add the AI root table to the global environment
-		lua_setglobal(luaState, "AI");
+		lua_setglobal(luaState, "AICallOuts");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
+
+
+		#define PUSH_LUA_CONSTANT(L, prefix, c) \
+			lua_pushstring(L, #c);              \
+			lua_pushnumber(L, prefix::c);       \
+			lua_rawset(L, -3);
+
+		lua_newtable(luaState);
+			lua_pushstring(luaState, "TypeMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_BUILDER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_BUILDER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ASSISTER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ASSISTER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_E_PRODUCER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_E_PRODUCER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_M_PRODUCER_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_M_PRODUCER_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_E_STORAGE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_E_STORAGE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_M_STORAGE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_M_STORAGE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_DEFENSE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_DEFENSE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_OFFENSE_STATIC);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_OFFENSE_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_INTEL_MOBILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_INTEL_STATIC);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "TerrainMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_LAND);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_WATER_SURFACE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_WATER_SUBMERGED);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_AIR);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "WeaponMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ARMED);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_NUKE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ANTINUKE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_SHIELD);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_STOCKPILE);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_MANUALFIRE);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
+			lua_pushstring(luaState, "RoleMasks");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_SCOUT);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_RAIDER);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ASSAULT);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ARTILLERY);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_ANTIAIR);
+				PUSH_LUA_CONSTANT(luaState, AIUnitDef, MASK_STRIKER);
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+		lua_setglobal(luaState, "AIModuleClassMasks");
+		MAI_ASSERT(lua_gettop(luaState) == 0);
+
+		lua_newtable(luaState);
+			PUSH_LUA_CONSTANT(luaState, LuaModule, LUAMODULE_PRIORITY_EMERGENCY);
+			PUSH_LUA_CONSTANT(luaState, LuaModule, LUAMODULE_PRIORITY_REACTIVE);
+			PUSH_LUA_CONSTANT(luaState, LuaModule, LUAMODULE_PRIORITY_PROACTIVE);
+		lua_setglobal(luaState, "AIModulePriorities");
+		MAI_ASSERT(lua_gettop(luaState) == 0);
+
+		#undef PUSH_LUA_CONSTANT
 
 		// lua_register(L, name, func) is short-hand macro for
 		// lua_pushcfunction(L, func) + lua_setglobal(L, name)
@@ -140,8 +220,8 @@ LuaModuleLoader::LuaModuleLoader() {
 	cString modModuleDirRel = AI_LUA_DIR + rcb->GetModShortName();
 
 	// Modules get installed in the readonly directory, so load them from there
-	cString defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, true);
-	cString modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, true);
+	cString defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, NULL, true);
+	cString modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, NULL, true);
 
 	vString defModuleFiles;
 	vString modModuleFiles;
@@ -245,7 +325,9 @@ LuaModuleLoader::~LuaModuleLoader() {
 		std::vector<lua_State*>& luaStateVec = mit->second;
 
 		for (std::vector<lua_State*>::iterator vit = luaStateVec.begin(); vit != luaStateVec.end(); ++vit) {
-			lua_close(*vit);
+			if (*vit != NULL) {
+				lua_close(*vit);
+			}
 		}
 
 		luaStateVec.clear();

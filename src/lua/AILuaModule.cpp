@@ -145,7 +145,7 @@ std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& mod
 	std::stringstream ss;
 
 	out << "types:";
-	for (Uint32 i = 0; i < NUM_TYPE_MASKS; i++)
+	for (Uint32 i = 0; i < AIUnitDef::NUM_TYPE_MASKS; i++)
 	{
 		Uint32 mask = (1 << i);
 		if (mask&moduleClass.typeMask)
@@ -156,7 +156,7 @@ std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& mod
 	out << ss.str().substr(0,ss.str().length()-1);
 	out << ", terrains:";
 	ss.str("");
-	for (Uint32 i = 0; i < NUM_TERRAIN_MASKS; i++)
+	for (Uint32 i = 0; i < AIUnitDef::NUM_TERRAIN_MASKS; i++)
 	{
 		Uint32 mask = (1 << i);
 		if (mask&moduleClass.terrMask)
@@ -167,7 +167,7 @@ std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& mod
 	out << ss.str().substr(0,ss.str().length()-1);
 	out << ", weapons:";
 	ss.str("");
-	for (Uint32 i = 0; i < NUM_WEAPON_MASKS; i++)
+	for (Uint32 i = 0; i < AIUnitDef::NUM_WEAPON_MASKS; i++)
 	{
 		Uint32 mask = (1 << i);
 		if (mask&moduleClass.weapMask)
@@ -178,7 +178,7 @@ std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& mod
 	out << ss.str().substr(0,ss.str().length()-1);
 	out << ", roles:";
 	ss.str("");
-	for (Uint32 i = 0; i < NUM_ROLE_MASKS; i++)
+	for (Uint32 i = 0; i < AIUnitDef::NUM_ROLE_MASKS; i++)
 	{
 		Uint32 mask = (1 << i);
 		if (mask&moduleClass.roleMask)

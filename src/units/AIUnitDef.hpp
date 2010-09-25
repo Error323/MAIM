@@ -14,6 +14,8 @@
 DECLARE_CLASS(MoveData)
 DECLARE_CLASS(UnitDef)
 
+struct AIUnitDef {
+public:
 // note: MOBILE and STATIC are mutually exclusive
 // todo: make the MOBILE property its own bitmask?
 enum UnitDefTypeMasks {
@@ -72,35 +74,37 @@ enum UnitDefRoleMasks {
 	NUM_ROLE_MASKS = 6
 };
 
-// these serve as a straight mapping from the MoveData
-// move{Type, Family} and terrainClass enum members to
-// bitmasks so we can classify a static builder by the
-// BW-OR'ed mapped masks of each of its build options
-#define MOVEDATA_MT2MASK(mt) (1 << (mt + 0))
-#define MOVEDATA_MF2MASK(mf) (1 << (mf + 4))
-#define MOVEDATA_TC2MASK(tc) (1 << (tc + 9))
-enum UnitDefMoveDataMasks {
-	MASK_MOVEDATA_MT_GND = MOVEDATA_MT2MASK(MoveData::Ground_Move), // 1 << 0
-	MASK_MOVEDATA_MT_HVR = MOVEDATA_MT2MASK(MoveData::Hover_Move),  // 1 << 1
-	MASK_MOVEDATA_MT_SHP = MOVEDATA_MT2MASK(MoveData::Ship_Move),   // 1 << 2
-	MASK_MOVEDATA_MT_AIR = MOVEDATA_MT2MASK(3),                     // 1 << 3
+	// move-masks
+	// these serve as a straight mapping from the MoveData
+	// move{Type, Family} and terrainClass enum members to
+	// bitmasks so we can classify a static builder by the
+	// BW-OR'ed mapped masks of each of its build options
+	#define MOVEDATA_MT2MASK(mt) (1 << (mt + 0))
+	#define MOVEDATA_MF2MASK(mf) (1 << (mf + 4))
+	#define MOVEDATA_TC2MASK(tc) (1 << (tc + 9))
+	enum {
+		MASK_MOVEDATA_MT_GND = MOVEDATA_MT2MASK(MoveData::Ground_Move), // 1 << 0
+		MASK_MOVEDATA_MT_HVR = MOVEDATA_MT2MASK(MoveData::Hover_Move),  // 1 << 1
+		MASK_MOVEDATA_MT_SHP = MOVEDATA_MT2MASK(MoveData::Ship_Move),   // 1 << 2
+		MASK_MOVEDATA_MT_AIR = MOVEDATA_MT2MASK(3),                     // 1 << 3
 
-	MASK_MOVEDATA_MF_TNK = MOVEDATA_MF2MASK(MoveData::Tank),        // 1 << (0 + 4)
-	MASK_MOVEDATA_MF_KBT = MOVEDATA_MF2MASK(MoveData::KBot),        // 1 << (1 + 4)
-	MASK_MOVEDATA_MF_HVR = MOVEDATA_MF2MASK(MoveData::Hover),       // 1 << (2 + 4)
-	MASK_MOVEDATA_MF_SHP = MOVEDATA_MF2MASK(MoveData::Ship),        // 1 << (3 + 4)
-	MASK_MOVEDATA_MF_AIR = MOVEDATA_MF2MASK(8),                     // 1 << (4 + 4)
+		MASK_MOVEDATA_MF_TNK = MOVEDATA_MF2MASK(MoveData::Tank),        // 1 << (0 + 4)
+		MASK_MOVEDATA_MF_KBT = MOVEDATA_MF2MASK(MoveData::KBot),        // 1 << (1 + 4)
+		MASK_MOVEDATA_MF_HVR = MOVEDATA_MF2MASK(MoveData::Hover),       // 1 << (2 + 4)
+		MASK_MOVEDATA_MF_SHP = MOVEDATA_MF2MASK(MoveData::Ship),        // 1 << (3 + 4)
+		MASK_MOVEDATA_MF_AIR = MOVEDATA_MF2MASK(8),                     // 1 << (4 + 4)
 
-	MASK_MOVEDATA_TC_LND = MOVEDATA_TC2MASK(MoveData::Land),        // 1 << (0 + 9)
-	MASK_MOVEDATA_TC_WTR = MOVEDATA_TC2MASK(MoveData::Water),       // 1 << (1 + 9)
-	MASK_MOVEDATA_TC_MXD = MOVEDATA_TC2MASK(MoveData::Mixed),       // 1 << (2 + 9)
-	MASK_MOVEDATA_TC_AIR = MOVEDATA_TC2MASK(12),                    // 1 << (3 + 9)
+		MASK_MOVEDATA_TC_LND = MOVEDATA_TC2MASK(MoveData::Land),        // 1 << (0 + 9)
+		MASK_MOVEDATA_TC_WTR = MOVEDATA_TC2MASK(MoveData::Water),       // 1 << (1 + 9)
+		MASK_MOVEDATA_TC_MXD = MOVEDATA_TC2MASK(MoveData::Mixed),       // 1 << (2 + 9)
+		MASK_MOVEDATA_TC_AIR = MOVEDATA_TC2MASK(12),                    // 1 << (3 + 9)
 
-	NUM_MOVEDATA_MASKS = 13
-};
+		NUM_MOVEDATA_MASKS = 13
+	};
+	// #undef MOVEDATA_MT2MASK
+	// #undef MOVEDATA_MF2MASK
+	// #undef MOVEDATA_TC2MASK
 
-struct AIUnitDef {
-public:
 	AIUnitDef(): sprUnitDef(0), dgunWeaponDef(0) {
 	}
 

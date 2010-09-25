@@ -42,7 +42,7 @@ std::string Logger::GetLogName() const {
 		ss << "]";
 
 	std::string relName = ss.str();
-	std::string absName = util::GetAbsFileName(rcb, relName);
+	std::string absName = util::GetAbsFileName(rcb, relName, NULL, false);
 	return absName;
 }
 
