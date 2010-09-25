@@ -142,50 +142,49 @@ std::ostream& operator<<(std::ostream &out, rcLuaModule module) {
 }
 
 std::ostream& operator<<(std::ostream &out, const LuaModule::LuaModuleClass& moduleClass) {
-	std::stringstream ss;
+	std::stringstream types; types << "types[";
+	std::stringstream terrains; terrains << "terrains[";
+	std::stringstream weapons; weapons << "weapons[";
+	std::stringstream roles; roles << "roles[";
 
-	out << "types:";
-	for (Uint32 i = 0; i < AIUnitDef::NUM_TYPE_MASKS; i++)
+	static cUint32 max_bits = 
+		std::max<Uint32>(AIUnitDef::NUM_TYPE_MASKS,
+		std::max<Uint32>(AIUnitDef::NUM_TERRAIN_MASKS,
+		std::max<Uint32>(AIUnitDef::NUM_WEAPON_MASKS, 
+		AIUnitDef::NUM_ROLE_MASKS))
+	);
+
+	int a, b, c, d;
+	a = b = c = d = 0;
+	for (Uint32 i = 0; i < max_bits; i++)
 	{
 		Uint32 mask = (1 << i);
 		if (mask&moduleClass.typeMask)
 		{
-			ss << AIUnitDef::GetTypeMaskName(mask) << "|";
+			types << AIUnitDef::GetTypeMaskName(mask) << "|";
+			a = 1;
 		}
-	}
-	out << ss.str().substr(0,ss.str().length()-1);
-	out << ", terrains:";
-	ss.str("");
-	for (Uint32 i = 0; i < AIUnitDef::NUM_TERRAIN_MASKS; i++)
-	{
-		Uint32 mask = (1 << i);
 		if (mask&moduleClass.terrMask)
 		{
-			ss << AIUnitDef::GetTerrainMaskName(mask) << "|";
+			terrains << AIUnitDef::GetTerrainMaskName(mask) << "|";
+			b = 1;
 		}
-	}
-	out << ss.str().substr(0,ss.str().length()-1);
-	out << ", weapons:";
-	ss.str("");
-	for (Uint32 i = 0; i < AIUnitDef::NUM_WEAPON_MASKS; i++)
-	{
-		Uint32 mask = (1 << i);
 		if (mask&moduleClass.weapMask)
 		{
-			ss << AIUnitDef::GetWeaponMaskName(mask) << "|";
+			weapons << AIUnitDef::GetWeaponMaskName(mask) << "|";
+			c = 1;
 		}
-	}
-	out << ss.str().substr(0,ss.str().length()-1);
-	out << ", roles:";
-	ss.str("");
-	for (Uint32 i = 0; i < AIUnitDef::NUM_ROLE_MASKS; i++)
-	{
-		Uint32 mask = (1 << i);
 		if (mask&moduleClass.roleMask)
 		{
-			ss << AIUnitDef::GetRoleMaskName(mask) << "|";
+			roles << AIUnitDef::GetRoleMaskName(mask) << "|";
+			d = 1;
 		}
 	}
-	out << ss.str().substr(0,ss.str().length()-1);
+
+	out << types.str().substr(0,types.str().length()-a) << "], ";
+	out << terrains.str().substr(0,terrains.str().length()-b) << "], ";
+	out << weapons.str().substr(0,weapons.str().length()-c) << "], ";
+	out << roles.str().substr(0, roles.str().length()-d) << "]";
+
 	return out;
 }
