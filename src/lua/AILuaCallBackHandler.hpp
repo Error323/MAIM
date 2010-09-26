@@ -9,10 +9,18 @@ public:
 	static void SetActiveModule(LuaModule* m) { activeModule = m; }
 	static LuaModule* GetActiveModule() { return activeModule; }
 
-	static int EcoStateIsStallingMetal(lua_State*);
-	static int EcoStateIsStallingEnergy(lua_State*);
-	static int GameMapGetAmountOfLand(lua_State*);
-	static int GameMapGetAmountOfWater(lua_State*);
+	struct EcoStateCallBacks {
+		static int IsStallingMetal(lua_State*);
+		static int IsStallingEnergy(lua_State*);
+	};
+	struct GameMapCallBacks {
+		static int GetAmountOfLand(lua_State*);
+		static int GetAmountOfWater(lua_State*);
+
+	};
+	struct CommandCallBacks {
+		static int GiveCommand(lua_State*);
+	};
 
 private:
 	static LuaModule* activeModule;

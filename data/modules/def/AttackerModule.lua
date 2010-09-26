@@ -3,10 +3,10 @@ function GetName()
 end
 
 function GetClassMask()
-	local typeMasksTbl = AIModuleClassMasks.TypeMasks
-	local terrMasksTbl = AIModuleClassMasks.TerrainMasks
-	local weapMasksTbl = AIModuleClassMasks.WeaponMasks
-	local roleMasksTbl = AIModuleClassMasks.RoleMasks
+	local typeMasksTbl = AIModuleClassMaskConstsTbl.TypeMasksTbl
+	local terrMasksTbl = AIModuleClassMaskConstsTbl.TerrainMasksTbl
+	local weapMasksTbl = AIModuleClassMaskConstsTbl.WeaponMasksTbl
+	local roleMasksTbl = AIModuleClassMaskConstsTbl.RoleMasksTbl
 
 	-- NOTE: '+' because we do not have bit-ops
 	local terrMask = terrMasksTbl.MASK_LAND + terrMasksTbl.MASK_WATER_SURFACE + terrMasksTbl.MASK_WATER_SUBMERGED
@@ -18,7 +18,7 @@ function GetClassMask()
 end
 
 function GetPriority()
-	return AIModulePriorities.LUAMODULE_PRIORITY_PROACTIVE
+	return AIModulePriorityConstsTbl.LUAMODULE_PRIORITY_PROACTIVE
 end
 
 function CanRun()
