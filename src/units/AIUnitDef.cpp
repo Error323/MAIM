@@ -85,13 +85,21 @@ cString AIUnitDef::GetRoleMaskName(cUint32 mask) {
 }
 
 bool AIUnitDef::AIUnitDefClass::operator < (rcAIUnitDefClass udc) const {
-	// sort by typeMask, then by terrMask, then by weapMask, then by roleMask
-	// note that we only look at the number of 1-bits, not which bits are set
-	if (util::CountOneBits(typeMask) < util::CountOneBits(udc.typeMask)) { return true; }
-	if (util::CountOneBits(terrMask) < util::CountOneBits(udc.terrMask)) { return true; }
-	if (util::CountOneBits(weapMask) < util::CountOneBits(udc.weapMask)) { return true; }
-	if (util::CountOneBits(roleMask) < util::CountOneBits(udc.roleMask)) { return true; }
-	return false;
+	// sort by summation of all the 1-bit masks, note it doesn't matter which
+	// bits are set...
+	cUint32 lhs = 
+		util::CountOneBits(typeMask) +
+		util::CountOneBits(terrMask) +
+		util::CountOneBits(weapMask) +
+		util::CountOneBits(roleMask);
+
+	cUint32 rhs = 
+		util::CountOneBits(udc.typeMask) +
+		util::CountOneBits(udc.terrMask) +
+		util::CountOneBits(udc.weapMask) +
+		util::CountOneBits(udc.roleMask);
+
+	return (lhs < rhs);
 }
 
 std::ostream& operator << (std::ostream& out, const AIUnitDef::AIUnitDefClass& unitDefClass) {
