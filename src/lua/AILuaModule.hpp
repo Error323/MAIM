@@ -49,11 +49,9 @@ public:
 		LuaModuleClass(): typeMask(0), terrMask(0), weapMask(0), roleMask(0) {
 		}
 
-		bool operator < (rcLuaModuleClass mc) const {
-			return (typeMask < mc.typeMask && terrMask < mc.terrMask && weapMask < mc.weapMask);
-		}
+		bool operator < (rcLuaModuleClass mc) const;
 		bool operator == (rcLuaModuleClass mc) const {
-			return (typeMask == mc.typeMask && terrMask == mc.terrMask && weapMask == mc.weapMask);
+			return (typeMask == mc.typeMask && terrMask == mc.terrMask && weapMask == mc.weapMask && roleMask == mc.roleMask);
 		}
 		rLuaModuleClass operator = (rcLuaModuleClass mc) {
 			typeMask = mc.typeMask;
