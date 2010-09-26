@@ -61,9 +61,9 @@ void AIGroup::AddUnit(pAIUnit unit, bool isNewGroup) {
 
 bool AIGroup::CanAddUnit(pAIUnit unit) const {
 	// only add unit-type classes that this group already contains
-	bool canBeAdded = true;
+	bool canAddUnit = true;
 
-	AIUnitDef::AIUnitDefClass unitDefClass = unit->GetUnitDef()->unitDefClass;
+	const AIUnitDef::AIUnitDefClass& unitDefClass = unit->GetUnitDef()->unitDefClass;
 
 	for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 	{
@@ -73,17 +73,17 @@ bool AIGroup::CanAddUnit(pAIUnit unit) const {
 		const AIUnitDef::AIUnitDefClass& groupDefClass = modules[i]->GetUnitDefClass();
 
 		// See if the given unit matches all modules in this group
-		canBeAdded = canBeAdded && IS_BINARY_SUBSET(unitDefClass.typeMask, groupDefClass.typeMask);
-		canBeAdded = canBeAdded && IS_BINARY_SUBSET(unitDefClass.terrMask, groupDefClass.terrMask);
-		canBeAdded = canBeAdded && IS_BINARY_SUBSET(unitDefClass.weapMask, groupDefClass.weapMask);
-		canBeAdded = canBeAdded && IS_BINARY_SUBSET(unitDefClass.roleMask, groupDefClass.roleMask);
+		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.typeMask, groupDefClass.typeMask);
+		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.terrMask, groupDefClass.terrMask);
+		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.weapMask, groupDefClass.weapMask);
+		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.roleMask, groupDefClass.roleMask);
 
 		// Also extract the maximum number of units for this group
-		canBeAdded = (canBeAdded && (units.size() < modules[i]->GetMaxGroupSize()));
+		canAddUnit = canAddUnit && (units.size() < modules[i]->GetMaxGroupSize());
 
 		// We are very strict about this: if one module fails on
 		// any of these constraints, the unit can't be added
-		if (!canBeAdded)
+		if (!canAddUnit)
 			return false;
 	}
 

@@ -111,10 +111,8 @@ public:
 		}
 
 		bool operator < (rcAIUnitDefClass udc) const;
+		bool operator == (rcAIUnitDefClass udc) const;
 
-		bool operator == (rcAIUnitDefClass udc) const {
-			return (typeMask == udc.typeMask && terrMask == udc.terrMask && weapMask == udc.weapMask);
-		}
 		rAIUnitDefClass operator = (rcAIUnitDefClass udc) {
 			typeMask = udc.typeMask;
 			terrMask = udc.terrMask;

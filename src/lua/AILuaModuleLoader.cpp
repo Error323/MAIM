@@ -20,7 +20,8 @@
 LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priority) {
 	lua_State* moduleState = NULL;
 	LuaModule* module = NULL;
-	AIUnitDef::AIUnitDefClass unitDefClass = def->unitDefClass;
+
+	const AIUnitDef::AIUnitDefClass& unitDefClass = def->unitDefClass;
 
 	if (luaModules.find(unitDefClass) != luaModules.end()) {
 		// module = luaModules[unitDefClass][priority];
@@ -32,14 +33,14 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 		typedef std::map<AIUnitDef::AIUnitDefClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
 
 		for (LuaStateMapIt it = luaModuleStates.begin(); it != luaModuleStates.end(); ++it) {
-			const AIUnitDef::AIUnitDefClass& lmc = it->first;
+			const AIUnitDef::AIUnitDefClass& udc = it->first;
 			const std::vector<lua_State*>& lmsv = it->second;
 
 			// check if <def>'s module-class is suited for this module
-			if (!IS_BINARY_SUBSET(unitDefClass.typeMask, lmc.typeMask)) { continue; }
-			if (!IS_BINARY_SUBSET(unitDefClass.terrMask, lmc.terrMask)) { continue; }
-			if (!IS_BINARY_SUBSET(unitDefClass.weapMask, lmc.weapMask)) { continue; }
-			if (!IS_BINARY_SUBSET(unitDefClass.roleMask, lmc.roleMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.typeMask, udc.typeMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.terrMask, udc.terrMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.weapMask, udc.weapMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.roleMask, udc.roleMask)) { continue; }
 
 			// NOTE: what if multiple module-classes are suitable?
 			moduleState = lmsv[priority];
