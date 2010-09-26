@@ -6,7 +6,7 @@
 
 #define HISTORY 10
 
-DECLARE_CLASS(UnitType)
+DECLARE_CLASS(AIUnitDef)
 DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIHelper)
 
@@ -27,19 +27,18 @@ class EcoState {
 		/**
 		 * Determine whether a factory can be assisted
 		 *
-		 * @param Group*, the group that can potentially assist
-		 * @return Group*, the factory which to assist
+		 * @param pGroup, the group that can potentially assist
+		 * @return pGroup, the factory which to assist
 		 */
-		pAIGroup CanAssistFactory(pAIGroup);
+		bool CanAssistFactory(pcAIGroup);
 
 		/**
 		 * Determine whether a certain unit can be build
 		 *
-		 * @param Group*, the group that performs the potential build
-		 * @param UnitType*, the unit to be build
+		 * @param pAIUnitDef, the unit to be build
 		 * @return bool
 		 */
-		bool CanAffordToBuild(pAIGroup, pUnitType);
+		bool CanAffordToBuild(pcAIUnitDef);
 
 		bool IsStallingMetal() { return mStalling; }
 		bool IsStallingEnergy() { return eStalling; }

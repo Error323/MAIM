@@ -2,9 +2,10 @@
 
 #include "../main/HAIInterface.hpp"
 #include "../main/AIHelper.hpp"
+#include "../groups/AIGroup.hpp"
+#include "../units/AIUnitDef.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
-#include "../groups/AIGroup.hpp"
 
 void EcoState::Init() {
 	// Create a Gaussian distribution over the HISTORY
@@ -69,10 +70,14 @@ void EcoState::Update() {
 	eExceeding = (eNow/eStorage) > 0.9f && eIncome > eUsage;
 }
 
-pAIGroup EcoState::CanAssistFactory(pAIGroup) {
-	return NULL;
+bool EcoState::CanAssistFactory(pcAIGroup aiGroup) {
+	return true;
 }
 
-bool EcoState::CanAffordToBuild(pAIGroup, pUnitType) {
-	return true;
+bool EcoState::CanAffordToBuild(pcAIUnitDef aiUnitDef) {
+	cFloat buildTime = aiUnitDef->GetDef()->buildTime / aiUnitDef->GetDef()->buildSpeed;
+	cFloat mPrediction = mNow + (mIncome - mUsage) * buildTime - aiUnitDef->GetDef()->metalCost;
+	cFloat ePrediction = eNow + (eIncome - eUsage) * buildTime - aiUnitDef->GetDef()->energyCost;
+
+	return (mPrediction >= 0.0f && ePrediction >= 0.0f);
 }

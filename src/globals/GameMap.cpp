@@ -212,23 +212,9 @@ void GameMap::CalcMetalSpots() {
 			GameMap::metalspots.push_back(metalspot);
 
 			#ifdef GAMEMAP_DEBUG
-			aih->rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
+			rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
 			#endif
 		}
-	}
-
-	std::string maptype;
-	if(IsMetalMap())
-	{
-		maptype = "speedmetal";
-	}
-	else if (nonMetalCount == 0)
-	{
-		maptype = "non-metalmap";
-	}
-	else
-	{
-		maptype = "normal metalmap";
 	}
 }
 
