@@ -84,21 +84,45 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 
 		// AICallOuts = {}
 		lua_newtable(luaState);
+			// SimStateTbl = {}
+			lua_pushstring(luaState, "SimStateTbl");
+			lua_newtable(luaState);
+			MAI_ASSERT(lua_istable(luaState, -3));
+			MAI_ASSERT(lua_istable(luaState, -1));
+				// SimStateTbl["GetInitSimFrame"] = func
+				lua_pushstring(luaState, "GetInitSimFrame");
+				lua_pushcfunction(luaState, LuaCallBackHandler::SimStateCallBacks::GetInitSimFrame);
+				MAI_ASSERT(lua_istable(luaState, -3));
+				lua_settable(luaState, -3);
+				MAI_ASSERT(lua_gettop(luaState) == 3);
+
+				// SimStateTbl["GetCurrSimFrame"] = func
+				lua_pushstring(luaState, "GetCurrSimFrame");
+				lua_pushcfunction(luaState, LuaCallBackHandler::SimStateCallBacks::GetCurrSimFrame);
+				MAI_ASSERT(lua_istable(luaState, -3));
+				lua_settable(luaState, -3);
+				MAI_ASSERT(lua_gettop(luaState) == 3);
+			// AICallOuts["SimStateTbl"] = SimStateTbl
+			lua_settable(luaState, -3);
+			MAI_ASSERT(lua_gettop(luaState) == 1);
+
 			// EcoStateTbl = {}
 			lua_pushstring(luaState, "EcoStateTbl");
 			lua_newtable(luaState);
 			MAI_ASSERT(lua_istable(luaState, -3));
 			MAI_ASSERT(lua_istable(luaState, -1));
+				// EcoStateTbl["IsStallingMetal"] = func
 				lua_pushstring(luaState, "IsStallingMetal");
 				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateCallBacks::IsStallingMetal);
 				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3); // EcoState["IsStallingMetal"] = func
+				lua_settable(luaState, -3);
 				MAI_ASSERT(lua_gettop(luaState) == 3);
 
+				// EcoStateTbl["IsStallingEnergy"] = func
 				lua_pushstring(luaState, "IsStallingEnergy");
 				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateCallBacks::IsStallingEnergy);
 				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3); // EcoState["IsStallingEnergy"] = func
+				lua_settable(luaState, -3);
 				MAI_ASSERT(lua_gettop(luaState) == 3);
 			// AICallOuts["EcoStateTbl"] = EcoStateTbl
 			lua_settable(luaState, -3);
@@ -109,14 +133,14 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 			lua_newtable(luaState);
 			MAI_ASSERT(lua_istable(luaState, -3));
 			MAI_ASSERT(lua_istable(luaState, -1));
-				// GameMap["GetAmountOfLand"] = func
+				// GameMapTbl["GetAmountOfLand"] = func
 				lua_pushstring(luaState, "GetAmountOfLand");
 				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapCallBacks::GetAmountOfLand);
 				MAI_ASSERT(lua_istable(luaState, -3));
 				lua_settable(luaState, -3);
 				MAI_ASSERT(lua_gettop(luaState) == 3);
 
-				// GameMap["GetAmountOfWater"] = func
+				// GameMapTbl["GetAmountOfWater"] = func
 				lua_pushstring(luaState, "GetAmountOfWater");
 				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapCallBacks::GetAmountOfWater);
 				MAI_ASSERT(lua_istable(luaState, -3));

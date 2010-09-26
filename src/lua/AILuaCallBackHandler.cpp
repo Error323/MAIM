@@ -11,6 +11,16 @@
 
 LuaModule* LuaCallBackHandler::activeModule = NULL;
 
+int LuaCallBackHandler::SimStateCallBacks::GetInitSimFrame(lua_State* L) {
+	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetInitFrame());
+	return 1;
+}
+int LuaCallBackHandler::SimStateCallBacks::GetCurrSimFrame(lua_State* L) {
+	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetCurrFrame());
+	return 1;
+}
+
+
 int LuaCallBackHandler::EcoStateCallBacks::IsStallingMetal(lua_State* L) {
 	// MAI_ASSERT(lua_gettop(L) == 0);
 	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetEcoState()->IsStallingMetal());
