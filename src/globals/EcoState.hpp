@@ -7,6 +7,7 @@
 #define HISTORY 10
 
 DECLARE_CLASS(AIUnitDef)
+DECLARE_CLASS(AIUnit)
 DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIHelper)
 
@@ -38,7 +39,7 @@ class EcoState {
 		 * @param pAIUnitDef, the unit to be build
 		 * @return bool
 		 */
-		bool CanAffordToBuild(pcAIUnitDef);
+		bool CanAffordToBuild(pcAIUnit, pcAIUnitDef);
 
 		bool IsStallingMetal() { return mStalling; }
 		bool IsStallingEnergy() { return eStalling; }

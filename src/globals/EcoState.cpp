@@ -3,6 +3,7 @@
 #include "../main/HAIInterface.hpp"
 #include "../main/AIHelper.hpp"
 #include "../groups/AIGroup.hpp"
+#include "../units/AIUnit.hpp"
 #include "../units/AIUnitDef.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
@@ -74,8 +75,8 @@ bool EcoState::CanAssistFactory(pcAIGroup aiGroup) {
 	return true;
 }
 
-bool EcoState::CanAffordToBuild(pcAIUnitDef aiUnitDef) {
-	cFloat buildTime = aiUnitDef->GetDef()->buildTime / aiUnitDef->GetDef()->buildSpeed;
+bool EcoState::CanAffordToBuild(pcAIUnit aiUnit, pcAIUnitDef aiUnitDef) {
+	cFloat buildTime = aiUnitDef->GetDef()->buildTime / aiUnit->GetUnitDef()->GetDef()->buildSpeed;
 	cFloat mPrediction = mNow + (mIncome - mUsage) * buildTime - aiUnitDef->GetDef()->metalCost;
 	cFloat ePrediction = eNow + (eIncome - eUsage) * buildTime - aiUnitDef->GetDef()->energyCost;
 

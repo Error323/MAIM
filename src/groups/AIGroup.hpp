@@ -23,6 +23,7 @@ public:
 	void  Update(); // called by engine update()
 	void  Release(); // Release the group
 	cBool CanBeAdded(pAIUnit) const;
+	const std::map<int, pAIUnit>& GetUnits() { return units; }
 
 	float3 GetPos();
 	int GetID() { return groupID; }
