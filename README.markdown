@@ -1,5 +1,5 @@
-Modular Artificial Intelligence
-===============================
+Modular Artificial Intelligence Model
+=====================================
 
 Last revised: September 22, 2010
 
