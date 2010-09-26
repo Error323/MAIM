@@ -10,7 +10,6 @@
 #include "./AILuaCallOutHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../main/AIDefines.hpp"
-#include "../units/AIUnitDef.hpp"
 #include "../utils/Debugger.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/ObjectFactory.hpp"
@@ -21,30 +20,26 @@
 LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priority) {
 	lua_State* moduleState = NULL;
 	LuaModule* module = NULL;
-	LuaModule::LuaModuleClass moduleClass;
-		moduleClass.typeMask = def->typeMask;
-		moduleClass.terrMask = def->terrainMask;
-		moduleClass.weapMask = def->weaponMask;
-		moduleClass.roleMask = def->roleMask;
+	AIUnitDef::AIUnitDefClass unitDefClass = def->unitDefClass;
 
-	if (luaModules.find(moduleClass) != luaModules.end()) {
-		// module = luaModules[moduleClass][priority];
-		// moduleState = luaModuleStates[moduleClass][priority];
+	if (luaModules.find(unitDefClass) != luaModules.end()) {
+		// module = luaModules[unitDefClass][priority];
+		// moduleState = luaModuleStates[unitDefClass][priority];
 	} else {
 		module = ObjectFactory<LuaModule>::Instance();
 
-		typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
-		typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
+		typedef std::map<AIUnitDef::AIUnitDefClass, std::vector<lua_State*> > LuaStateMap;
+		typedef std::map<AIUnitDef::AIUnitDefClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
 
 		for (LuaStateMapIt it = luaModuleStates.begin(); it != luaModuleStates.end(); ++it) {
-			const LuaModule::LuaModuleClass& lmc = it->first;
+			const AIUnitDef::AIUnitDefClass& lmc = it->first;
 			const std::vector<lua_State*>& lmsv = it->second;
 
 			// check if <def>'s module-class is suited for this module
-			if (!IS_BINARY_SUBSET(moduleClass.typeMask, lmc.typeMask)) { continue; }
-			if (!IS_BINARY_SUBSET(moduleClass.terrMask, lmc.terrMask)) { continue; }
-			if (!IS_BINARY_SUBSET(moduleClass.weapMask, lmc.weapMask)) { continue; }
-			if (!IS_BINARY_SUBSET(moduleClass.roleMask, lmc.roleMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.typeMask, lmc.typeMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.terrMask, lmc.terrMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.weapMask, lmc.weapMask)) { continue; }
+			if (!IS_BINARY_SUBSET(unitDefClass.roleMask, lmc.roleMask)) { continue; }
 
 			// NOTE: what if multiple module-classes are suitable?
 			moduleState = lmsv[priority];
@@ -52,15 +47,15 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 		}
 
 		// do NOT cache LuaModule*'s, each AIGroup* must have a unique instance
-		// luaModules[moduleClass] = std::vector<LuaModule*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
-		// luaModules[moduleClass][priority] = module;
+		// luaModules[unitDefClass] = std::vector<LuaModule*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
+		// luaModules[unitDefClass][priority] = module;
 	}
 
 	// NOTE:
 	//   moduleState can be NULL, which means we have a group of units
 	//   of type <def> whose class-mask does not map to *any* registered
 	//   Lua script (for any priority-level)
-	module->SetModuleClass(moduleClass);
+	module->SetUnitDefClass(unitDefClass);
 	module->SetModuleState(moduleState);
 	module->SetPriority(priority);
 
@@ -277,7 +272,7 @@ LuaModuleLoader::LuaModuleLoader() {
 			continue;
 		}
 
-		LuaModule::LuaModuleClass moduleClass;
+		AIUnitDef::AIUnitDefClass unitDefClass;
 
 		Uint32 modulePriority = LuaModule::LUAMODULE_NUM_PRIORITIES;
 		Uint32 moduleGroupSize = -1;
@@ -301,10 +296,10 @@ LuaModuleLoader::LuaModuleLoader() {
 		CALL_LUA_FUNC_END(moduleState, 1);
 
 		CALL_LUA_FUNC_BEG(moduleState, "GetClass", 0, 4);
-			moduleClass.typeMask = luaL_checkint(moduleState, -4);
-			moduleClass.terrMask = luaL_checkint(moduleState, -3);
-			moduleClass.weapMask = luaL_checkint(moduleState, -2);
-			moduleClass.roleMask = luaL_checkint(moduleState, -1);
+			unitDefClass.typeMask = luaL_checkint(moduleState, -4);
+			unitDefClass.terrMask = luaL_checkint(moduleState, -3);
+			unitDefClass.weapMask = luaL_checkint(moduleState, -2);
+			unitDefClass.roleMask = luaL_checkint(moduleState, -1);
 		CALL_LUA_FUNC_END(moduleState, 4);
 
 
@@ -314,16 +309,16 @@ LuaModuleLoader::LuaModuleLoader() {
 			continue;
 		}
 
-		if (luaModuleStates.find(moduleClass) == luaModuleStates.end()) {
-			luaModuleStates[moduleClass] = std::vector<lua_State*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
-			luaModuleStates[moduleClass][modulePriority] = moduleState;
+		if (luaModuleStates.find(unitDefClass) == luaModuleStates.end()) {
+			luaModuleStates[unitDefClass] = std::vector<lua_State*>(LuaModule::LUAMODULE_NUM_PRIORITIES, NULL);
+			luaModuleStates[unitDefClass][modulePriority] = moduleState;
 		} else {
-			if (luaModuleStates[moduleClass][modulePriority] != NULL) {
+			if (luaModuleStates[unitDefClass][modulePriority] != NULL) {
 				// two or more .lua scripts have the same class-mask _and_
 				// the same priority, so we don't require a new lua_State*
 				lua_close(moduleState);
 			} else {
-				luaModuleStates[moduleClass][modulePriority] = moduleState;
+				luaModuleStates[unitDefClass][modulePriority] = moduleState;
 			}
 		}
 	}
@@ -331,8 +326,8 @@ LuaModuleLoader::LuaModuleLoader() {
 
 LuaModuleLoader::~LuaModuleLoader() {
 	// close all cached unique Lua states
-	typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > LuaStateMap;
-	typedef std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
+	typedef std::map<AIUnitDef::AIUnitDefClass, std::vector<lua_State*> > LuaStateMap;
+	typedef std::map<AIUnitDef::AIUnitDefClass, std::vector<lua_State*> >::iterator LuaStateMapIt;
 
 	for (LuaStateMapIt mit = luaModuleStates.begin(); mit != luaModuleStates.end(); mit++) {
 		std::vector<lua_State*>& luaStateVec = mit->second;

@@ -105,6 +105,33 @@ public:
 	// #undef MOVEDATA_MF2MASK
 	// #undef MOVEDATA_TC2MASK
 
+	DECLARE_STRUCT(AIUnitDefClass)
+	struct AIUnitDefClass {
+		AIUnitDefClass(): typeMask(0), terrMask(0), weapMask(0), roleMask(0) {
+		}
+
+		bool operator < (rcAIUnitDefClass udc) const {
+			return (typeMask < udc.typeMask && terrMask < udc.terrMask && weapMask < udc.weapMask);
+		}
+		bool operator == (rcAIUnitDefClass udc) const {
+			return (typeMask == udc.typeMask && terrMask == udc.terrMask && weapMask == udc.weapMask);
+		}
+		rAIUnitDefClass operator = (rcAIUnitDefClass udc) {
+			typeMask = udc.typeMask;
+			terrMask = udc.terrMask;
+			weapMask = udc.weapMask;
+			roleMask = udc.roleMask;
+			return *this;
+		}
+
+		Uint32 typeMask;
+		Uint32 terrMask;
+		Uint32 weapMask;
+		Uint32 roleMask;
+
+		friend std::ostream& operator << (std::ostream&, rcAIUnitDefClass);
+	};
+
 	AIUnitDef(): sprUnitDef(0), dgunWeaponDef(0) {
 	}
 
@@ -130,86 +157,12 @@ public:
 
 	// per-frame costs of building a unit
 	// of this type at a given build-speed
-	float FrameCost(char resCode, float buildSpeed) const {
-		switch (resCode) {
-			case 'M': {
-				cFloat bt = GetBuildTimeFrames(buildSpeed);
-				cFloat mc = GetDef()->metalCost / bt;
-				return mc;
-			} break;
-			case 'E': {
-				cFloat bt = GetBuildTimeFrames(buildSpeed);
-				cFloat ec = GetDef()->energyCost / bt;
-				return ec;
-			} break;
-			default: {
-				return 1.0f;
-			} break;
-		}
-	}
+	float FrameCost(char resCode, float buildSpeed) const;
 
-	static cString GetTypeMaskName(cUint32 mask) {
-		switch (mask) {
-			case MASK_BUILDER_MOBILE: return "BUILDER_MOBILE";
-			case MASK_BUILDER_STATIC: return "BUILDER_STATIC";
-			case MASK_ASSISTER_MOBILE: return "ASSISTER_MOBILE";
-			case MASK_ASSISTER_STATIC: return "ASSISTER_STATIC";
-			case MASK_E_PRODUCER_MOBILE: return "E_PRODUCER_MOBILE";
-			case MASK_E_PRODUCER_STATIC: return "E_PRODUCER_STATIC";
-			case MASK_M_PRODUCER_MOBILE: return "M_PRODUCER_MOBILE";
-			case MASK_M_PRODUCER_STATIC: return "M_PRODUCER_STATIC";
-			case MASK_E_STORAGE_MOBILE: return "E_STORAGE_MOBILE";
-			case MASK_E_STORAGE_STATIC: return "E_STORAGE_STATIC";
-			case MASK_M_STORAGE_MOBILE: return "M_STORAGE_MOBILE";
-			case MASK_M_STORAGE_STATIC: return "M_STORAGE_STATIC";
-			case MASK_DEFENSE_STATIC: return "DEFENSE_STATIC";
-			case MASK_DEFENSE_MOBILE: return "DEFENSE_MOBILE";
-			case MASK_OFFENSE_STATIC: return "OFFENSE_STATIC";
-			case MASK_OFFENSE_MOBILE: return "OFFENSE_MOBILE";
-			case MASK_INTEL_MOBILE: return "INTEL_MOBILE";
-			case MASK_INTEL_STATIC: return "INTEL_STATIC";
-			case MASK_KAMIKAZE: return "KAMIKAZE";
-			default: return "INVALID_TYPE_ENUM";
-		};
-		return "INVALID_TYPE_ENUM";
-	}
-
-	static cString GetTerrainMaskName(cUint32 mask) {
-		switch (mask) {
-			case MASK_LAND: return "LAND";
-			case MASK_WATER_SURFACE: return "WATER_SURFACE";
-			case MASK_WATER_SUBMERGED: return "WATER_SUBMERGED";
-			case MASK_AIR: return "AIR";
-			default: return "INVALID_TERRAIN_ENUM";
-		}
-		return "INVALID_TERRAIN_ENUM";
-	}
-
-	static cString GetWeaponMaskName(cUint32 mask) {
-		switch(mask) {
-			case MASK_ARMED: return "ARMED";
-			case MASK_NUKE: return "NUKE";
-			case MASK_ANTINUKE: return "ANTINUKE";
-			case MASK_SHIELD: return "SHIELD";
-			case MASK_STOCKPILE: return "STOCKPILE";
-			case MASK_MANUALFIRE: return "MANUALFIRE";
-			default: return "INVALID_WEAPON_ENUM";
-		}
-		return "INVALID_WEAPON_ENUM";
-	}
-
-	static cString GetRoleMaskName(cUint32 mask) {
-		switch(mask) {
-			case MASK_SCOUT: return "SCOUT";
-			case MASK_RAIDER: return "RAIDER";
-			case MASK_ASSAULT: return "ASSAULT";
-			case MASK_ARTILLERY: return "ARTILLERY";
-			case MASK_ANTIAIR: return "ANTIAIR";
-			case MASK_STRIKER: return "STRIKER";
-			default: return "INVALID_ROLE_ENUM";
-		}
-		return "INVALID_ROLE_ENUM";
-	}
+	static cString GetTypeMaskName(cUint32 mask);
+	static cString GetTerrainMaskName(cUint32 mask);
+	static cString GetWeaponMaskName(cUint32 mask);
+	static cString GetRoleMaskName(cUint32 mask);
 
 	bool HaveBuildOptionDefID(int uDefID) const {
 		return (buildOptionUDIDs.find(uDefID) != buildOptionUDIDs.end());
@@ -235,11 +188,7 @@ public:
 		return 0;
 	}
 
-
-	Uint32 typeMask;
-	Uint32 terrainMask;
-	Uint32 weaponMask;
-	Uint32 roleMask;             // general categorization (scout, raider, ...), unused for now
+	AIUnitDefClass unitDefClass;
 	Uint32 boMoveDataMask;       // for build options, used by static builders ONLY
 
 	bool isHubBuilder;

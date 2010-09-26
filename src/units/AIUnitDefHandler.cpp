@@ -101,8 +101,8 @@ AIUnitDefHandler::AIUnitDefHandler() {
 		std::set<int>& boUDIDs = aiUnitDef->buildOptionUDIDs;
 		std::set<int>::const_iterator boUDIDsIt;
 
-		bool isStaticBuilder  = ((aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC) != 0);
-		bool isMobileBuilder  = ((aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_MOBILE) != 0);
+		bool isStaticBuilder  = ((aiUnitDef->unitDefClass.typeMask & AIUnitDef::MASK_BUILDER_STATIC) != 0);
+		bool isMobileBuilder  = ((aiUnitDef->unitDefClass.typeMask & AIUnitDef::MASK_BUILDER_MOBILE) != 0);
 		bool isSpecialBuilder = (isStaticBuilder || isMobileBuilder);
 
 		if (isStaticBuilder || isMobileBuilder) {
@@ -129,7 +129,7 @@ AIUnitDefHandler::AIUnitDefHandler() {
 					aiUnitDef->boMoveDataMask |= AIUnitDef::MASK_MOVEDATA_TC_AIR;
 				}
 
-				if ((aiBuildOptionDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC) != 0) {
+				if ((aiBuildOptionDef->unitDefClass.typeMask & AIUnitDef::MASK_BUILDER_STATIC) != 0) {
 					aiUnitDef->isHubBuilder = true;
 				}
 			}
@@ -180,45 +180,11 @@ void AIUnitDefHandler::WriteLog() {
 		msg << "nrg. cost: " << aiUnitDef->nEnergyCost << ", ";
 		msg << "max. speed: " << aiUnitDef->nMaxMoveSpeed << ", ";
 		msg << "extr. depth: " << aiUnitDef->nExtractsMetal << "\n";
-		msg << "\n\t";
-		msg << "isHubBuilder: " << aiUnitDef->isHubBuilder << ", ";
+		msg << "\tisHubBuilder: " << aiUnitDef->isHubBuilder << ", ";
 		msg << "isSpecialBuilder: " << aiUnitDef->isSpecialBuilder << "\n";
-		msg << "\n";
-		msg << "\tType, Terrain, Weapon [, Class] Masks:\n";
-
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_MOBILE   ) { msg << "\t\tMASK_BUILDER_MOBILE    = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC   ) { msg << "\t\tMASK_BUILDER_STATIC    = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_ASSISTER_MOBILE  ) { msg << "\t\tMASK_ASSISTER_MOBILE   = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_ASSISTER_STATIC  ) { msg << "\t\tMASK_ASSISTER_STATIC   = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_PRODUCER_MOBILE) { msg << "\t\tMASK_E_PRODUCER_MOBILE = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_PRODUCER_STATIC) { msg << "\t\tMASK_E_PRODUCER_STATIC = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_PRODUCER_MOBILE) { msg << "\t\tMASK_M_PRODUCER_MOBILE = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_PRODUCER_STATIC) { msg << "\t\tMASK_M_PRODUCER_STATIC = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_STORAGE_MOBILE ) { msg << "\t\tMASK_E_STORAGE_MOBILE  = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_E_STORAGE_STATIC ) { msg << "\t\tMASK_E_STORAGE_STATIC  = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_STORAGE_MOBILE ) { msg << "\t\tMASK_M_STORAGE_MOBILE  = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_M_STORAGE_STATIC ) { msg << "\t\tMASK_M_STORAGE_STATIC  = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_DEFENSE_STATIC   ) { msg << "\t\tMASK_DEFENSE_STATIC    = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_DEFENSE_MOBILE   ) { msg << "\t\tMASK_DEFENSE_MOBILE    = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_OFFENSE_STATIC   ) { msg << "\t\tMASK_OFFENSE_STATIC    = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_OFFENSE_MOBILE   ) { msg << "\t\tMASK_OFFENSE_MOBILE    = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_INTEL_MOBILE     ) { msg << "\t\tMASK_INTEL_MOBILE      = 1\n"; }
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_INTEL_STATIC     ) { msg << "\t\tMASK_INTEL_STATIC      = 1\n"; }
-
-		if (aiUnitDef->terrainMask & AIUnitDef::MASK_LAND           ) { msg << "\t\tMASK_LAND              = 1\n"; }
-		if (aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SURFACE  ) { msg << "\t\tMASK_WATER_SURFACE     = 1\n"; }
-		if (aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SUBMERGED) { msg << "\t\tMASK_WATER_SUBMERGED   = 1\n"; }
-		if (aiUnitDef->terrainMask & AIUnitDef::MASK_AIR            ) { msg << "\t\tMASK_AIR               = 1\n"; }
-
-		if (aiUnitDef->weaponMask & AIUnitDef::MASK_ARMED     ) { msg << "\t\tMASK_ARMED             = 1\n"; }
-		if (aiUnitDef->weaponMask & AIUnitDef::MASK_NUKE      ) { msg << "\t\tMASK_NUKE              = 1\n"; }
-		if (aiUnitDef->weaponMask & AIUnitDef::MASK_ANTINUKE  ) { msg << "\t\tMASK_ANTINUKE          = 1\n"; }
-		if (aiUnitDef->weaponMask & AIUnitDef::MASK_SHIELD    ) { msg << "\t\tMASK_SHIELD            = 1\n"; }
-		if (aiUnitDef->weaponMask & AIUnitDef::MASK_STOCKPILE ) { msg << "\t\tMASK_STOCKPILE         = 1\n"; }
-		if (aiUnitDef->weaponMask & AIUnitDef::MASK_MANUALFIRE) { msg << "\t\tMASK_MANUALFIRE        = 1\n"; }
-
-		if (aiUnitDef->typeMask & AIUnitDef::MASK_BUILDER_STATIC) {
-			msg << "\n\tBuildOption MoveData Masks:\n";
+		msg << "\tUnitDefClass: " << aiUnitDef->unitDefClass << "\n";
+		if (aiUnitDef->unitDefClass.typeMask & AIUnitDef::MASK_BUILDER_STATIC) {
+			msg << "\tBuildOption MoveData Masks:\n";
 
 			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MT_GND) { msg << "\t\tMASK_MOVEDATA_MT_GND   = 1\n"; }
 			if (aiUnitDef->boMoveDataMask & AIUnitDef::MASK_MOVEDATA_MT_HVR) { msg << "\t\tMASK_MOVEDATA_MT_HVR   = 1\n"; }
@@ -451,7 +417,7 @@ int AIUnitDefHandler::InsertUnitDefByID(int i) {
 
 	int n = 0;
 
-	std::list<std::set<int>* > sets = GetUnitDefIDSetsForMask(aiDef->typeMask, aiDef->terrainMask, aiDef->weaponMask);
+	std::list<std::set<int>* > sets = GetUnitDefIDSetsForMask(aiDef->unitDefClass.typeMask, aiDef->unitDefClass.terrMask, aiDef->unitDefClass.weapMask);
 	std::list<std::set<int>* >::iterator setsIt;
 
 	for (setsIt = sets.begin(); setsIt != sets.end(); setsIt++) {
@@ -484,10 +450,10 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 	aiUnitDef->isMobile         = ((sprUnitDef->speed > 0.0f) && ((sprUnitDef->canmove && sprUnitDef->movedata != NULL) || sprUnitDef->canfly));
 	aiUnitDef->isAttacker       = (!sprUnitDef->weapons.empty());
 	aiUnitDef->isBuilder        = (!sprUnitDef->buildOptions.empty());
-	aiUnitDef->typeMask         = 0;
-	aiUnitDef->terrainMask      = 0;
-	aiUnitDef->weaponMask       = 0;
-	aiUnitDef->roleMask         = 0;
+	aiUnitDef->unitDefClass.typeMask         = 0;
+	aiUnitDef->unitDefClass.terrMask      = 0;
+	aiUnitDef->unitDefClass.weapMask       = 0;
+	aiUnitDef->unitDefClass.roleMask         = 0;
 	aiUnitDef->boMoveDataMask   = 0;
 
 
@@ -497,51 +463,51 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 	if (!aiUnitDef->isBuilder) {
 		if (sprUnitDef->canAssist || sprUnitDef->canRepair) {
-			aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_ASSISTER_MOBILE: AIUnitDef::MASK_ASSISTER_STATIC);
+			aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_ASSISTER_MOBILE: AIUnitDef::MASK_ASSISTER_STATIC);
 		}
 	} else {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_BUILDER_MOBILE: AIUnitDef::MASK_BUILDER_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_BUILDER_MOBILE: AIUnitDef::MASK_BUILDER_STATIC);
 	}
 
 
 	// intelligence
 	if ((sprUnitDef->radarRadius > 0 || sprUnitDef->jammerRadius  > 0)) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
 	}
 	if ((sprUnitDef->sonarRadius  > 0 || sprUnitDef->sonarJamRadius > 0)) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
 	}
 	if ((sprUnitDef->seismicRadius > 0)) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_INTEL_MOBILE: AIUnitDef::MASK_INTEL_STATIC);
 	}
 
 
 	/* Should this be unavailable?
 	// resources (metal)
 	if (aiUnitDef->ResMakeOff('M', 0.0f, 0.0f) > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_PRODUCER_MOBILE: AIUnitDef::MASK_M_PRODUCER_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_PRODUCER_MOBILE: AIUnitDef::MASK_M_PRODUCER_STATIC);
 	}
 	if (aiUnitDef->IsResGenerator('M')) {
 		// extractor or maker (when active)
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_PRODUCER_MOBILE: AIUnitDef::MASK_M_PRODUCER_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_PRODUCER_MOBILE: AIUnitDef::MASK_M_PRODUCER_STATIC);
 	}
 
 	// resources (energy)
 	if (aiUnitDef->ResMakeOff('E', 0.0f, 0.0f) > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_PRODUCER_MOBILE: AIUnitDef::MASK_E_PRODUCER_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_PRODUCER_MOBILE: AIUnitDef::MASK_E_PRODUCER_STATIC);
 	}
 	if (aiUnitDef->IsResGenerator('E')) {
 		// wind or tidal
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_PRODUCER_MOBILE: AIUnitDef::MASK_E_PRODUCER_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_PRODUCER_MOBILE: AIUnitDef::MASK_E_PRODUCER_STATIC);
 	}
 	*/
 
 	// resources ({M, E} storage)
 	if (sprUnitDef->metalStorage  > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_STORAGE_MOBILE: AIUnitDef::MASK_M_STORAGE_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_M_STORAGE_MOBILE: AIUnitDef::MASK_M_STORAGE_STATIC);
 	}
 	if (sprUnitDef->energyStorage > 0.0f) {
-		aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_STORAGE_MOBILE: AIUnitDef::MASK_E_STORAGE_STATIC);
+		aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_E_STORAGE_MOBILE: AIUnitDef::MASK_E_STORAGE_STATIC);
 	}
 
 
@@ -560,8 +526,8 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 			if (!w->stockpile && !w->noAutoTarget && !w->isShield && !w->targetable && !w->interceptor) {
 				// regular weapon (note the offense/defense switch)
-				aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_OFFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
-				aiUnitDef->weaponMask |= AIUnitDef::MASK_ARMED;
+				aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_OFFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
+				aiUnitDef->unitDefClass.weapMask |= AIUnitDef::MASK_ARMED;
 
 				aiUnitDef->minWeaponRange = std::min(aiUnitDef->minWeaponRange, w->range);
 				aiUnitDef->maxWeaponRange = std::max(aiUnitDef->maxWeaponRange, w->range);
@@ -570,18 +536,18 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 				if (w->stockpile) {
 					MAI_ASSERT(sprUnitDef->stockpileWeaponDef != NULL);
 					// weapon that uses ammunition (do we need this?)
-					aiUnitDef->weaponMask |= AIUnitDef::MASK_STOCKPILE;
+					aiUnitDef->unitDefClass.weapMask |= AIUnitDef::MASK_STOCKPILE;
 				}
 				if (w->noAutoTarget) {
 					// manual-target weapon (do we need this?)
-					aiUnitDef->weaponMask |= AIUnitDef::MASK_MANUALFIRE;
+					aiUnitDef->unitDefClass.weapMask |= AIUnitDef::MASK_MANUALFIRE;
 				}
 
 				if (w->isShield) {
 					MAI_ASSERT(sprUnitDef->shieldWeaponDef != NULL);
 					// (possibly mobile) shield generator
-					aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_DEFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
-					aiUnitDef->weaponMask |= AIUnitDef::MASK_SHIELD;
+					aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_DEFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
+					aiUnitDef->unitDefClass.weapMask |= AIUnitDef::MASK_SHIELD;
 				}
 
 				if (!w->interceptor) {
@@ -589,14 +555,14 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 						// (possibly mobile) nuke launcher
 						// (weapon that can be intercepted,
 						// may or may not need stockpiling)
-						aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_OFFENSE_MOBILE: AIUnitDef::MASK_OFFENSE_STATIC);
-						aiUnitDef->weaponMask |= AIUnitDef::MASK_NUKE;
+						aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_OFFENSE_MOBILE: AIUnitDef::MASK_OFFENSE_STATIC);
+						aiUnitDef->unitDefClass.weapMask |= AIUnitDef::MASK_NUKE;
 					}
 				} else {
-					aiUnitDef->typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_DEFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
+					aiUnitDef->unitDefClass.typeMask |= (aiUnitDef->isMobile? AIUnitDef::MASK_DEFENSE_MOBILE: AIUnitDef::MASK_DEFENSE_STATIC);
 					// (possibly mobile) anti-nuke
 					// there are no anti-anti weapons
-					aiUnitDef->weaponMask |= AIUnitDef::MASK_ANTINUKE;
+					aiUnitDef->unitDefClass.weapMask |= AIUnitDef::MASK_ANTINUKE;
 				}
 			}
 		}
@@ -609,14 +575,14 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 		// requirements (default {min, max} vals
 		// are -10e6 and +10e6)
 		if ((sprUnitDef->minWaterDepth >= 0.0f) /*&& (sprUnitDef->maxWaterDepth >= sprUnitDef->minWaterDepth)*/) {
-			aiUnitDef->terrainMask |= (sprUnitDef->floater? AIUnitDef::MASK_WATER_SURFACE: AIUnitDef::MASK_WATER_SUBMERGED);
+			aiUnitDef->unitDefClass.terrMask |= (sprUnitDef->floater? AIUnitDef::MASK_WATER_SURFACE: AIUnitDef::MASK_WATER_SUBMERGED);
 		} else {
-			aiUnitDef->terrainMask |= AIUnitDef::MASK_LAND;
+			aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_LAND;
 		}
 	} else {
 		if (sprUnitDef->canfly) {
 			MAI_ASSERT(sprUnitDef->movedata == NULL);
-			aiUnitDef->terrainMask |= AIUnitDef::MASK_AIR;
+			aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_AIR;
 		} else {
 			MAI_ASSERT(sprUnitDef->movedata != NULL);
 
@@ -628,13 +594,13 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 					MAI_ASSERT(sprUnitDef->movedata->moveType == MoveData::Ground_Move);
 					MAI_ASSERT(sprUnitDef->movedata->followGround);
 
-					aiUnitDef->terrainMask |= AIUnitDef::MASK_LAND;
+					aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_LAND;
 
 					// in practice, most land units can move into
 					// shallow water, so this is not very useful
 					// (depth here represents maxWaterDepth)
 					if (sprUnitDef->movedata->depth > 0.0f) {
-						aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SUBMERGED;
+						aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_WATER_SUBMERGED;
 					}
 				} break;
 				case MoveData::Hover: {
@@ -647,8 +613,8 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 					//! for tanks, "minWaterDepth" should be < 0.0f
 					//! for hovers, "maxWaterDepth" should be > 0.0f
 
-					aiUnitDef->terrainMask |= AIUnitDef::MASK_LAND;
-					aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SURFACE;
+					aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_LAND;
+					aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_WATER_SURFACE;
 				} break;
 				case MoveData::Ship: {
 					// floater is true if "waterline" key exists, which submarines ALSO have
@@ -660,24 +626,24 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 					// explicit || implicit
 					if (sprUnitDef->movedata->subMarine || (sprUnitDef->waterline >= sprUnitDef->movedata->depth)) {
-						aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SUBMERGED;
+						aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_WATER_SUBMERGED;
 					} else {
-						aiUnitDef->terrainMask |= AIUnitDef::MASK_WATER_SURFACE;
+						aiUnitDef->unitDefClass.terrMask |= AIUnitDef::MASK_WATER_SURFACE;
 					}
 				} break;
 			}
 
 			if (sprUnitDef->movedata->terrainClass == MoveData::Mixed) {
 				MAI_ASSERT(
-					( aiUnitDef->terrainMask & AIUnitDef::MASK_LAND) &&
-					((aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SURFACE) ||
-					( aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SUBMERGED))
+					( aiUnitDef->unitDefClass.terrMask & AIUnitDef::MASK_LAND) &&
+					((aiUnitDef->unitDefClass.terrMask & AIUnitDef::MASK_WATER_SURFACE) ||
+					( aiUnitDef->unitDefClass.terrMask & AIUnitDef::MASK_WATER_SUBMERGED))
 				);
 			}
 		}
 	}
 
-	MAI_ASSERT(!((aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SURFACE) && (aiUnitDef->terrainMask & AIUnitDef::MASK_WATER_SUBMERGED)));
+	MAI_ASSERT(!((aiUnitDef->unitDefClass.terrMask & AIUnitDef::MASK_WATER_SURFACE) && (aiUnitDef->unitDefClass.terrMask & AIUnitDef::MASK_WATER_SUBMERGED)));
 
 
 	{

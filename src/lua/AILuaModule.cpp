@@ -5,7 +5,6 @@
 #include "./AILuaModuleLoader.hpp"
 #include "./AILuaCallOutHandler.hpp"
 #include "../main/AIHelper.hpp"
-#include "../units/AIUnitDef.hpp"
 #include "../utils/ObjectFactory.hpp"
 #include "../utils/Logger.hpp"
 #include "../utils/Util.hpp"
@@ -197,61 +196,9 @@ std::ostream& operator << (std::ostream& out, rcLuaModule module) {
 	out << module.GetPriority();
 	out << ", valid: ";
 	out << module.IsValid();
-	out << ", moduleclass: [";
-	out << module.GetModuleClass();
+	out << ", class: [";
+	out << module.GetUnitDefClass();
 	out << "]}";
-
-	return out;
-}
-
-std::ostream& operator << (std::ostream& out, const LuaModule::LuaModuleClass& moduleClass) {
-	std::stringstream type_mask_ss; type_mask_ss << "typeMasks[";
-	std::stringstream terr_mask_ss; terr_mask_ss << "terrMasks[";
-	std::stringstream weap_mask_ss; weap_mask_ss << "weapMasks[";
-	std::stringstream role_mask_ss; role_mask_ss << "roleMasks[";
-
-	static cUint32 max_bits = 
-		std::max<Uint32>(AIUnitDef::NUM_TYPE_MASKS,
-		std::max<Uint32>(AIUnitDef::NUM_TERRAIN_MASKS,
-		std::max<Uint32>(AIUnitDef::NUM_WEAPON_MASKS, 
-		AIUnitDef::NUM_ROLE_MASKS))
-	);
-
-	vUint32 indent(4, 0);
-
-	for (Uint32 i = 0; i < max_bits; i++)
-	{
-		cUint32 mask = (1 << i);
-
-		if (mask & moduleClass.typeMask)
-		{
-			type_mask_ss << AIUnitDef::GetTypeMaskName(mask) << "|";
-			indent[0] = 1;
-		}
-
-		if (mask & moduleClass.terrMask)
-		{
-			terr_mask_ss << AIUnitDef::GetTerrainMaskName(mask) << "|";
-			indent[1] = 1;
-		}
-
-		if (mask & moduleClass.weapMask)
-		{
-			weap_mask_ss << AIUnitDef::GetWeaponMaskName(mask) << "|";
-			indent[2] = 1;
-		}
-
-		if (mask & moduleClass.roleMask)
-		{
-			role_mask_ss << AIUnitDef::GetRoleMaskName(mask) << "|";
-			indent[3] = 1;
-		}
-	}
-
-	out << (type_mask_ss.str()).substr(0, type_mask_ss.str().length() - indent[0]) << "], ";
-	out << (terr_mask_ss.str()).substr(0, terr_mask_ss.str().length() - indent[1]) << "], ";
-	out << (weap_mask_ss.str()).substr(0, weap_mask_ss.str().length() - indent[2]) << "], ";
-	out << (role_mask_ss.str()).substr(0, role_mask_ss.str().length() - indent[3]) << "]";
 
 	return out;
 }

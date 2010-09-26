@@ -2,7 +2,7 @@
 #define AI_LUA_MODULE_HDR
 
 #include <map>
-#include "../main/AITypes.hpp"
+#include "../units/AIUnitDef.hpp"
 
 DECLARE_STRUCT(lua_State)
 DECLARE_CLASS(AIHelper)
@@ -44,35 +44,8 @@ public:
 		LUAMODULE_NUM_PRIORITIES     = 3,
 	};
 
-	DECLARE_STRUCT(LuaModuleClass)
-	struct LuaModuleClass {
-		LuaModuleClass(): typeMask(0), terrMask(0), weapMask(0), roleMask(0) {
-		}
-
-		bool operator < (rcLuaModuleClass mc) const {
-			return (typeMask < mc.typeMask && terrMask < mc.terrMask && weapMask < mc.weapMask);
-		}
-		bool operator == (rcLuaModuleClass mc) const {
-			return (typeMask == mc.typeMask && terrMask == mc.terrMask && weapMask == mc.weapMask);
-		}
-		rLuaModuleClass operator = (rcLuaModuleClass mc) {
-			typeMask = mc.typeMask;
-			terrMask = mc.terrMask;
-			weapMask = mc.weapMask;
-			roleMask = mc.roleMask;
-			return *this;
-		}
-
-		Uint32 typeMask;
-		Uint32 terrMask;
-		Uint32 weapMask;
-		Uint32 roleMask;
-
-		friend std::ostream& operator << (std::ostream&, rcLuaModuleClass);
-	};
-
-	void SetModuleClass(rcLuaModuleClass c) { moduleClass = c; }
-	rcLuaModuleClass GetModuleClass() const { return moduleClass; }
+	void SetUnitDefClass(const AIUnitDef::AIUnitDefClass& c) { unitDefClass = c; }
+	const AIUnitDef::AIUnitDefClass& GetUnitDefClass() const { return unitDefClass; }
 
 	friend std::ostream& operator<<(std::ostream&, rcLuaModule);
 
@@ -81,7 +54,7 @@ private:
 
 	lua_State* moduleState;
 	AIGroup* moduleGroup;
-	LuaModuleClass moduleClass;
+	AIUnitDef::AIUnitDefClass unitDefClass;
 
 	// LUAMODULE_PRIORITY_*
 	Uint32 priority;

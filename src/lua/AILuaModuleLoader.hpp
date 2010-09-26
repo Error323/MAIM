@@ -4,7 +4,8 @@
 #include <map>
 #include <vector>
 
-#include "AILuaModule.hpp"
+#include "./AILuaModule.hpp"
+#include "../units/AIUnitDef.hpp"
 
 struct lua_State;
 
@@ -27,8 +28,8 @@ private:
 	//
 	// multiple AIGroup*'s can NOT share one LuaModule*
 	// multiple LuaModule*'s CAN share one lua_State*
-	std::map<LuaModule::LuaModuleClass, std::vector<lua_State*> > luaModuleStates;
-	std::map<LuaModule::LuaModuleClass, std::vector<LuaModule*> > luaModules;
+	std::map<AIUnitDef::AIUnitDefClass, std::vector<lua_State*> > luaModuleStates;
+	std::map<AIUnitDef::AIUnitDefClass, std::vector<LuaModule*> > luaModules;
 };
 
 #endif
