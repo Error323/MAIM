@@ -2,7 +2,7 @@
 #define AI_LUA_MODULE_HDR
 
 #include <map>
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 
 DECLARE_STRUCT(lua_State)
 DECLARE_CLASS(AIHelper)

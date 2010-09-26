@@ -1,7 +1,9 @@
 #ifndef AI_GROUP_HANDLER_HDR
 #define AI_GROUP_HANDLER_HDR
 
-#include "../main/Types.hpp"
+#include <map>
+
+#include "../main/AITypes.hpp"
 #include "../observers/AGroupDestroyedObserver.hpp"
 
 DECLARE_CLASS(AIGroup)

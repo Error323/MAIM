@@ -2,7 +2,7 @@
 #define AI_UNIT_HDR
 
 #include "System/float3.h"
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 #include "../observers/AUnitDestroyedSubject.hpp"
 
 DECLARE_CLASS(Command)

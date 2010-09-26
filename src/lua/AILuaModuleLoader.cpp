@@ -1,14 +1,14 @@
 #include <string>
 #include <fstream>
 
-#include "../main/HAIInterface.hpp"
+#include "LegacyCpp/IAICallback.h"
 
 #include "./AILuaHeaders.hpp"
 #include "./AILuaModuleLoader.hpp"
 #include "./AILuaModule.hpp"
 #include "./AILuaCallBackHandler.hpp"
 #include "../main/AIHelper.hpp"
-#include "../main/DFolders.hpp"
+#include "../main/AIDefines.hpp"
 #include "../units/AIUnitDef.hpp"
 #include "../utils/Debugger.hpp"
 #include "../utils/Logger.hpp"

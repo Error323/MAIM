@@ -1,8 +1,7 @@
 #include <sstream>
 #include <algorithm>
 
-#include "../main/HEngine.hpp"
-#include "../main/HAIInterface.hpp"
+#include "LegacyCpp/IAICallback.h"
 
 #include "./AIUnitDefHandler.hpp"
 #include "./AIUnitDef.hpp"

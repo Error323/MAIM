@@ -1,11 +1,11 @@
-#ifndef GROUP_HDR
-#define GROUP_HDR
+#ifndef AI_GROUP_HDR
+#define AI_GROUP_HDR
 
 #include <list>
 #include <stack>
 #include <map>
 
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 #include "../observers/AGroupDestroyedSubject.hpp"
 #include "../observers/AUnitDestroyedObserver.hpp"
 #include "System/float3.h"

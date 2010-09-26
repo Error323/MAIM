@@ -1,11 +1,12 @@
-#ifndef TASK_HOLDER
-#define TASK_HOLDER
+#ifndef AI_TASK_HANDLER_HDR
+#define AI_TASK_HANDLER_HDR
 
 #include <list>
 #include <map>
 #include <iostream>
 
-#include "../main/Types.hpp"
+#include "System/float3.h"
+#include "../main/AITypes.hpp"
 #include "../observers/AGroupDestroyedObserver.hpp"
 
 DECLARE_CLASS(AIGroup)

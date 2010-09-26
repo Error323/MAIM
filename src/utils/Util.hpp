@@ -1,11 +1,11 @@
-#ifndef UTIL
-#define UTIL
+#ifndef AI_UTIL_HDR
+#define AI_UTIL_HDR
 
 #include <list>
 #include <set>
 #include <string>
 
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 
 DECLARE_CLASS(IAICallback)
 

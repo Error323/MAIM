@@ -8,8 +8,8 @@
 #include "Sim/Weapons/WeaponDef.h"
 #include "Sim/MoveTypes/MoveInfo.h"
 
-#include "../main/DConstants.hpp"
-#include "../main/Types.hpp"
+#include "../main/AIDefines.hpp"
+#include "../main/AITypes.hpp"
 
 DECLARE_CLASS(MoveData)
 DECLARE_CLASS(UnitDef)

@@ -1,6 +1,11 @@
+#ifndef AI_TYPES_HDR
+#define AI_TYPES_HDR
+
 #include <vector>
 #include <string>
-#include "./HEngine.hpp"
+
+class float3;
+struct UnitDef;
 
 #define DECLARE_HUNGARIAN(TYPE)                          \
 	typedef       TYPE*                     p##TYPE;     \
@@ -66,3 +71,5 @@ typedef unsigned __int16 Uint16; DECLARE_HUNGARIAN(Uint16)
 typedef __int8           Int8;   DECLARE_HUNGARIAN(Int8)
 typedef unsigned __int8  Uint8;  DECLARE_HUNGARIAN(Uint8)
 #endif // WIN32
+
+#endif

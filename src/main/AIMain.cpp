@@ -1,9 +1,10 @@
 #include <iostream>
 
+#include "LegacyCpp/IAICallback.h"
+
 #include "./MAI.hpp"
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
-
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 #include "../globals/AITaskHandler.hpp"

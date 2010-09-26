@@ -1,44 +1,22 @@
 #include <map>
 
-// AI interface stuff
+// AI interface headers
 #include "ExternalAI/Interface/SSkirmishAILibrary.h"
 #include "ExternalAI/Interface/SSkirmishAICallback.h"
 #include "../Wrappers/LegacyCpp/AIGlobalAI.h"
 #include "../Wrappers/CUtils/Util.h"
-#include "Game/GameVersion.h"
 
-// MAI stuff
-#include "./Exports.hpp"
+// MAI headers
+#include "./AIExports.hpp"
 #include "./AIMain.hpp"
 
-// teamId -> AI map
 static std::map<int, CAIGlobalAI*> aiInstances;
-
-// callbacks for all the teams controlled by this Skirmish AI
 static std::map<int, const struct SSkirmishAICallback*> teamCallbacks;
 
 
 
-EXPORT(enum LevelOfSupport) getLevelOfSupportFor(
-	int teamId,
-	const char* engineVersionString, int engineVersionNumber,
-	const char* aiInterfaceShortName, const char* aiInterfaceVersion
-) {
-	const char* springVersion = SpringVersion::GetFull().c_str();
-	const int cmp = strcmp(engineVersionString, springVersion);
-
-	if (cmp == 0 && engineVersionNumber <= ENGINE_VERSION_NUMBER) {
-		return LOS_Working;
-	}
-
-	return LOS_None;
-}
-
 EXPORT(int) init(int teamId, const struct SSkirmishAICallback* callback) {
 	if (aiInstances.find(teamId) != aiInstances.end()) {
-		// the map already has an AI for this team.
-		// raise an error, since it's probably a mistake if we're trying
-		// to reinitialise a team that already had init() called on it.
 		return -1;
 	}
 
@@ -50,10 +28,8 @@ EXPORT(int) init(int teamId, const struct SSkirmishAICallback* callback) {
 	return 0;
 }
 
-// optionally called
 EXPORT(int) release(int teamId) {
-	if (aiInstances.count(teamId) == 0) {
-		// no AI for this team, raise an error
+	if (aiInstances.find(teamId) == aiInstances.end()) {
 		return -1;
 	}
 
@@ -65,11 +41,7 @@ EXPORT(int) release(int teamId) {
 }
 
 EXPORT(int) handleEvent(int teamId, int topic, const void* data) {
-	if (teamId < 0) {
-		// events sent to team -1 will always be to the AI object itself,
-		// not to a particular team.
-	} else if (aiInstances.find(teamId) != aiInstances.end()) {
-		// allow the AI instance to handle the event.
+	if (teamId >= 0 && aiInstances.find(teamId) != aiInstances.end()) {
 		return aiInstances[teamId]->handleEvent(topic, data);
 	}
 
@@ -110,9 +82,7 @@ const char* aiexport_getDataDir(bool absoluteAndWriteable) {
 
 	return NULL;
 }
-*/
 
-/*
 const char* aiexport_getMyOption(int teamId, const char* key) {
 	return teamCallbacks[teamId]->Clb_SkirmishAI_OptionValues_getValueByKey(teamId, key);
 }

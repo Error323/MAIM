@@ -1,7 +1,7 @@
-#ifndef HELPER_HDR
-#define HELPER_HDR
+#ifndef AI_HELPER_HDR
+#define AI_HELPER_HDR
 
-#include "./Types.hpp"
+#include "./AITypes.hpp"
 
 DECLARE_CLASS(IGlobalAICallback)
 DECLARE_CLASS(IAICallback)

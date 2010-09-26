@@ -1,6 +1,6 @@
-#include "EcoState.hpp"
+#include "LegacyCpp/IAICallback.h"
 
-#include "../main/HAIInterface.hpp"
+#include "./EcoState.hpp"
 #include "../main/AIHelper.hpp"
 #include "../groups/AIGroup.hpp"
 #include "../units/AIUnit.hpp"

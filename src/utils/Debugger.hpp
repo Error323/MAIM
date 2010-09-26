@@ -1,7 +1,7 @@
-#ifndef MAI_DEBUGGER_HDR
-#define MAI_DEBUGGER_HDR
+#ifndef AI_DEBUGGER_HDR
+#define AI_DEBUGGER_HDR
 
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 
 DECLARE_CLASS(Debugger)
 

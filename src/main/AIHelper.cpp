@@ -1,6 +1,8 @@
-#include "./HAIInterface.hpp"
+#include "LegacyCpp/IGlobalAICallback.h"
+#include "LegacyCpp/IAICallback.h"
+
 #include "./AIHelper.hpp"
-#include "./DFolders.hpp"
+#include "./AIDefines.hpp"
 
 #include "../utils/Logger.hpp"
 #include "../utils/Timer.hpp"

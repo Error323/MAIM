@@ -1,7 +1,9 @@
 #ifndef AI_UNIT_HANDLER_HDR
 #define AI_UNIT_HANDLER_HDR
 
-#include "../main/Types.hpp"
+#include <map>
+
+#include "../main/AITypes.hpp"
 #include "../observers/AUnitDestroyedObserver.hpp"
 
 DECLARE_CLASS(AIUnit)

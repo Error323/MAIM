@@ -1,5 +1,5 @@
-#ifndef EXPORTS_HDR
-#define EXPORTS_HDR
+#ifndef AI_EXPORTS_HDR
+#define AI_EXPORTS_HDR
 
 // check if the correct defines are set by the build system
 #if !defined BUILDING_SKIRMISH_AI
@@ -16,15 +16,11 @@
 #endif
 
 #include "ExternalAI/Interface/aidefines.h"
-#include "ExternalAI/Interface/ELevelOfSupport.h"
 
 struct SSkirmishAICallback;
 
 // for a list of the functions that have to be exported,
 // see struct SSkirmishAILibrary in "ExternalAI/Interface/SSkirmishAILibrary.h"
-
-// static AI library methods (optional to implement)
-EXPORT(enum LevelOfSupport) getLevelOfSupportFor(int, const char*, int, const char*, const char*);
 
 // team instance functions
 EXPORT(int) init(int teamId, const struct SSkirmishAICallback* callback);

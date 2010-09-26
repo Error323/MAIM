@@ -1,10 +1,10 @@
-#ifndef GAME_MAP
-#define GAME_MAP
+#ifndef AI_GAME_MAP_HDR
+#define AI_GAME_MAP_HDR
 
 #include <list>
 
 #include "System/float3.h"
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 
 // heightVariance(Altair_Crossing.smf)
 #define KBOT_VEH_THRESHOLD 43.97f

@@ -1,11 +1,12 @@
-#include "./GameMap.hpp"
-
 #include <limits>
 #include <iostream>
 #include <map>
 
-#include "../main/HEngine.hpp"
-#include "../main/HAIInterface.hpp"
+#include "System/float3.h"
+#include "LegacyCpp/IAICallback.h"
+#include "LegacyCpp/UnitDef.h"
+
+#include "./GameMap.hpp"
 #include "../main/AIHelper.hpp"
 #include "../groups/AIGroup.hpp"
 #include "../utils/Logger.hpp"
@@ -25,6 +26,7 @@ void GameMap::Init() {
 
 	CalcMapHeightFeatures();
 	CalcMetalSpots();
+
 	LOG_BASIC("[GameMap::HasMetalSpots] " << HasMetalSpots() << "\n");
 	LOG_BASIC("[GameMap::HasGeoSpots] " << HasGeoSpots() << "\n");
 	LOG_BASIC("[GameMap::HasEnergyFeatures] " << HasEnergyFeatures() << "\n");

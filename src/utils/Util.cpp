@@ -5,7 +5,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "../main/HAIInterface.hpp"
+#include "LegacyCpp/IAICallback.h"
+
 #include "./Util.hpp"
 #include "./Debugger.hpp"
 

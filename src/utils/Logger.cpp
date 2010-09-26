@@ -3,9 +3,10 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../main/DFolders.hpp"
-#include "../main/HAIInterface.hpp"
+#include "LegacyCpp/IAICallback.h"
+
 #include "../main/AIHelper.hpp"
+#include "../main/AIDefines.hpp"
 
 #include "./Logger.hpp"
 #include "./Util.hpp"

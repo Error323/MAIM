@@ -1,5 +1,7 @@
-#include "../main/HAIInterface.hpp"
-#include "../main/HEngine.hpp"
+#include "Sim/Units/CommandAI/Command.h"
+#include "Sim/Units/CommandAI/CommandQueue.h"
+#include "System/float3.h"
+#include "LegacyCpp/IAICallback.h"
 
 #include "./AIUnit.hpp"
 #include "./AIUnitDef.hpp"

@@ -1,8 +1,8 @@
-#ifndef ECO_STATE
-#define ECO_STATE
+#ifndef AI_ECO_STATE_HDR
+#define AI_ECO_STATE_HDR
 
 #include <list>
-#include "../main/Types.hpp"
+#include "../main/AITypes.hpp"
 
 #define HISTORY 10
 

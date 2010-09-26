@@ -1,8 +1,9 @@
 #ifndef AIMAIN_HDR
 #define AIMAIN_HDR
 
-#include "./HAIInterface.hpp"
+#include "LegacyCpp/IGlobalAI.h"
 
+class IGlobalAICallback;
 class AIHelper;
 class AIMain: public IGlobalAI {
 public:
@@ -34,7 +35,8 @@ public:
 private:
 	unsigned int aiInstance;
 	static unsigned int aiInstances;
-	AIHelper *aih;
+
+	AIHelper* aih;
 };
 
 #endif
