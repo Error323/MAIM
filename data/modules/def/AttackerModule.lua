@@ -12,12 +12,12 @@ function GetMinGroupSize() return    1 end
 function GetMaxGroupSize() return 9001 end
 
 
-function GetClassMask()
+function GetClass()
 	-- called at AI load-time only (class-mask is fixed)
-	local typeMasksTbl = AIModuleClassMaskConstsTbl.TypeMasksTbl
-	local terrMasksTbl = AIModuleClassMaskConstsTbl.TerrainMasksTbl
-	local weapMasksTbl = AIModuleClassMaskConstsTbl.WeaponMasksTbl
-	local roleMasksTbl = AIModuleClassMaskConstsTbl.RoleMasksTbl
+	local typeMasksTbl = AIModuleClassConstsTbl.TypeMasksTbl
+	local terrMasksTbl = AIModuleClassConstsTbl.TerrainMasksTbl
+	local weapMasksTbl = AIModuleClassConstsTbl.WeaponMasksTbl
+	local roleMasksTbl = AIModuleClassConstsTbl.RoleMasksTbl
 
 	-- NOTE: '+' because we do not have bit-ops
 	local terrMask = terrMasksTbl.MASK_LAND + terrMasksTbl.MASK_WATER_SURFACE + terrMasksTbl.MASK_WATER_SUBMERGED

@@ -165,7 +165,7 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 				PUSH_LUA_MASK_CONSTANT(luaState, MASK_STRIKER);
 			lua_settable(luaState, -3);
 			MAI_ASSERT(lua_gettop(luaState) == 1);
-		lua_setglobal(luaState, "AIModuleClassMaskConstsTbl");
+		lua_setglobal(luaState, "AIModuleClassConstsTbl");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
 
 		lua_newtable(luaState);
@@ -300,7 +300,7 @@ LuaModuleLoader::LuaModuleLoader() {
 			modulePriority = luaL_checkint(moduleState, -1);
 		CALL_LUA_FUNC_END(moduleState, 1);
 
-		CALL_LUA_FUNC_BEG(moduleState, "GetClassMask", 0, 4);
+		CALL_LUA_FUNC_BEG(moduleState, "GetClass", 0, 4);
 			moduleClass.typeMask = luaL_checkint(moduleState, -4);
 			moduleClass.terrMask = luaL_checkint(moduleState, -3);
 			moduleClass.weapMask = luaL_checkint(moduleState, -2);

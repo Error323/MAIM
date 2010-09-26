@@ -99,7 +99,7 @@ these four variables is assigned a value from the following C++ enums:
 * enum UnitDefTypeMasks {`MASK_BUILDER_MOBILE`, `MASK_ASSISTER_STATIC`, ...}
 * enum UnitDefTerrainMasks {`MASK_LAND`, `MASK_WATER_SURFACE`, ...}
 * enum UnitDefWeaponMasks {`MASK_NUKE`, `MASK_SHIELD`, ...}
-* enum UnitDefClassMasks {`MASK_SCOUT`, `MASK_ASSAULT`, ...}
+* enum UnitDefRoleMasks {`MASK_SCOUT`, `MASK_ASSAULT`, ...}
 
 Lua module scripts define the values of these variables; they become
 constants for the lifetime of the LuaModule (ie. for as long as it is
