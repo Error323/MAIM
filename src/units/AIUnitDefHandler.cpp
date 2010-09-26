@@ -443,17 +443,17 @@ void AIUnitDefHandler::CategorizeUnitDefByID(int id) {
 
 	aiUnitDef->SetUnitDef(sprUnitDef);
 	aiUnitDef->SetDGunWeaponDef(aiUnitDef->GetDGunWeaponDef());
-	//aiUnitDef->maxConcurrentInstances = -1;
 
 	aiUnitDef->isHubBuilder     = false;
 	aiUnitDef->isSpecialBuilder = false;
 	aiUnitDef->isMobile         = ((sprUnitDef->speed > 0.0f) && ((sprUnitDef->canmove && sprUnitDef->movedata != NULL) || sprUnitDef->canfly));
 	aiUnitDef->isAttacker       = (!sprUnitDef->weapons.empty());
 	aiUnitDef->isBuilder        = (!sprUnitDef->buildOptions.empty());
-	aiUnitDef->unitDefClass.typeMask         = 0;
-	aiUnitDef->unitDefClass.terrMask      = 0;
-	aiUnitDef->unitDefClass.weapMask       = 0;
-	aiUnitDef->unitDefClass.roleMask         = 0;
+
+	aiUnitDef->unitDefClass.typeMask = 0;
+	aiUnitDef->unitDefClass.terrMask = 0;
+	aiUnitDef->unitDefClass.weapMask = 0;
+	aiUnitDef->unitDefClass.roleMask = 0;
 	aiUnitDef->boMoveDataMask   = 0;
 
 
