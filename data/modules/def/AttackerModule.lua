@@ -18,6 +18,13 @@ function GetClassMask()
 end
 
 function GetPriority()
+	-- [[
+	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
+	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
+	local commandTbl = {type = cmdTypesTbl.CMD_MOVE, opts = cmdOptionsTbl.SHIFT_KEY, args = {[0] = 123, [1] = 456}}
+	AICallOutsTbl.CommandsTbl.GiveCommand(12345, commandTbl)
+	-- ]]
+
 	return AIModulePriorityConstsTbl.LUAMODULE_PRIORITY_PROACTIVE
 end
 

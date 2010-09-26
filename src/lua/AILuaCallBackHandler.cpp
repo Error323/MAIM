@@ -6,6 +6,7 @@
 #include "../main/AIHelper.hpp"
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
+#include "../units/AIUnitHandler.hpp"
 #include "../utils/Debugger.hpp"
 
 LuaModule* LuaCallBackHandler::activeModule = NULL;
@@ -41,12 +42,19 @@ int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
-	if (!lua_isnumber(L, 1)) { return 0; }
-	if (!lua_istable(L, 2)) { return 0; }
+	if (!lua_isnumber(L, 1)) { return 0; } // unitID
+	if (!lua_istable(L, 2)) { return 0; } // commandTbl
+
+	const int unitID = lua_tointeger(L, 1);
+	const int tableIdx = 2; // == -1
+
+	if (aih->GetAIUnitHandler()->GetUnit(unitID) == NULL) {
+		return 0;
+	}
 
 	Command c;
 
-	// command = {
+	// commandTbl = {
 	//     type = CMD_*,
 	//     opts = *_KEY,
 	//     args = {
@@ -56,9 +64,35 @@ int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
 	//         ...
 	//     },
 	//     [ tag = 31415927182818, ]
-	//     [ timeOut = MAX_INT, ]
+	//     [ ttl = MAX_INT, ]
 	// }
 
-	lua_pushnumber(L, rcb->GiveOrder(lua_tointeger(L, 1), &c));
+	lua_pushnil(L);
+
+	while (lua_next(L, tableIdx) != 0) {
+		const int keyType = lua_type(L, -2);
+		const int valType = lua_type(L, -1);
+
+		if (keyType == LUA_TSTRING) {
+			const std::string key = lua_tostring(L, -2);
+
+			switch (valType) {
+				case LUA_TNUMBER: {
+					     if (key == "type") { c.id      = lua_tonumber(L, -1); }
+					else if (key == "opts") { c.options = lua_tonumber(L, -1); }
+					else if (key == "tag" ) { c.tag     = lua_tonumber(L, -1); }
+					else if (key == "ttl" ) { c.timeOut = lua_tonumber(L, -1); }
+				} break;
+				case LUA_TTABLE: {
+					// args
+				} break;
+			}
+		}
+
+		// pop the VALUE
+		lua_pop(L, 1);
+	}
+
+	lua_pushnumber(L, rcb->GiveOrder(unitID, &c));
 	return 1;
 }
