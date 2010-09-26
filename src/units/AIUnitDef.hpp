@@ -110,9 +110,8 @@ public:
 		AIUnitDefClass(): typeMask(0), terrMask(0), weapMask(0), roleMask(0) {
 		}
 
-		bool operator < (rcAIUnitDefClass udc) const {
-			return (typeMask < udc.typeMask && terrMask < udc.terrMask && weapMask < udc.weapMask);
-		}
+		bool operator < (rcAIUnitDefClass udc) const;
+
 		bool operator == (rcAIUnitDefClass udc) const {
 			return (typeMask == udc.typeMask && terrMask == udc.terrMask && weapMask == udc.weapMask);
 		}

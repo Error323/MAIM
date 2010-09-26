@@ -10,16 +10,6 @@
 #include "../utils/Util.hpp"
 #include "../utils/Debugger.hpp"
 
-bool LuaModule::LuaModuleClass::operator < (rcLuaModuleClass mc) const {
-	// sort by typeMask, then by terrMask, then by weapMask, then by roleMask
-	// note that we only look at the number of 1-bits, not which bits are set
-	if (util::CountOneBits(typeMask) < util::CountOneBits(mc.typeMask)) { return true; }
-	if (util::CountOneBits(terrMask) < util::CountOneBits(mc.terrMask)) { return true; }
-	if (util::CountOneBits(weapMask) < util::CountOneBits(mc.weapMask)) { return true; }
-	if (util::CountOneBits(roleMask) < util::CountOneBits(mc.roleMask)) { return true; }
-	return false;
-}
-
 LuaModule::LuaModule(): 
 	isValid(false),
 	moduleState(NULL),
