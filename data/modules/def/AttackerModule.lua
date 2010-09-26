@@ -33,7 +33,7 @@ function GetPriority()
 	--[[
 	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
 	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
-	local cmdsTbl = AICallOutsTbl.CommandsTbl
+	local cmdsTbl = AICallOutsTbl.CommandCallOutsTbl
 	local commandTbl = {type = cmdTypesTbl.CMD_MOVE, opts = cmdOptionsTbl.SHIFT_KEY, args = {[0] = 123, [1] = 456, [2] = 789}}
 
 	cmdsTbl.GiveCommand(12345, commandTbl)
@@ -67,7 +67,7 @@ end
 function AddUnit(unitID)
 	-- called whenever a unit is added to the
 	-- group managing this module
-	UNITS[unitID] = AICallOutsTbl.SimStateCallOuts.GetCurrFrame()
+	UNITS[unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrFrame()
 end
 
 function DelUnit(unitID)

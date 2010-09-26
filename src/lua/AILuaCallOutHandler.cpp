@@ -26,10 +26,10 @@ void LuaCallOutHandler::RegisterFunctions(lua_State* L) {
 }
 
 void LuaCallOutHandler::SimStateCallOuts::RegisterFunctions(lua_State* L) {
-	// SimStateTbl = {}
-	//   SimStateTbl["func"] = func
-	// AICallOutsTbl["SimStateTbl"] = SimStateTbl
-	lua_pushstring(L, "SimStateTbl");
+	// SimStateCallOutsTbl = {}
+	//   SimStateCallOutsTbl["func"] = func
+	// AICallOutsTbl["SimStateCallOutsTbl"] = SimStateCallOutsTbl
+	lua_pushstring(L, "SimStateCallOutsTbl");
 	lua_newtable(L);
 	MAI_ASSERT(lua_istable(L, -3));
 	MAI_ASSERT(lua_istable(L, -1));
@@ -41,10 +41,10 @@ void LuaCallOutHandler::SimStateCallOuts::RegisterFunctions(lua_State* L) {
 }
 
 void LuaCallOutHandler::EcoStateCallOuts::RegisterFunctions(lua_State* L) {
-	// EcoStateTbl = {}
-	//   EcoStateTbl["func"] = func
-	// AICallOutsTbl["EcoStateTbl"] = EcoStateTbl
-	lua_pushstring(L, "EcoStateTbl");
+	// EcoStateCallOutsTbl = {}
+	//   EcoStateCallOutsTbl["func"] = func
+	// AICallOutsTbl["EcoStateCallOutsTbl"] = EcoStateCallOutsTbl
+	lua_pushstring(L, "EcoStateCallOutsTbl");
 	lua_newtable(L);
 	MAI_ASSERT(lua_istable(L, -3));
 	MAI_ASSERT(lua_istable(L, -1));
@@ -55,10 +55,10 @@ void LuaCallOutHandler::EcoStateCallOuts::RegisterFunctions(lua_State* L) {
 }
 
 void LuaCallOutHandler::GameMapCallOuts::RegisterFunctions(lua_State* L) {
-	// GameMapTbl = {}
-	//   GameMapTbl["func"] = func
-	// AICallOutsTbl["GameMapTbl"] = GameMapTbl
-	lua_pushstring(L, "GameMapTbl");
+	// GameMapCallOutsTbl = {}
+	//   GameMapCallOutsTbl["func"] = func
+	// AICallOutsTbl["GameMapTbl"] = GameMapCallOutsTbl
+	lua_pushstring(L, "GameMapCallOutsTbl");
 	lua_newtable(L);
 	MAI_ASSERT(lua_istable(L, -3));
 	MAI_ASSERT(lua_istable(L, -1));
@@ -68,10 +68,10 @@ void LuaCallOutHandler::GameMapCallOuts::RegisterFunctions(lua_State* L) {
 	MAI_ASSERT(lua_gettop(L) == 1);
 }
 void LuaCallOutHandler::CommandCallOuts::RegisterFunctions(lua_State* L) {
-	// CommandsTbl = {}
-	//   CommandsTbl["func"] = func
-	// AICallOutsTbl["CommandsTbl"] = CommandsTbl
-	lua_pushstring(L, "CommandsTbl");
+	// CommandCallOutsTbl = {}
+	//   CommandCallOutsTbl["func"] = func
+	// AICallOutsTbl["CommandCallOutsTbl"] = CommandCallOutsTbl
+	lua_pushstring(L, "CommandCallOutsTbl");
 	lua_newtable(L);
 	MAI_ASSERT(lua_istable(L, -3));
 	MAI_ASSERT(lua_istable(L, -1));
