@@ -103,4 +103,4 @@ public:
 };
 #endif // DEBUG
 
-#endif // MAI_DEBUGGER_HDR
+#endif // AI_DEBUGGER_HDR

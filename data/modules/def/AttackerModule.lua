@@ -22,7 +22,7 @@ function GetPriority()
 	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
 	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
 	local cmdsTbl = AICallOutsTbl.CommandsTbl
-	local commandTbl = {type = cmdTypesTbl.CMD_MOVE, opts = cmdOptionsTbl.SHIFT_KEY, args = {[0] = 123, [1] = 456}}
+	local commandTbl = {type = cmdTypesTbl.CMD_MOVE, opts = cmdOptionsTbl.SHIFT_KEY, args = {[0] = 123, [1] = 456, [2] = 789}}
 
 	cmdsTbl.GiveCommand(12345, commandTbl)
 	-- ]]

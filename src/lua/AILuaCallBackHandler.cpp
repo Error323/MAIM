@@ -12,59 +12,60 @@
 LuaModule* LuaCallBackHandler::activeModule = NULL;
 
 int LuaCallBackHandler::EcoStateCallBacks::IsStallingMetal(lua_State* L) {
-	MAI_ASSERT(lua_gettop(L) == 0);
+	// MAI_ASSERT(lua_gettop(L) == 0);
 	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetEcoState()->IsStallingMetal());
 	return 1;
 }
 int LuaCallBackHandler::EcoStateCallBacks::IsStallingEnergy(lua_State* L) {
-	MAI_ASSERT(lua_gettop(L) == 0);
+	// MAI_ASSERT(lua_gettop(L) == 0);
 	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetEcoState()->IsStallingEnergy());
 	return 1;
 }
 
 
 int LuaCallBackHandler::GameMapCallBacks::GetAmountOfLand(lua_State* L) {
-	MAI_ASSERT(lua_gettop(L) == 0);
+	// MAI_ASSERT(lua_gettop(L) == 0);
 	lua_pushnumber(L, AIHelper::GetActiveInstance()->GetGameMap()->GetAmountOfLand());
 	return 1;
 }
 
 int LuaCallBackHandler::GameMapCallBacks::GetAmountOfWater(lua_State* L) {
-	MAI_ASSERT(lua_gettop(L) == 0);
+	// MAI_ASSERT(lua_gettop(L) == 0);
 	lua_pushnumber(L, AIHelper::GetActiveInstance()->GetGameMap()->GetAmountOfWater());
 	return 1;
 }
 
 
 int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
-	MAI_ASSERT(lua_gettop(L) == 2);
+	MAI_ASSERT(lua_gettop(L) >= 2);
 
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
+	pAIUnitHandler uh = aih->GetAIUnitHandler();
 
 	if (!lua_isnumber(L, 1)) { return 0; } // unitID
 	if (!lua_istable(L, 2)) { return 0; } // commandTbl
 
 	const int unitID = lua_tointeger(L, 1);
-	const int tableIdx = 2; // == -1
+	const int tableIdx = 2; // absolute index
 
-	if (aih->GetAIUnitHandler()->GetUnit(unitID) == NULL) {
+	if (uh == NULL || uh->GetUnit(unitID) == NULL) {
 		return 0;
 	}
 
-	Command c;
+	Command cmd;
 
 	// commandTbl = {
-	//     type = CMD_*,
-	//     opts = *_KEY,
-	//     args = {
+	//     "type" = CMD_*,
+	//     "opts" = *_KEY,
+	//     "args" = {
 	//         [0] = 123,
 	//         [1] = 456,
 	//         [2] = 789,
 	//         ...
 	//     },
-	//     [ tag = 31415927182818, ]
-	//     [ ttl = MAX_INT, ]
+	//     [ "tag" = 31415927182818, ]
+	//     [ "ttl" = MAX_INT, ]
 	// }
 
 	lua_pushnil(L);
@@ -78,13 +79,22 @@ int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
 
 			switch (valType) {
 				case LUA_TNUMBER: {
-					     if (key == "type") { c.id      = lua_tonumber(L, -1); }
-					else if (key == "opts") { c.options = lua_tonumber(L, -1); }
-					else if (key == "tag" ) { c.tag     = lua_tonumber(L, -1); }
-					else if (key == "ttl" ) { c.timeOut = lua_tonumber(L, -1); }
+					     if (key == "type") { cmd.id      = lua_tonumber(L, -1); }
+					else if (key == "opts") { cmd.options = lua_tonumber(L, -1); }
+					else if (key == "tag" ) { cmd.tag     = lua_tonumber(L, -1); }
+					else if (key == "ttl" ) { cmd.timeOut = lua_tonumber(L, -1); }
 				} break;
 				case LUA_TTABLE: {
-					// args
+					// args sub-table (array)
+					lua_pushnil(L);
+
+					while (lua_next(L, -2) != 0) {
+						MAI_ASSERT(lua_type(L, -2) == LUA_TNUMBER); // idx (key)
+						MAI_ASSERT(lua_type(L, -1) == LUA_TNUMBER); // arg (val)
+
+						cmd.AddParam(lua_tonumber(L, -1));
+						lua_pop(L, 1);
+					}
 				} break;
 			}
 		}
@@ -93,6 +103,6 @@ int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
 		lua_pop(L, 1);
 	}
 
-	lua_pushnumber(L, rcb->GiveOrder(unitID, &c));
+	lua_pushnumber(L, rcb->GiveOrder(unitID, &cmd));
 	return 1;
 }
