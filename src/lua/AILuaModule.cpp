@@ -91,11 +91,15 @@ Uint32 LuaModule::GetMinGroupSize() {
 	Uint32 minGroupSize = 1;
 
 	if (isValid) {
+		LuaCallBackHandler::SetActiveModule(this);
+
 		lua_getglobal(moduleState, "GetMinGroupSize");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isnumber(moduleState, -1));
 		minGroupSize = lua_tonumber(moduleState, -1);
 		lua_pop(moduleState, 1);
+
+		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
 	return minGroupSize;
@@ -105,11 +109,15 @@ Uint32 LuaModule::GetMaxGroupSize() {
 	Uint32 maxGroupSize = -1;
 
 	if (isValid) {
+		LuaCallBackHandler::SetActiveModule(this);
+
 		lua_getglobal(moduleState, "GetMaxGroupSize");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isnumber(moduleState, -1));
 		maxGroupSize = lua_tonumber(moduleState, -1);
 		lua_pop(moduleState, 1);
+
+		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
 	return maxGroupSize;
