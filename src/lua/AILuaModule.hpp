@@ -44,6 +44,7 @@ public:
 		LUAMODULE_NUM_PRIORITIES     = 3,
 	};
 
+
 	void SetUnitDefClass(const AIUnitDef::AIUnitDefClass& c) { unitDefClass = c; }
 	const AIUnitDef::AIUnitDefClass& GetUnitDefClass() const { return unitDefClass; }
 
