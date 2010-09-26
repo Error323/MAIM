@@ -1,5 +1,5 @@
 ### Generic native Skirmish AI config
-PROJECT(MAI)
+PROJECT(MAIM)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 #-------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 # Extract and set the version
 #-------------------------------------------------------------------------------
 EXECUTE_PROCESS(
-	COMMAND "${MAI_SOURCE_DIR}/scripts/get-revision.sh"
+	COMMAND "${MAIM_SOURCE_DIR}/scripts/get-revision.sh"
 	OUTPUT_VARIABLE GIT_VERSION
 	ERROR_VARIABLE GIT_ERROR
 	OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -29,7 +29,7 @@ ELSE(NOT GIT_VERSION)
 ENDIF(GIT_VERSION)
 
 EXECUTE_PROCESS(
-	COMMAND "${MAI_SOURCE_DIR}/scripts/update-version.sh" ${VERSION}
+	COMMAND "${MAIM_SOURCE_DIR}/scripts/update-version.sh" ${VERSION}
 	OUTPUT_VARIABLE SET_VERSION
 	ERROR_VARIABLE SET_VERSION_ERROR
 	OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -40,8 +40,8 @@ IF(SET_VERSION_ERROR)
 ENDIF(SET_VERSION_ERROR)
 
 CONFIGURE_FILE(
-	"${MAI_SOURCE_DIR}/cmake/MAI.hpp.in"
-	"${MAI_SOURCE_DIR}/src/main/MAI.hpp"
+	"${MAIM_SOURCE_DIR}/cmake/MAIM.hpp.in"
+	"${MAIM_SOURCE_DIR}/src/main/MAIM.hpp"
 	)
 
 GetNativeSourcesRecursive(luaSources "${CMAKE_SOURCE_DIR}/rts/lib/lua/src" "")

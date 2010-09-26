@@ -1,7 +1,7 @@
 #ifdef DEBUG
-	#define NAME    "MAI (DEBUG)"
+	#define NAME    "MAIM (DEBUG)"
 #else
-	#define NAME    "MAI"
+	#define NAME    "MAIM"
 #endif
 
 #define VERSION     "@VERSION@"

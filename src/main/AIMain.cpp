@@ -2,7 +2,7 @@
 
 #include "LegacyCpp/IAICallback.h"
 
-#include "./MAI.hpp"
+#include "./MAIM.hpp"
 #include "./AIMain.hpp"
 #include "./AIHelper.hpp"
 #include "../globals/EcoState.hpp"
