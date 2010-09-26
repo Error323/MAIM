@@ -67,7 +67,7 @@ end
 function AddUnit(unitID)
 	-- called whenever a unit is added to the
 	-- group managing this module
-	UNITS[unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrFrame()
+	UNITS[unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrSimFrame()
 end
 
 function DelUnit(unitID)
