@@ -16,7 +16,7 @@
 local infos = {
 	{
 		key    = 'shortName',
-		value  = 'MAI',
+		value  = 'MAIM',
 		desc   = 'machine conform name.',
 	},
 	{
@@ -25,12 +25,12 @@ local infos = {
 	},
 	{
 		key    = 'name',
-		value  = 'MAI',
+		value  = 'MAIM',
 		desc   = 'Human readable name',
 	},
 	{
 		key    = 'description',
-		value  = 'Modular AI - Theoretically capable of supporting any mod',
+		value  = 'Modular AI Model - Theoretically capable of supporting any mod',
 		desc   = 'tooltip.',
 	},
 	{
