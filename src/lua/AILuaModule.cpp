@@ -15,7 +15,6 @@ LuaModule::LuaModule():
 	isValid(false),
 	moduleState(NULL),
 	moduleGroup(NULL),
-	maxGroupSize(0),
 	priority(LUAMODULE_NUM_PRIORITIES)
 {
 }
@@ -31,8 +30,10 @@ bool LuaModule::SetModuleState(lua_State* L) {
 	if (moduleState != NULL) {
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
 
-		static const unsigned int NUM_CALLINS = 5;
+		static const Uint32 NUM_CALLINS = 7;
 		static const char* callIns[NUM_CALLINS] = {
+			"GetMinGroupSize",
+			"GetMaxGroupSize",
 			"GetName",
 			"CanRun",
 			"Update",
@@ -40,7 +41,7 @@ bool LuaModule::SetModuleState(lua_State* L) {
 			"DelUnit",
 		};
 
-		for (unsigned int n = 0; n < NUM_CALLINS; n++) {
+		for (Uint32 n = 0; n < NUM_CALLINS; n++) {
 			lua_getglobal(moduleState, callIns[n]);
 			isValid = isValid && lua_isfunction(moduleState, -1);
 			lua_pop(moduleState, 1);
@@ -69,25 +70,55 @@ void LuaModule::Release() {
 
 
 std::string LuaModule::GetName() {
-	std::string ret;
+	std::string name;
 
 	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "GetName");
 		lua_call(moduleState, 0, 1);
-		MAI_ASSERT(lua_isstring(moduleState, -1));
-		ret = lua_tostring(moduleState, -1);
+			MAI_ASSERT(lua_isstring(moduleState, -1));
+		name = lua_tostring(moduleState, -1);
 		lua_pop(moduleState, 1);
 
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
-	return ret;
+	return name;
 }
 
+Uint32 LuaModule::GetMinGroupSize() {
+	Uint32 minGroupSize = 1;
+
+	if (isValid) {
+		lua_getglobal(moduleState, "GetMinGroupSize");
+		lua_call(moduleState, 0, 1);
+		MAI_ASSERT(lua_isnumber(moduleState, -1));
+		minGroupSize = lua_tonumber(moduleState, -1);
+		lua_pop(moduleState, 1);
+	}
+
+	return minGroupSize;
+}
+
+Uint32 LuaModule::GetMaxGroupSize() {
+	Uint32 maxGroupSize = -1;
+
+	if (isValid) {
+		lua_getglobal(moduleState, "GetMaxGroupSize");
+		lua_call(moduleState, 0, 1);
+		MAI_ASSERT(lua_isnumber(moduleState, -1));
+		maxGroupSize = lua_tonumber(moduleState, -1);
+		lua_pop(moduleState, 1);
+	}
+
+	return maxGroupSize;
+}
+
+
+
 bool LuaModule::CanRun() {
-	bool ret = false;
+	bool canRun = false;
 
 	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
@@ -95,17 +126,17 @@ bool LuaModule::CanRun() {
 		lua_getglobal(moduleState, "CanRun");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isboolean(moduleState, -1));
-		ret = lua_toboolean(moduleState, -1);
+		canRun = lua_toboolean(moduleState, -1);
 		lua_pop(moduleState, 1);
 
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
-	return ret;
+	return canRun;
 }
 
 bool LuaModule::Update() {
-	bool ret = false;
+	bool update = false;
 
 	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
@@ -113,18 +144,18 @@ bool LuaModule::Update() {
 		lua_getglobal(moduleState, "Update");
 		lua_call(moduleState, 0, 1);
 		MAI_ASSERT(lua_isboolean(moduleState, -1));
-		ret = lua_toboolean(moduleState, -1);
+		update = lua_toboolean(moduleState, -1);
 		lua_pop(moduleState, 1);
 
 		LuaCallBackHandler::SetActiveModule(NULL);
 	}
 
-	return ret;
+	return update;
 }
 
 
 
-void LuaModule::AddUnit(unsigned int unitID) {
+void LuaModule::AddUnit(Uint32 unitID) {
 	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
 
@@ -137,7 +168,7 @@ void LuaModule::AddUnit(unsigned int unitID) {
 	}
 }
 
-void LuaModule::DelUnit(unsigned int unitID) {
+void LuaModule::DelUnit(Uint32 unitID) {
 	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
 

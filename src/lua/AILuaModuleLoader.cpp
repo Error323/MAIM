@@ -333,7 +333,9 @@ LuaModuleLoader::LuaModuleLoader() {
 		}
 
 		LuaModule::LuaModuleClass moduleClass;
-		unsigned int modulePriority = LuaModule::LUAMODULE_NUM_PRIORITIES;
+
+		Uint32 modulePriority = LuaModule::LUAMODULE_NUM_PRIORITIES;
+		Uint32 moduleGroupSize = -1;
 
 		// note: asumes <inArgs> is 0
 		#define CALL_LUA_FUNC_BEG(L, name, inArgs, outArgs) \

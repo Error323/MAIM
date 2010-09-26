@@ -19,14 +19,16 @@ public:
 	bool CanRun();
 	bool Update();
 
-	void AddUnit(unsigned int unitID);
-	void DelUnit(unsigned int unitID);
+	void AddUnit(Uint32 unitID);
+	void DelUnit(Uint32 unitID);
+
+	void SetPriority(Uint32 p) { priority = p; }
+	void SetGroup(AIGroup* g) { moduleGroup = g; }
 
 	std::string GetName();
-	void SetPriority(unsigned int p) { priority = p; }
-	void SetGroup(AIGroup* g) { moduleGroup = g; }
-	unsigned int GetMaxGroupSize() const { return maxGroupSize; }
-	unsigned int GetPriority() const { return priority; }
+	Uint32 GetMinGroupSize();
+	Uint32 GetMaxGroupSize();
+	Uint32 GetPriority() const { return priority; }
 
 	bool IsValid() const { return isValid; }
 
@@ -80,9 +82,6 @@ private:
 	lua_State* moduleState;
 	AIGroup* moduleGroup;
 	LuaModuleClass moduleClass;
-
-	// Should be read from <module>.lua
-	Uint32 maxGroupSize;
 
 	// LUAMODULE_PRIORITY_*
 	Uint32 priority;

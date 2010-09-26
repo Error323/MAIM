@@ -2,7 +2,16 @@ function GetName()
 	return "AttackerModule"
 end
 
+
+-- called whenever the Lua VM executing
+-- this script is attached to a group's
+-- module
+function GetMinGroupSize() return    1 end
+function GetMaxGroupSize() return 9001 end
+
+
 function GetClassMask()
+	-- called at AI load-time only (class-mask is fixed)
 	local typeMasksTbl = AIModuleClassMaskConstsTbl.TypeMasksTbl
 	local terrMasksTbl = AIModuleClassMaskConstsTbl.TerrainMasksTbl
 	local weapMasksTbl = AIModuleClassMaskConstsTbl.WeaponMasksTbl
@@ -18,6 +27,7 @@ function GetClassMask()
 end
 
 function GetPriority()
+	-- called at AI load-time only (priority is fixed)
 	-- [[
 	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
 	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
