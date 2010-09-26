@@ -8,7 +8,6 @@
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 #include "../globals/AITaskHandler.hpp"
-#include "../lua/AILuaCallBackHandler.hpp"
 #include "../lua/AILuaModule.hpp"
 #include "../groups/AIGroup.hpp"
 #include "../groups/AIGroupHandler.hpp"

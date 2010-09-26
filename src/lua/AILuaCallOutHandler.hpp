@@ -1,27 +1,38 @@
-#ifndef AI_LUA_CALLBACK_HANDLER_HDR
-#define AI_LUA_CALLBACK_HANDLER_HDR
+#ifndef AI_LUA_CALLOUT_HANDLER_HDR
+#define AI_LUA_CALLOUT_HANDLER_HDR
 
 struct AIHelper;
 class LuaModule;
 struct lua_State;
-class LuaCallBackHandler {
+class LuaCallOutHandler {
 public:
 	static void SetActiveModule(LuaModule* m) { activeModule = m; }
 	static LuaModule* GetActiveModule() { return activeModule; }
 
-	struct SimStateCallBacks {
+	static void RegisterFunctions(lua_State*);
+
+	struct SimStateCallOuts {
+		static void RegisterFunctions(lua_State*);
+
 		static int GetInitSimFrame(lua_State*);
 		static int GetCurrSimFrame(lua_State*);
+		static int IsPaused(lua_State*);
 	};
-	struct EcoStateCallBacks {
+	struct EcoStateCallOuts {
+		static void RegisterFunctions(lua_State*);
+
 		static int IsStallingMetal(lua_State*);
 		static int IsStallingEnergy(lua_State*);
 	};
-	struct GameMapCallBacks {
+	struct GameMapCallOuts {
+		static void RegisterFunctions(lua_State*);
+
 		static int GetAmountOfLand(lua_State*);
 		static int GetAmountOfWater(lua_State*);
 	};
-	struct CommandCallBacks {
+	struct CommandCallOuts {
+		static void RegisterFunctions(lua_State*);
+
 		static int GiveCommand(lua_State*);
 	};
 

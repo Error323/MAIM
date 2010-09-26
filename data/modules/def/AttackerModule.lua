@@ -1,3 +1,5 @@
+local UNITS = {}
+
 function GetName()
 	return "AttackerModule"
 end
@@ -28,14 +30,14 @@ end
 
 function GetPriority()
 	-- called at AI load-time only (priority is fixed)
-	-- [[
+	--[[
 	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
 	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
 	local cmdsTbl = AICallOutsTbl.CommandsTbl
 	local commandTbl = {type = cmdTypesTbl.CMD_MOVE, opts = cmdOptionsTbl.SHIFT_KEY, args = {[0] = 123, [1] = 456, [2] = 789}}
 
 	cmdsTbl.GiveCommand(12345, commandTbl)
-	-- ]]
+	--]]
 
 	return AIModulePriorityConstsTbl.LUAMODULE_PRIORITY_PROACTIVE
 end
@@ -53,6 +55,10 @@ function Update()
 	-- called every frame; should return true
 	-- when the group managing this module is
 	-- done with its assigned [priority] task
+	for unitID, _ in pairs(UNITS) do
+		UNITS[unitID] = UNITS[unitID] + 1
+	end
+
 	return false
 end
 
@@ -61,9 +67,11 @@ end
 function AddUnit(unitID)
 	-- called whenever a unit is added to the
 	-- group managing this module
+	UNITS[unitID] = AICallOutsTbl.SimStateCallOuts.GetCurrFrame()
 end
 
 function DelUnit(unitID)
 	-- called whenever a unit is removed from
 	-- the group managing this module
+	UNITS[unitID] = nil
 end

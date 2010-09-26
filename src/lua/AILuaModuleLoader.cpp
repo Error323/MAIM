@@ -7,7 +7,7 @@
 #include "./AILuaHeaders.hpp"
 #include "./AILuaModuleLoader.hpp"
 #include "./AILuaModule.hpp"
-#include "./AILuaCallBackHandler.hpp"
+#include "./AILuaCallOutHandler.hpp"
 #include "../main/AIHelper.hpp"
 #include "../main/AIDefines.hpp"
 #include "../units/AIUnitDef.hpp"
@@ -79,95 +79,16 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript) {
 		lua_pop(luaState, 1);
 		return NULL;
 	} else {
-		// register the callbacks for this state
+		// register the callouts for this state
 		MAI_ASSERT(lua_gettop(luaState) == 0);
 
-		// AICallOuts = {}
+		// AICallOutsTbl = {}
+		//   AICallOutsTbl["CallOutSubTbl"] = CallOutSubTbl
+		// _G["AICallOuts"] = AICallOutsTbl
 		lua_newtable(luaState);
-			// SimStateTbl = {}
-			lua_pushstring(luaState, "SimStateTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				// SimStateTbl["GetInitSimFrame"] = func
-				lua_pushstring(luaState, "GetInitSimFrame");
-				lua_pushcfunction(luaState, LuaCallBackHandler::SimStateCallBacks::GetInitSimFrame);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-
-				// SimStateTbl["GetCurrSimFrame"] = func
-				lua_pushstring(luaState, "GetCurrSimFrame");
-				lua_pushcfunction(luaState, LuaCallBackHandler::SimStateCallBacks::GetCurrSimFrame);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-			// AICallOuts["SimStateTbl"] = SimStateTbl
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			// EcoStateTbl = {}
-			lua_pushstring(luaState, "EcoStateTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				// EcoStateTbl["IsStallingMetal"] = func
-				lua_pushstring(luaState, "IsStallingMetal");
-				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateCallBacks::IsStallingMetal);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-
-				// EcoStateTbl["IsStallingEnergy"] = func
-				lua_pushstring(luaState, "IsStallingEnergy");
-				lua_pushcfunction(luaState, LuaCallBackHandler::EcoStateCallBacks::IsStallingEnergy);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-			// AICallOuts["EcoStateTbl"] = EcoStateTbl
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			// GameMapTbl = {}
-			lua_pushstring(luaState, "GameMapTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				// GameMapTbl["GetAmountOfLand"] = func
-				lua_pushstring(luaState, "GetAmountOfLand");
-				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapCallBacks::GetAmountOfLand);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-
-				// GameMapTbl["GetAmountOfWater"] = func
-				lua_pushstring(luaState, "GetAmountOfWater");
-				lua_pushcfunction(luaState, LuaCallBackHandler::GameMapCallBacks::GetAmountOfWater);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-			// AICallOuts["GameMapTbl"] = GameMapTbl
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			// CommandsTbl = {}
-			lua_pushstring(luaState, "CommandsTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				lua_pushstring(luaState, "GiveCommand");
-				lua_pushcfunction(luaState, LuaCallBackHandler::CommandCallBacks::GiveCommand);
-				MAI_ASSERT(lua_istable(luaState, -3));
-				lua_settable(luaState, -3);
-				MAI_ASSERT(lua_gettop(luaState) == 3);
-			// AICallOuts["CommandsTbl"] = CommandsTbl
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-		// add the AI root table to the global environment
+			LuaCallOutHandler::RegisterFunctions(luaState);
 		lua_setglobal(luaState, "AICallOutsTbl");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
-
 
 		#define PUSH_LUA_MASK_CONSTANT(L, c) \
 			lua_pushstring(L, #c);           \
