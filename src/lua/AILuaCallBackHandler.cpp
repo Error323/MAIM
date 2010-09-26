@@ -1,3 +1,6 @@
+#include "Sim/Units/CommandAI/Command.h"
+#include "LegacyCpp/IAICallback.h"
+
 #include "./AILuaCallBackHandler.hpp"
 #include "./AILuaHeaders.hpp"
 #include "../main/AIHelper.hpp"
@@ -33,14 +36,15 @@ int LuaCallBackHandler::GameMapCallBacks::GetAmountOfWater(lua_State* L) {
 
 
 int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
-	MAI_ASSERT(lua_gettop(L) == 1);
+	MAI_ASSERT(lua_gettop(L) == 2);
 
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
-	if (!lua_istable(L, 1)) {
-		return 0;
-	}
+	if (!lua_isnumber(L, 1)) { return 0; }
+	if (!lua_istable(L, 2)) { return 0; }
+
+	Command c;
 
 	// command = {
 	//     type = CMD_*,
@@ -55,5 +59,6 @@ int LuaCallBackHandler::CommandCallBacks::GiveCommand(lua_State* L) {
 	//     [ timeOut = MAX_INT, ]
 	// }
 
-	return 0;
+	lua_pushnumber(L, rcb->GiveOrder(lua_tointeger(L, 1), &c));
+	return 1;
 }

@@ -350,7 +350,7 @@ LuaModuleLoader::LuaModuleLoader() {
 			MAI_ASSERT(lua_gettop(L) == 0);
 
 		CALL_LUA_FUNC_BEG(moduleState, "GetPriority", 0, 1);
-			modulePriority = lua_tointeger(moduleState, -1);
+			modulePriority = luaL_checkint(moduleState, -1);
 		CALL_LUA_FUNC_END(moduleState, 1);
 
 		CALL_LUA_FUNC_BEG(moduleState, "GetClassMask", 0, 4);
