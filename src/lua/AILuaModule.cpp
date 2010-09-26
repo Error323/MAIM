@@ -13,9 +13,6 @@
 
 LuaModule::LuaModule(): 
 	isValid(false),
-	haveGetName(false),
-	haveCanRun(false),
-	haveUpdate(false),
 	moduleState(NULL),
 	moduleGroup(NULL),
 	maxGroupSize(0),
@@ -29,35 +26,33 @@ LuaModule::LuaModule():
 // moduleState
 bool LuaModule::SetModuleState(lua_State* L) {
 	moduleState = L;
+	isValid = true;
 
 	if (moduleState != NULL) {
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
 
-		lua_getglobal(moduleState, "GetName");
-			haveGetName = lua_isfunction(moduleState, -1);
-		lua_pop(moduleState, 1);
-		lua_getglobal(moduleState, "CanRun");
-			haveCanRun = lua_isfunction(moduleState, -1);
-		lua_pop(moduleState, 1);
-		lua_getglobal(moduleState, "Update");
-			haveUpdate = lua_isfunction(moduleState, -1);
-		lua_pop(moduleState, 1);
+		static const unsigned int NUM_CALLINS = 5;
+		static const char* callIns[NUM_CALLINS] = {
+			"GetName",
+			"CanRun",
+			"Update",
+			"AddUnit",
+			"DelUnit",
+		};
 
-		isValid = (haveGetName && haveCanRun && haveUpdate);
+		for (unsigned int n = 0; n < NUM_CALLINS; n++) {
+			lua_getglobal(moduleState, callIns[n]);
+			isValid = isValid && lua_isfunction(moduleState, -1);
+			lua_pop(moduleState, 1);
+		}
+
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
 	} else {
-		isValid     = false;
-		haveGetName = false;
-		haveCanRun  = false;
-		haveUpdate  = false;
+		isValid = false;
 	}
 
-	LOG_BASIC("[LuaModule::SetModuleState()]\n");
-	LOG_BASIC("\tHaveGetName(): " << (HaveGetName()) << "\n");
-	LOG_BASIC("\tHaveCanRun():  " << (HaveCanRun())  << "\n");
-	LOG_BASIC("\tHaveUpdate():  " << (HaveUpdate()) << "\n");
-
-	return (isValid);
+	LOG_BASIC("[LuaModule::SetModuleState()] isValid: " << isValid << "\n");
+	return isValid;
 }
 
 void LuaModule::Release() {
@@ -76,7 +71,7 @@ void LuaModule::Release() {
 std::string LuaModule::GetName() {
 	std::string ret;
 
-	if (isValid && haveGetName) {
+	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "GetName");
@@ -94,7 +89,7 @@ std::string LuaModule::GetName() {
 bool LuaModule::CanRun() {
 	bool ret = false;
 
-	if (isValid && haveCanRun) {
+	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "CanRun");
@@ -112,7 +107,7 @@ bool LuaModule::CanRun() {
 bool LuaModule::Update() {
 	bool ret = false;
 
-	if (isValid && haveUpdate) {
+	if (isValid) {
 		LuaCallBackHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "Update");
@@ -126,6 +121,35 @@ bool LuaModule::Update() {
 
 	return ret;
 }
+
+
+
+void LuaModule::AddUnit(unsigned int unitID) {
+	if (isValid) {
+		LuaCallBackHandler::SetActiveModule(this);
+
+		lua_getglobal(moduleState, "AddUnit");
+		lua_pushnumber(moduleState, unitID);
+		lua_call(moduleState, 1, 0);
+		lua_pop(moduleState, 1);
+
+		LuaCallBackHandler::SetActiveModule(NULL);
+	}
+}
+
+void LuaModule::DelUnit(unsigned int unitID) {
+	if (isValid) {
+		LuaCallBackHandler::SetActiveModule(this);
+
+		lua_getglobal(moduleState, "DelUnit");
+		lua_pushnumber(moduleState, unitID);
+		lua_call(moduleState, 1, 0);
+		lua_pop(moduleState, 1);
+
+		LuaCallBackHandler::SetActiveModule(NULL);
+	}
+}
+
 
 std::ostream& operator << (std::ostream& out, rcLuaModule module) {
 	out << "Module{name: ";

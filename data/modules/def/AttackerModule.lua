@@ -30,10 +30,30 @@ function GetPriority()
 	return AIModulePriorityConstsTbl.LUAMODULE_PRIORITY_PROACTIVE
 end
 
+
+
 function CanRun()
+	-- called every frame; should return true
+	-- when this module should become active
+	-- (and always false if done)
 	return true
 end
 
 function Update()
+	-- called every frame; should return true
+	-- when the group managing this module is
+	-- done with its assigned [priority] task
 	return false
+end
+
+
+
+function AddUnit(unitID)
+	-- called whenever a unit is added to the
+	-- group managing this module
+end
+
+function DelUnit(unitID)
+	-- called whenever a unit is removed from
+	-- the group managing this module
 end

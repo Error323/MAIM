@@ -8,13 +8,13 @@ void AIUnitHandler::UnitCreated(pAIUnit unit) {
 	unit->AttachObserver(this);
 }
 
-void AIUnitHandler::UnitDestroyed(int unitID) {
+void AIUnitHandler::UnitDestroyed(unsigned int unitID) {
 	MAI_ASSERT(mUnits.find(unitID) != mUnits.end());
 	mUnits[unitID]->DetachObserver(this);
 	mUnits.erase(unitID);
 }
 
-pAIUnit AIUnitHandler::GetUnit(int unitID) {
+pAIUnit AIUnitHandler::GetUnit(unsigned int unitID) {
 	MAI_ASSERT(mUnits.find(unitID) != mUnits.end());
 	return mUnits[unitID];
 }

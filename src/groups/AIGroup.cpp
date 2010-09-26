@@ -11,7 +11,7 @@
 #include "../utils/Debugger.hpp"
 #include "../utils/Util.hpp"
 
-int AIGroup::sGroupCounter = 0;
+unsigned int AIGroup::sGroupCounter = 0;
 
 AIGroup::AIGroup(): groupID(sGroupCounter) {
 	SetGroupDestroyedSubjectID(groupID); 
@@ -37,7 +37,7 @@ void AIGroup::Release() {
 	NotifyGroupDestroyedObservers();
 }
 
-void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
+void AIGroup::AddUnit(pAIUnit unit, bool isNewGroup) {
 	units[unit->GetID()] = unit;
 
 	if (isNewGroup)
@@ -49,14 +49,14 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 		AddModule(aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY));
 		AddModule(aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE));
 		AddModule(aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE));
-
-		// modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] = aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_EMERGENCY);
-		// modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] = aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_REACTIVE );
-		// modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] = aih->GetLuaModuleLoader()->GetModule(def, LuaModule::LUAMODULE_PRIORITY_PROACTIVE);
 	}
 
 	// Attach to unit subject
 	unit->AttachObserver(this);
+
+	if (modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY]->AddUnit(unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ]->AddUnit(unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE]->AddUnit(unit->GetID()); }
 }
 
 bool AIGroup::CanAddUnit(pAIUnit unit) const {
@@ -94,6 +94,24 @@ bool AIGroup::CanAddUnit(pAIUnit unit) const {
 	return true;
 }
 
+void AIGroup::UnitDestroyed(unsigned int unitID) {
+	MAI_ASSERT(units.find(unitID) != units.end());
+
+	pAIUnit unit = units[unitID];
+
+	if (modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY]->DelUnit(unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ]->DelUnit(unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE]->DelUnit(unit->GetID()); }
+
+	unit->DetachObserver(this);
+	units.erase(unitID);
+
+	if (units.empty())
+		Release();
+}
+
+
+
 void AIGroup::AddModule(pLuaModule module) {
 	cUint32 priority = module->GetPriority();
 
@@ -128,15 +146,7 @@ void AIGroup::Update() {
 	}
 }
 
-void AIGroup::UnitDestroyed(int unitID) {
-	MAI_ASSERT(units.find(unitID) != units.end());
 
-	units[unitID]->DetachObserver(this);
-	units.erase(unitID);
-
-	if (units.empty())
-		Release();
-}
 
 std::ostream& operator << (std::ostream& out, rcAIGroup group) {
 	out << "\nGroup{id: ";

@@ -19,6 +19,9 @@ public:
 	bool CanRun();
 	bool Update();
 
+	void AddUnit(unsigned int unitID);
+	void DelUnit(unsigned int unitID);
+
 	std::string GetName();
 	void SetPriority(unsigned int p) { priority = p; }
 	void SetGroup(AIGroup* g) { moduleGroup = g; }
@@ -26,9 +29,6 @@ public:
 	unsigned int GetPriority() const { return priority; }
 
 	bool IsValid() const { return isValid; }
-	bool HaveGetName() const { return haveGetName; }
-	bool HaveCanRun() const { return haveCanRun; }
-	bool HaveUpdate() const { return haveUpdate; }
 
 	bool SetModuleState(lua_State*);
 	lua_State* GetModuleState() const { return moduleState; }
@@ -76,9 +76,6 @@ public:
 
 private:
 	bool isValid;
-	bool haveGetName;
-	bool haveCanRun;
-	bool haveUpdate;
 
 	lua_State* moduleState;
 	AIGroup* moduleGroup;

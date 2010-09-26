@@ -17,29 +17,30 @@ DECLARE_CLASS(LuaModule)
 class AIGroup: public AGroupDestroyedSubject, AUnitDestroyedObserver {
 public:
 	AIGroup();
-	~AIGroup(){}
+	~AIGroup() {}
 
-	void  AddUnit(pAIUnit, cBool isNewGroup);
-	void  Update(); // called by engine update()
-	void  Release(); // Release the group
 	bool CanAddUnit(pAIUnit) const;
-	const std::map<int, pAIUnit>& GetUnits() { return units; }
+	void AddUnit(pAIUnit, bool isNewGroup);
 
-	float3 GetPos();
-	int GetID() { return groupID; }
+	void Update(); // called by engine update()
+	void Release(); // Release the group
+
+	float3 GetPos() const;
+	unsigned int GetID() const { return groupID; }
+	const std::map<int, pAIUnit>& GetUnits() { return units; }
 	
 	friend std::ostream& operator << (std::ostream&, rcAIGroup);
 
 private:
-	static int sGroupCounter;
-	cInt groupID;
+	static unsigned int sGroupCounter;
+	const unsigned int groupID;
 
 	std::map<int, pAIUnit> units;
 	vpLuaModule modules;
 	pLuaModule activeModule;
 
 	// implementation
-	void UnitDestroyed(int unitID);
+	void UnitDestroyed(unsigned int unitID);
 
 	void AddModule(pLuaModule);
 	void PushModule(pLuaModule);

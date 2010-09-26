@@ -15,12 +15,12 @@ public:
 
 	void UnitCreated(pAIUnit);
 	// override AUnitDestroyedObserver::UnitDestroyed
-	void UnitDestroyed(int unitID);
+	void UnitDestroyed(unsigned int unitID);
 
-	pAIUnit GetUnit(int unitID);
+	pAIUnit GetUnit(unsigned int unitID);
 
 private:
-	std::map<int, pAIUnit> mUnits;
+	std::map<unsigned int, pAIUnit> mUnits;
 
 };
 
