@@ -22,7 +22,7 @@ public:
 	void  AddUnit(pAIUnit, cBool isNewGroup);
 	void  Update(); // called by engine update()
 	void  Release(); // Release the group
-	cBool CanBeAdded(pAIUnit) const;
+	bool CanAddUnit(pAIUnit) const;
 	const std::map<int, pAIUnit>& GetUnits() { return units; }
 
 	float3 GetPos();

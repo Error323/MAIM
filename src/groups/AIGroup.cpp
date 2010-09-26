@@ -59,7 +59,7 @@ void AIGroup::AddUnit(pAIUnit unit, cBool isNewGroup) {
 	unit->AttachObserver(this);
 }
 
-cBool AIGroup::CanBeAdded(pAIUnit unit) const {
+bool AIGroup::CanAddUnit(pAIUnit unit) const {
 	// only add unit-type classes that this group already contains
 	bool canBeAdded = true;
 

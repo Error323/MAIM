@@ -15,7 +15,7 @@ void AIGroupHandler::UnitFinished(pAIUnit unit) {
 		pAIGroup group = i->second;
 		// Check for existing homogeneous group
 		// And check for maximum units allowed for this group
-		if (group->CanBeAdded(unit))
+		if (group->CanAddUnit(unit))
 		{
 			group->AddUnit(unit, false);
 			return;
