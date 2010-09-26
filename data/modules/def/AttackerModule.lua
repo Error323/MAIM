@@ -21,8 +21,10 @@ function GetPriority()
 	-- [[
 	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
 	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
+	local cmdsTbl = AICallOutsTbl.CommandsTbl
 	local commandTbl = {type = cmdTypesTbl.CMD_MOVE, opts = cmdOptionsTbl.SHIFT_KEY, args = {[0] = 123, [1] = 456}}
-	AICallOutsTbl.CommandsTbl.GiveCommand(12345, commandTbl)
+
+	cmdsTbl.GiveCommand(12345, commandTbl)
 	-- ]]
 
 	return AIModulePriorityConstsTbl.LUAMODULE_PRIORITY_PROACTIVE
