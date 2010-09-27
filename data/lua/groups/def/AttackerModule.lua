@@ -1,15 +1,15 @@
-local UNITS = {}
+-- "global" units table; _ALL_ LuaModule instances
+-- sharing this Lua state also share the same data
+local luaStateUnits = {}
+
 
 function GetName()
 	return "AttackerModule"
 end
 
 
--- called whenever the Lua VM executing
--- this script is attached to a group's
--- module
-function GetMinGroupSize() return    1 end
-function GetMaxGroupSize() return 9001 end
+function GetMinGroupSize(groupID) return    1 end
+function GetMaxGroupSize(groupID) return 9001 end
 
 
 function GetClass()
@@ -44,19 +44,23 @@ end
 
 
 
-function CanRun()
+function CanRun(groupID)
 	-- called every frame; should return true
 	-- when this module should become active
 	-- (and always false if done)
 	return true
 end
 
-function Update()
+function Update(groupID)
 	-- called every frame; should return true
 	-- when the group managing this module is
 	-- done with its assigned [priority] task
-	for unitID, _ in pairs(UNITS) do
-		UNITS[unitID] = UNITS[unitID] + 1
+	local groupUnits = luaStateUnits[groupID]
+
+	if (groupUnits ~= nil) then
+		for unitID, _ in pairs(groupUnits) do
+			groupUnits[unitID] = groupUnits[unitID] + 1
+		end
 	end
 
 	return false
@@ -64,19 +68,35 @@ end
 
 
 
-function CanAddUnit(unitID)
-	-- TODO: distance check, etc.
-	return (#UNITS < GetMaxGroupSize())
+function CanAddUnit(groupID, unitID)
+	-- called whenever a unit is being considered for
+	-- addition to the group managing this LuaModule
+	-- instance
+	-- TODO: incorporate distance checks, etc.
+	if (luaStateUnits[groupID] ~= nil) then
+		return (#luaStateUnits[groupID] < GetMaxGroupSize(groupID))
+	end
+
+	return true
 end
 
-function AddUnit(unitID)
+function AddUnit(groupID, unitID)
 	-- called whenever a unit is added to the
-	-- group managing this module
-	UNITS[unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrSimFrame()
+	-- group managing this LuaModule instance
+	if (luaStateUnits[groupID] == nil) then
+		luaStateUnits[groupID] = {}
+	end
+
+	luaStateUnits[groupID][unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrSimFrame()
 end
 
-function DelUnit(unitID)
+function DelUnit(groupID, unitID)
 	-- called whenever a unit is removed from
-	-- the group managing this module
-	UNITS[unitID] = nil
+	-- the group that contains this LuaModule
+	-- instance
+	luaStateUnits[groupID][unitID] = nil
+
+	if (#luaStateUnits[groupID] == 0) then
+		luaStateUnits[groupID] = nil
+	end
 end

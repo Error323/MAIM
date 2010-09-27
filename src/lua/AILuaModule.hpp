@@ -16,19 +16,19 @@ public:
 	~LuaModule() {}
 
 	void Release();
-	bool CanRun();
-	bool Update();
+	bool CanRun(Uint32 groupID);
+	bool Update(Uint32 groupID);
 
-	bool CanAddUnit(Uint32 unitID);
-	void AddUnit(Uint32 unitID);
-	void DelUnit(Uint32 unitID);
+	bool CanAddUnit(Uint32 groupID, Uint32 unitID);
+	void AddUnit(Uint32 groupID, Uint32 unitID);
+	void DelUnit(Uint32 groupID, Uint32 unitID);
 
 	void SetPriority(Uint32 p) { priority = p; }
 	void SetGroup(AIGroup* g) { moduleGroup = g; }
 
 	std::string GetName();
-	Uint32 GetMinGroupSize();
-	Uint32 GetMaxGroupSize();
+	Uint32 GetMinGroupSize(Uint32 groupID);
+	Uint32 GetMaxGroupSize(Uint32 groupID);
 	Uint32 GetPriority() const { return priority; }
 
 	bool IsValid() const { return isValid; }

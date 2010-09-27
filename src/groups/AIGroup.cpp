@@ -54,9 +54,9 @@ void AIGroup::AddUnit(pAIUnit unit, bool isNewGroup) {
 	// Attach to unit subject
 	unit->AttachObserver(this);
 
-	if (modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY]->AddUnit(unit->GetID()); }
-	if (modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ]->AddUnit(unit->GetID()); }
-	if (modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE]->AddUnit(unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY]->AddUnit(groupID, unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ]->AddUnit(groupID, unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE]->AddUnit(groupID, unit->GetID()); }
 }
 
 bool AIGroup::CanAddUnit(pAIUnit unit) const {
@@ -78,7 +78,7 @@ bool AIGroup::CanAddUnit(pAIUnit unit) const {
 		// if at least one module fails to meet these constraints,
 		// the unit can't be added
 		canAddUnit = util::IsBinaryMatch(unitDefClass, groupDefClass);
-		canAddUnit = canAddUnit && modules[i]->CanAddUnit(unit->GetID());
+		canAddUnit = canAddUnit && modules[i]->CanAddUnit(groupID, unit->GetID());
 	}
 
 	return canAddUnit;
@@ -89,9 +89,9 @@ void AIGroup::UnitDestroyed(unsigned int unitID) {
 
 	pAIUnit unit = units[unitID];
 
-	if (modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY]->DelUnit(unit->GetID()); }
-	if (modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ]->DelUnit(unit->GetID()); }
-	if (modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE]->DelUnit(unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_EMERGENCY]->DelUnit(groupID, unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_REACTIVE ]->DelUnit(groupID, unit->GetID()); }
+	if (modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE] != NULL) { modules[LuaModule::LUAMODULE_PRIORITY_PROACTIVE]->DelUnit(groupID, unit->GetID()); }
 
 	unit->DetachObserver(this);
 	units.erase(unitID);
@@ -117,7 +117,7 @@ void AIGroup::Update() {
 	{
 		for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 		{
-			if (modules[i] != NULL && modules[i]->CanRun()) 
+			if (modules[i] != NULL && modules[i]->CanRun(groupID)) 
 			{
 				activeModule = modules[i];
 				break;
@@ -126,7 +126,7 @@ void AIGroup::Update() {
 	}
 
 	// Module::Update() returns true when done
-	if (activeModule != NULL && activeModule->Update())
+	if (activeModule != NULL && activeModule->Update(groupID))
 		activeModule = NULL;
 	
 	// Update all units in the group (age, position etc)
