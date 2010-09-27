@@ -221,10 +221,11 @@ LuaModuleLoader::LuaModuleLoader() {
 	AIHelper* aih = AIHelper::GetActiveInstance();
 	IAICallback* rcb = aih->GetCallbackHandler();
 
-	cString defModuleDirRel = AI_LUA_DIR + "def/";
-	cString modModuleDirRel = AI_LUA_DIR + rcb->GetModShortName();
+	// NOTE: use for globals/{def/, mod/} as well?
+	cString defModuleDirRel = AI_LUA_DIR + "groups/" + "def/";
+	cString modModuleDirRel = AI_LUA_DIR + "groups/" + rcb->GetModShortName();
 
-	// Modules get installed in the readonly directory, so load them from there
+	// Modules get installed in the read-only directory, so load them from there
 	cString defModuleDirAbs = util::GetAbsFileName(rcb, defModuleDirRel, NULL, true);
 	cString modModuleDirAbs = util::GetAbsFileName(rcb, modModuleDirRel, NULL, true);
 
