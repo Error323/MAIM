@@ -85,7 +85,7 @@ int EcoState::GetBuildUnitID(pcAIUnit aiUnit, const AIUnitDef::AIUnitDefClass& i
 	for (Uint32 i = 0; i < unitDefs.size(); i++)
 	{
 		// If the unit can be build by aiUnit
-		if (util::AreSuitedSubjects(unitDefs[i]->unitDefClass, includes, excludes))
+		if (util::IsBinaryMatch(unitDefs[i]->unitDefClass, includes, excludes))
 		{
 			// If we can afford it with our current economic state
 			if (CanAffordToBuild(aiUnit, unitDefs[i]))

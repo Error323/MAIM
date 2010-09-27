@@ -87,18 +87,18 @@ namespace util {
 	}
 
 
-	bool AreSuitedSubjects(const AIUnitDef::AIUnitDefClass& subjects, const AIUnitDef::AIUnitDefClass& includes, const AIUnitDef::AIUnitDefClass& excludes) {
+	bool IsBinaryMatch(const AIUnitDef::AIUnitDefClass& subjects, const AIUnitDef::AIUnitDefClass& includes, const AIUnitDef::AIUnitDefClass& excludes) {
 		bool isSuited = true;
 
-		isSuited = isSuited && IsSuitedSubject(subjects.typeMask, includes.typeMask, excludes.typeMask);
-		isSuited = isSuited && IsSuitedSubject(subjects.terrMask, includes.terrMask, excludes.terrMask);
-		isSuited = isSuited && IsSuitedSubject(subjects.weapMask, includes.weapMask, excludes.weapMask);
-		isSuited = isSuited && IsSuitedSubject(subjects.roleMask, includes.roleMask, excludes.roleMask);
+		isSuited = isSuited && IsBinaryMatch(subjects.typeMask, includes.typeMask, excludes.typeMask);
+		isSuited = isSuited && IsBinaryMatch(subjects.terrMask, includes.terrMask, excludes.terrMask);
+		isSuited = isSuited && IsBinaryMatch(subjects.weapMask, includes.weapMask, excludes.weapMask);
+		isSuited = isSuited && IsBinaryMatch(subjects.roleMask, includes.roleMask, excludes.roleMask);
 
 		return isSuited;
 	}
 
-	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude) {
+	bool IsBinaryMatch(cUint32 subject, cUint32 include, cUint32 exclude) {
 		return (IS_BINARY_SUBSET(include, subject) && IS_EMPTY_BINARY_INTERSECTION(subject, exclude));
 	}
 

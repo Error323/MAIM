@@ -37,7 +37,7 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 			const std::vector<lua_State*>& lmsv = it->second;
 
 			// check if <def>'s module-class is suited for this module
-			if (!util::AreSuitedSubjects(unitDefClass, udc))
+			if (!util::IsBinaryMatch(unitDefClass, udc))
 				continue;
 
 			// NOTE: what if multiple module-classes are suitable?

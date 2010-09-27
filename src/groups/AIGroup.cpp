@@ -73,7 +73,7 @@ bool AIGroup::CanAddUnit(pAIUnit unit) const {
 		const AIUnitDef::AIUnitDefClass& groupDefClass = modules[i]->GetUnitDefClass();
 
 		// See if the given unit matches all modules in this group
-		canAddUnit = util::AreSuitedSubjects(unitDefClass, groupDefClass);
+		canAddUnit = util::IsBinaryMatch(unitDefClass, groupDefClass);
 
 		// Also extract the maximum number of units for this group
 		canAddUnit = canAddUnit && (units.size() < modules[i]->GetMaxGroupSize());
