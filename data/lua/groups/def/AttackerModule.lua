@@ -12,8 +12,8 @@ function GetMinGroupSize(groupID) return    1 end
 function GetMaxGroupSize(groupID) return 9001 end
 
 
+-- called at AI load-time only (class-mask is fixed)
 function GetClass()
-	-- called at AI load-time only (class-mask is fixed)
 	local typeMasksTbl = AIModuleClassConstsTbl.TypeMasksTbl
 	local terrMasksTbl = AIModuleClassConstsTbl.TerrainMasksTbl
 	local weapMasksTbl = AIModuleClassConstsTbl.WeaponMasksTbl
@@ -28,8 +28,8 @@ function GetClass()
 	return typeMask, terrMask, weapMask, roleMask
 end
 
+-- called at AI load-time only (priority is fixed)
 function GetPriority()
-	-- called at AI load-time only (priority is fixed)
 	--[[
 	local cmdTypesTbl = AICommandConstsTbl.TypesTbl
 	local cmdOptionsTbl = AICommandConstsTbl.OptionsTbl
@@ -44,17 +44,17 @@ end
 
 
 
+-- called every frame; should return true
+-- when this module should become active
+-- (and always false if done)
 function CanRun(groupID)
-	-- called every frame; should return true
-	-- when this module should become active
-	-- (and always false if done)
 	return true
 end
 
+-- called every frame; should return true
+-- when the group managing this module is
+-- done with its assigned [priority] task
 function Update(groupID)
-	-- called every frame; should return true
-	-- when the group managing this module is
-	-- done with its assigned [priority] task
 	local groupUnits = luaStateUnits[groupID]
 
 	if (groupUnits ~= nil) then
@@ -68,35 +68,42 @@ end
 
 
 
+-- called whenever a unit is being considered for
+-- addition to the group managing this LuaModule
+-- instance
+-- TODO: incorporate distance checks, etc.
 function CanAddUnit(groupID, unitID)
-	-- called whenever a unit is being considered for
-	-- addition to the group managing this LuaModule
-	-- instance
-	-- TODO: incorporate distance checks, etc.
-	if (luaStateUnits[groupID] ~= nil) then
-		return (#luaStateUnits[groupID] < GetMaxGroupSize(groupID))
+	local groupUnits = luaStateUnits[groupID]
+
+	if (groupUnits ~= nil) then
+		return (groupUnits.size < GetMaxGroupSize(groupID))
 	end
 
 	return true
 end
 
+-- called whenever a unit is added to the
+-- group managing this LuaModule instance
 function AddUnit(groupID, unitID)
-	-- called whenever a unit is added to the
-	-- group managing this LuaModule instance
-	if (luaStateUnits[groupID] == nil) then
-		luaStateUnits[groupID] = {}
+	local groupUnits = luaStateUnits[groupID]
+
+	if (groupUnits == nil) then
+		groupUnits = {size = 1}
 	end
 
-	luaStateUnits[groupID][unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrSimFrame()
+	groupUnits[unitID] = AICallOutsTbl.SimStateCallOutsTbl.GetCurrSimFrame()
 end
 
+-- called whenever a unit is removed from
+-- the group that contains this LuaModule
+-- instance
 function DelUnit(groupID, unitID)
-	-- called whenever a unit is removed from
-	-- the group that contains this LuaModule
-	-- instance
-	luaStateUnits[groupID][unitID] = nil
+	local groupUnits = luaStateUnits[groupID]
 
-	if (#luaStateUnits[groupID] == 0) then
+	groupUnits[unitID] = nil
+	groupUnits.size = groupUnits.size - 1
+
+	if (groupUnits.size == 0) then
 		luaStateUnits[groupID] = nil
 	end
 end
