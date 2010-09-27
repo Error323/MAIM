@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../main/AITypes.hpp"
+#include "../units/AIUnitDef.hpp"
 
 DECLARE_CLASS(IAICallback)
 
@@ -26,7 +27,7 @@ namespace util {
 
 
 	/**@brief fill with unit-type masks to see wether a AIUnitDef meets the filters */
-	bool AreSuitedSubjects(rcvUint32 subjects, rcvUint32 includes, rcvUint32 excludes);
+	bool AreSuitedSubjects(const AIUnitDef::AIUnitDefClass& subjects, const AIUnitDef::AIUnitDefClass& includes, const AIUnitDef::AIUnitDefClass& excludes = AIUnitDef::AIUnitDefClass());
 
 	/**@brief fill with unit-type mask to see wether a AIUnitDef meets the filters */
 	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude);

@@ -3,10 +3,10 @@
 
 #include <list>
 #include "../main/AITypes.hpp"
+#include "../units/AIUnitDef.hpp"
 
 #define HISTORY 10
 
-DECLARE_CLASS(AIUnitDef)
 DECLARE_CLASS(AIUnit)
 DECLARE_CLASS(AIGroup)
 DECLARE_CLASS(AIHelper)
@@ -32,6 +32,17 @@ class EcoState {
 		 * @return pGroup, the factory which to assist
 		 */
 		bool CanAssistFactory(pcAIGroup);
+
+		/**
+		 * Get the best buildable unit with the includes/excludes specifications
+		 * `best` being the most expensive one we can currently afford
+		 * 
+		 * @param pcAIUnit, the unit that will perform the construction
+		 * @param rcAIUnitDefClass, the included masks
+		 * @param rcAIUnitDefClass, the excluded masks
+		 * @return the build id (a negative number)
+		 */
+		int GetBuildUnitID(pcAIUnit, const AIUnitDef::AIUnitDefClass&, const AIUnitDef::AIUnitDefClass&);
 
 		/**
 		 * Determine whether a certain unit can be build

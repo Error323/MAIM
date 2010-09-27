@@ -73,10 +73,7 @@ bool AIGroup::CanAddUnit(pAIUnit unit) const {
 		const AIUnitDef::AIUnitDefClass& groupDefClass = modules[i]->GetUnitDefClass();
 
 		// See if the given unit matches all modules in this group
-		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.typeMask, groupDefClass.typeMask);
-		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.terrMask, groupDefClass.terrMask);
-		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.weapMask, groupDefClass.weapMask);
-		canAddUnit = canAddUnit && IS_BINARY_SUBSET(unitDefClass.roleMask, groupDefClass.roleMask);
+		canAddUnit = util::AreSuitedSubjects(unitDefClass, groupDefClass);
 
 		// Also extract the maximum number of units for this group
 		canAddUnit = canAddUnit && (units.size() < modules[i]->GetMaxGroupSize());

@@ -12,7 +12,7 @@
 #include "../main/AITypes.hpp"
 
 DECLARE_CLASS(MoveData)
-DECLARE_CLASS(UnitDef)
+DECLARE_CLASS(AIUnitDef)
 
 struct AIUnitDef {
 public:

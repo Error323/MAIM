@@ -87,21 +87,15 @@ namespace util {
 	}
 
 
-	bool AreSuitedSubjects(rcvUint32 subjects, rcvUint32 includes, rcvUint32 excludes) {
-		cUint32 n = subjects.size();
+	bool AreSuitedSubjects(const AIUnitDef::AIUnitDefClass& subjects, const AIUnitDef::AIUnitDefClass& includes, const AIUnitDef::AIUnitDefClass& excludes) {
+		bool isSuited = true;
 
-		MAI_ASSERT(n == includes.size());
-		MAI_ASSERT(n == excludes.size());
+		isSuited = isSuited && IsSuitedSubject(subjects.typeMask, includes.typeMask, excludes.typeMask);
+		isSuited = isSuited && IsSuitedSubject(subjects.terrMask, includes.terrMask, excludes.terrMask);
+		isSuited = isSuited && IsSuitedSubject(subjects.weapMask, includes.weapMask, excludes.weapMask);
+		isSuited = isSuited && IsSuitedSubject(subjects.roleMask, includes.roleMask, excludes.roleMask);
 
-		for (Uint32 i = 0; i < n; i++)
-		{
-			if (!IsSuitedSubject(subjects[i], includes[i], excludes[i]))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return isSuited;
 	}
 
 	bool IsSuitedSubject(cUint32 subject, cUint32 include, cUint32 exclude) {

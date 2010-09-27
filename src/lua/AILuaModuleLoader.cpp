@@ -37,10 +37,8 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 			const std::vector<lua_State*>& lmsv = it->second;
 
 			// check if <def>'s module-class is suited for this module
-			if (!IS_BINARY_SUBSET(unitDefClass.typeMask, udc.typeMask)) { continue; }
-			if (!IS_BINARY_SUBSET(unitDefClass.terrMask, udc.terrMask)) { continue; }
-			if (!IS_BINARY_SUBSET(unitDefClass.weapMask, udc.weapMask)) { continue; }
-			if (!IS_BINARY_SUBSET(unitDefClass.roleMask, udc.roleMask)) { continue; }
+			if (!util::AreSuitedSubjects(unitDefClass, udc))
+				continue;
 
 			// NOTE: what if multiple module-classes are suitable?
 			moduleState = lmsv[priority];

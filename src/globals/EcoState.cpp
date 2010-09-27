@@ -4,7 +4,7 @@
 #include "../main/AIHelper.hpp"
 #include "../groups/AIGroup.hpp"
 #include "../units/AIUnit.hpp"
-#include "../units/AIUnitDef.hpp"
+#include "../units/AIUnitDefHandler.hpp"
 #include "../utils/Util.hpp"
 #include "../utils/Logger.hpp"
 
@@ -73,6 +73,45 @@ void EcoState::Update() {
 
 bool EcoState::CanAssistFactory(pcAIGroup aiGroup) {
 	return true;
+}
+
+int EcoState::GetBuildUnitID(pcAIUnit aiUnit, const AIUnitDef::AIUnitDefClass& includes, const AIUnitDef::AIUnitDefClass& excludes) {
+	pAIHelper aih           = AIHelper::GetActiveInstance();
+	rcvpcAIUnitDef unitDefs = aih->GetAIUnitDefHandler()->GetUnitDefs();
+	pcAIUnitDef bestUnitDef = NULL;
+	float bestCost          = 0.0f;
+
+	// loop through aiunitdefs and select the one that can be afforded to build
+	for (Uint32 i = 0; i < unitDefs.size(); i++)
+	{
+		// If the unit can be build by aiUnit
+		if (util::AreSuitedSubjects(unitDefs[i]->unitDefClass, includes, excludes))
+		{
+			// If we can afford it with our current economic state
+			if (CanAffordToBuild(aiUnit, unitDefs[i]))
+			{
+				// TODO: Metal2Energy conversion
+				cFloat cost = unitDefs[i]->GetDef()->metalCost + unitDefs[i]->GetDef()->energyCost;
+
+				// Assuming more expensive unit is better
+				if (cost > bestCost)
+				{
+					bestCost = cost;
+					bestUnitDef = unitDefs[i];
+				}
+			}
+		}
+	}
+	
+	if (bestUnitDef == NULL)
+	{
+		LOG_ERROR("[EcoState::GetBuildUnitID] " << *aiUnit << " can't build unit specified by includes: " << includes << ", excludes: " << excludes << "\n");
+		return 0; // Doesn't exist
+	}
+	else
+	{
+		return -bestUnitDef->GetID(); // Negative ID is used for building
+	}
 }
 
 bool EcoState::CanAffordToBuild(pcAIUnit aiUnit, pcAIUnitDef aiUnitDef) {
