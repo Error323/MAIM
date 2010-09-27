@@ -29,13 +29,14 @@ bool LuaModule::SetModuleState(lua_State* L) {
 	if (moduleState != NULL) {
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
 
-		static const Uint32 NUM_CALLINS = 7;
+		static const Uint32 NUM_CALLINS = 8;
 		static const char* callIns[NUM_CALLINS] = {
 			"GetMinGroupSize",
 			"GetMaxGroupSize",
 			"GetName",
 			"CanRun",
 			"Update",
+			"CanAddUnit",
 			"AddUnit",
 			"DelUnit",
 		};
@@ -161,6 +162,24 @@ bool LuaModule::Update() {
 }
 
 
+
+bool LuaModule::CanAddUnit(Uint32 unitID) {
+	bool canAddUnit = false;
+
+	if (isValid) {
+		LuaCallOutHandler::SetActiveModule(this);
+
+		lua_getglobal(moduleState, "CanAddUnit");
+		lua_pushnumber(moduleState, unitID);
+		lua_call(moduleState, 1, 1);
+		canAddUnit = (lua_isboolean(moduleState, -1) && lua_toboolean(moduleState, -1));
+		lua_pop(moduleState, 1);
+
+		LuaCallOutHandler::SetActiveModule(NULL);
+	}
+
+	return canAddUnit;
+}
 
 void LuaModule::AddUnit(Uint32 unitID) {
 	if (isValid) {

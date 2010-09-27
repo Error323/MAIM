@@ -19,6 +19,7 @@ public:
 	bool CanRun();
 	bool Update();
 
+	bool CanAddUnit(Uint32 unitID);
 	void AddUnit(Uint32 unitID);
 	void DelUnit(Uint32 unitID);
 

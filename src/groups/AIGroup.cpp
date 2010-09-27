@@ -60,31 +60,28 @@ void AIGroup::AddUnit(pAIUnit unit, bool isNewGroup) {
 }
 
 bool AIGroup::CanAddUnit(pAIUnit unit) const {
-	// only add unit-type classes that this group already contains
 	bool canAddUnit = true;
 
+	// only add unit-type classes that this group already
+	// contains (to ensure all groups remain homogeneous)
 	const AIUnitDef::AIUnitDefClass& unitDefClass = unit->GetUnitDef()->unitDefClass;
 
-	for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
+	for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES && canAddUnit; i++)
 	{
 		if (modules[i] == NULL)
 			continue;
 
 		const AIUnitDef::AIUnitDefClass& groupDefClass = modules[i]->GetUnitDefClass();
 
-		// See if the given unit matches all modules in this group
+		// see if the given unit-class matches that of all modules
+		// for this group; also ask each module for its own opinion
+		// if at least one module fails to meet these constraints,
+		// the unit can't be added
 		canAddUnit = util::IsBinaryMatch(unitDefClass, groupDefClass);
-
-		// Also extract the maximum number of units for this group
-		canAddUnit = canAddUnit && (units.size() < modules[i]->GetMaxGroupSize());
-
-		// We are very strict about this: if one module fails on
-		// any of these constraints, the unit can't be added
-		if (!canAddUnit)
-			return false;
+		canAddUnit = canAddUnit && modules[i]->CanAddUnit(unit->GetID());
 	}
 
-	return true;
+	return canAddUnit;
 }
 
 void AIGroup::UnitDestroyed(unsigned int unitID) {

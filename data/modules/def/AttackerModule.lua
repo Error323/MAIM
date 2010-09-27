@@ -64,6 +64,11 @@ end
 
 
 
+function CanAddUnit(unitID)
+	-- TODO: distance check, etc.
+	return (#UNITS < GetMaxGroupSize())
+end
+
 function AddUnit(unitID)
 	-- called whenever a unit is added to the
 	-- group managing this module
