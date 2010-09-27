@@ -76,42 +76,44 @@ bool EcoState::CanAssistFactory(pcAIGroup aiGroup) {
 }
 
 int EcoState::GetBuildUnitID(pcAIUnit aiUnit, const AIUnitDef::AIUnitDefClass& includes, const AIUnitDef::AIUnitDefClass& excludes) {
-	pAIHelper aih           = AIHelper::GetActiveInstance();
-	rcvpcAIUnitDef unitDefs = aih->GetAIUnitDefHandler()->GetUnitDefs();
-	pcAIUnitDef bestUnitDef = NULL;
-	float bestCost          = 0.0f;
+	pAIHelper aih         = AIHelper::GetActiveInstance();
+	pAIUnitDefHandler udh = aih->GetAIUnitDefHandler();
 
-	// loop through aiunitdefs and select the one that can be afforded to build
-	for (Uint32 i = 0; i < unitDefs.size(); i++)
+	int   bestUnitID      = 0;
+	float bestCost        = 0.0f;
+
+	const std::set<int>& buildOptionUDIDs = aiUnit->GetUnitDef()->buildOptionUDIDs;
+	std::set<int>::const_iterator i;
+	
+	// loop through unitdefids that can be build by aiUnit
+	for (i = buildOptionUDIDs.begin(); i != buildOptionUDIDs.end(); i++)
 	{
-		// If the unit can be build by aiUnit
-		if (util::IsBinaryMatch(unitDefs[i]->unitDefClass, includes, excludes))
+		pcAIUnitDef aiUnitDef = udh->GetUnitDefByID(*i);
+
+		if (util::IsBinaryMatch(aiUnitDef->unitDefClass, includes, excludes))
 		{
 			// If we can afford it with our current economic state
-			if (CanAffordToBuild(aiUnit, unitDefs[i]))
+			if (CanAffordToBuild(aiUnit, aiUnitDef))
 			{
 				// TODO: Metal2Energy conversion
-				cFloat cost = unitDefs[i]->GetDef()->metalCost + unitDefs[i]->GetDef()->energyCost;
+				cFloat cost = aiUnitDef->GetDef()->metalCost + aiUnitDef->GetDef()->energyCost;
 
 				// Assuming more expensive unit is better
 				if (cost > bestCost)
 				{
 					bestCost = cost;
-					bestUnitDef = unitDefs[i];
+					bestUnitID = *i;
 				}
 			}
 		}
 	}
 	
-	if (bestUnitDef == NULL)
+	if (bestUnitID == 0)
 	{
-		LOG_ERROR("[EcoState::GetBuildUnitID] " << *aiUnit << " can't build unit specified by includes: " << includes << ", excludes: " << excludes << "\n");
-		return 0; // Doesn't exist
+		LOG_ERROR("[EcoState::GetBuildUnitID] " << *aiUnit << " can't build unit specified by:\n\tincludes: " << includes << "\n\texcludes: " << excludes << "\n");
 	}
-	else
-	{
-		return -bestUnitDef->GetID(); // Negative ID is used for building
-	}
+
+	return -bestUnitID; // Negative ID is used for building
 }
 
 bool EcoState::CanAffordToBuild(pcAIUnit aiUnit, pcAIUnitDef aiUnitDef) {

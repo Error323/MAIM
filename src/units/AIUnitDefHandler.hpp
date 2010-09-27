@@ -36,7 +36,6 @@ public:
 
 	// const unsigned int GetUnitDefCount() const { return (aiUnitDefsByID.size() - 1); }
 	const AIUnitDef* GetUnitDefByID(int i) const { return aiUnitDefsByID[i]; }
-	const std::vector<const AIUnitDef*>& GetUnitDefs() const { return aiUnitDefsByID; }
 
 private:
 	std::set<int> mobileBuilderUnitDefIDs;

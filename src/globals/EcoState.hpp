@@ -42,6 +42,7 @@ class EcoState {
 		 * @param rcAIUnitDefClass, the excluded masks
 		 * @return the build id (a negative number)
 		 */
+		// TODO: Move to lua
 		int GetBuildUnitID(pcAIUnit, const AIUnitDef::AIUnitDefClass&, const AIUnitDef::AIUnitDefClass&);
 
 		/**
