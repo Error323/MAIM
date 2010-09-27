@@ -32,15 +32,24 @@ public:
 		switch (lvl) {
 			case LOG_BASIC: {
 				log << "[BASIC] " << t;
+
+				#ifdef DEBUG
 				std::cout << "\E[0m[BASIC] " << t << "\E[0m";
+				#endif
 			} break;
 			case LOG_DEBUG: {
 				log << "[DEBUG] " << t;
+
+				#ifdef DEBUG
 				std::cout << "\E[0m\E[33m[DEBUG] " << t << "\E[0m";
+				#endif
 			} break;
 			case LOG_ERROR: {
 				log << "[ERROR] " << t;
+
+				#ifdef DEBUG
 				std::cout << "\E[0m\E[31m[ERROR] " << t << "\E[0m";
+				#endif
 			} break;
 			default: {
 			} break;

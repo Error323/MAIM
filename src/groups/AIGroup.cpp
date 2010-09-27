@@ -117,7 +117,7 @@ void AIGroup::Update() {
 	{
 		for (int i = 0; i < LuaModule::LUAMODULE_NUM_PRIORITIES; i++)
 		{
-			if (modules[i] != NULL && modules[i]->CanRun(groupID)) 
+			if (modules[i] != NULL && modules[i]->CanUpdate(groupID)) 
 			{
 				activeModule = modules[i];
 				break;

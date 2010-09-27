@@ -4,12 +4,11 @@
 #include <map>
 #include <vector>
 
-#include "./AILuaModule.hpp"
 #include "../units/AIUnitDef.hpp"
 
 struct lua_State;
 
-class AIUnitDef;
+class LuaModule;
 class LuaModuleLoader {
 public:
 	LuaModuleLoader();
@@ -19,7 +18,7 @@ public:
 	LuaModule* GetModule(const AIUnitDef*, unsigned int);
 
 private:
-	lua_State* LoadLuaModule(const std::string&);
+	lua_State* LoadLuaModule(const std::string&, std::string*);
 
 	// each AI instance maintains a cache of Lua
 	// VM states; there is exactly one state for

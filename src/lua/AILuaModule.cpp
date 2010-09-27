@@ -11,7 +11,7 @@
 #include "../utils/Debugger.hpp"
 
 LuaModule::LuaModule(): 
-	isValid(false),
+	moduleValid(false),
 	moduleState(NULL),
 	moduleGroup(NULL),
 	priority(LUAMODULE_NUM_PRIORITIES)
@@ -24,7 +24,7 @@ LuaModule::LuaModule():
 // moduleState
 bool LuaModule::SetModuleState(lua_State* L) {
 	moduleState = L;
-	isValid = true;
+	moduleValid = (L != NULL);
 
 	if (moduleState != NULL) {
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
@@ -34,26 +34,29 @@ bool LuaModule::SetModuleState(lua_State* L) {
 			"GetMinGroupSize",
 			"GetMaxGroupSize",
 			"GetName",
-			"CanRun",
+			"CanUpdate",
 			"Update",
 			"CanAddUnit",
 			"AddUnit",
 			"DelUnit",
 		};
 
+		// make sure the new state has all necessary call-ins
 		for (Uint32 n = 0; n < NUM_CALLINS; n++) {
 			lua_getglobal(moduleState, callIns[n]);
-			isValid = isValid && lua_isfunction(moduleState, -1);
+
+			if (!lua_isfunction(moduleState, -1)) {
+				LOG_BASIC("[SetModuleState] missing call-in \"" << callIns[n] << "\"\n");
+				moduleValid = false;
+			}
+
 			lua_pop(moduleState, 1);
 		}
 
 		MAI_ASSERT(lua_gettop(moduleState) == 0);
-	} else {
-		isValid = false;
 	}
 
-	LOG_BASIC("[LuaModule::SetModuleState()] isValid: " << isValid << "\n");
-	return isValid;
+	return moduleValid;
 }
 
 void LuaModule::Release() {
@@ -63,6 +66,7 @@ void LuaModule::Release() {
 
 	moduleState = NULL;
 	moduleGroup = NULL;
+	moduleValid = false;
 
 	ObjectFactory<LuaModule>::Release(this);
 }
@@ -72,7 +76,7 @@ void LuaModule::Release() {
 std::string LuaModule::GetName() {
 	std::string name;
 
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "GetName");
@@ -90,7 +94,7 @@ std::string LuaModule::GetName() {
 Uint32 LuaModule::GetMinGroupSize(Uint32 groupID) {
 	Uint32 minGroupSize = 1;
 
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "GetMinGroupSize");
@@ -109,7 +113,7 @@ Uint32 LuaModule::GetMinGroupSize(Uint32 groupID) {
 Uint32 LuaModule::GetMaxGroupSize(Uint32 groupID) {
 	Uint32 maxGroupSize = -1;
 
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "GetMaxGroupSize");
@@ -127,29 +131,29 @@ Uint32 LuaModule::GetMaxGroupSize(Uint32 groupID) {
 
 
 
-bool LuaModule::CanRun(Uint32 groupID) {
-	bool canRun = false;
+bool LuaModule::CanUpdate(Uint32 groupID) {
+	bool canUpdate = false;
 
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
-		lua_getglobal(moduleState, "CanRun");
+		lua_getglobal(moduleState, "CanUpdate");
 		lua_pushnumber(moduleState, groupID);
 		lua_call(moduleState, 1, 1);
 		MAI_ASSERT(lua_isboolean(moduleState, -1));
-		canRun = lua_toboolean(moduleState, -1);
+		canUpdate = lua_toboolean(moduleState, -1);
 		lua_pop(moduleState, 1);
 
 		LuaCallOutHandler::SetActiveModule(NULL);
 	}
 
-	return canRun;
+	return canUpdate;
 }
 
 bool LuaModule::Update(Uint32 groupID) {
 	bool update = false;
 
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "Update");
@@ -170,7 +174,7 @@ bool LuaModule::Update(Uint32 groupID) {
 bool LuaModule::CanAddUnit(Uint32 groupID, Uint32 unitID) {
 	bool canAddUnit = false;
 
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "CanAddUnit");
@@ -187,7 +191,7 @@ bool LuaModule::CanAddUnit(Uint32 groupID, Uint32 unitID) {
 }
 
 void LuaModule::AddUnit(Uint32 groupID, Uint32 unitID) {
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "AddUnit");
@@ -201,7 +205,7 @@ void LuaModule::AddUnit(Uint32 groupID, Uint32 unitID) {
 }
 
 void LuaModule::DelUnit(Uint32 groupID, Uint32 unitID) {
-	if (isValid) {
+	if (moduleValid) {
 		LuaCallOutHandler::SetActiveModule(this);
 
 		lua_getglobal(moduleState, "DelUnit");

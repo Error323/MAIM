@@ -16,7 +16,7 @@ public:
 	~LuaModule() {}
 
 	void Release();
-	bool CanRun(Uint32 groupID);
+	bool CanUpdate(Uint32 groupID);
 	bool Update(Uint32 groupID);
 
 	bool CanAddUnit(Uint32 groupID, Uint32 unitID);
@@ -31,7 +31,7 @@ public:
 	Uint32 GetMaxGroupSize(Uint32 groupID);
 	Uint32 GetPriority() const { return priority; }
 
-	bool IsValid() const { return isValid; }
+	bool IsValid() const { return moduleValid; }
 
 	bool SetModuleState(lua_State*);
 	lua_State* GetModuleState() const { return moduleState; }
@@ -52,7 +52,7 @@ public:
 	friend std::ostream& operator<<(std::ostream&, rcLuaModule);
 
 private:
-	bool isValid;
+	bool moduleValid;
 
 	lua_State* moduleState;
 	AIGroup* moduleGroup;
