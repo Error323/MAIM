@@ -45,6 +45,7 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 
 		// sort all matching modules by ascending order of #one-bits
 		std::map<AIUnitDef::AIUnitDefClass, lua_State*> matchingStates;
+		std::map<AIUnitDef::AIUnitDefClass, lua_State*>::iterator matchingState;
 
 		for (LuaStateMapIt it = luaModuleStates.begin(); it != luaModuleStates.end(); ++it) {
 			const AIUnitDef::AIUnitDefClass& lmc = it->first;
@@ -69,10 +70,11 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 		}
 
 		if (!matchingStates.empty()) {
-			// pick the matching class with the fewest total
+			matchingState = (matchingStates.end())--;
+			// pick the matching class with the largest total
 			// amount of one-bits set (ie. the most specific
 			// mask); FIXME does not make much more sense
-			moduleState = (matchingStates.begin())->second;
+			moduleState = matchingState->second;
 		}
 
 		// do NOT cache LuaModule*'s, each AIGroup* must have a unique instance

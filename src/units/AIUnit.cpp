@@ -9,33 +9,20 @@
 #include "../main/AIHelper.hpp"
 #include "../utils/Debugger.hpp"
 
-void AIUnit::SetActiveState(cBool wantActive) {
-	if (CanGiveCommand(CMD_ONOFF)) {
-		if (active != wantActive) {
-			active = !active;
-
-			Command c;
-				c.id = CMD_ONOFF;
-				c.params.push_back(wantActive);
-			GiveCommand(&c);
-		}
-	}
-}
-
 void AIUnit::Update() {
 	MAI_ASSERT(unitDef != 0);
 
-	UpdatePosition();
+	UpdateState();
 	UpdateCommand();
 	UpdateWait();
 
-	age += 1;
+	lifeTime += 1;
 }
 
 void AIUnit::Init(unsigned int _unitID, int unsigned _builderID) {
 	currCmdID = 0;
 
-	age = 0;
+	lifeTime = 0;
 	idleTime = 0;
 
 	waiting = false;
@@ -43,6 +30,8 @@ void AIUnit::Init(unsigned int _unitID, int unsigned _builderID) {
 	pos = ZeroVector;
 	vel = ZeroVector;
 	dir = ZeroVector;
+	spd = 0.0f;
+	health = 0.0f;
 
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
@@ -62,7 +51,7 @@ void AIUnit::Init(unsigned int _unitID, int unsigned _builderID) {
 	AUnitDestroyedSubject::RemoveObservers();
 }
 
-void AIUnit::UpdatePosition() {
+void AIUnit::UpdateState() {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
@@ -76,6 +65,7 @@ void AIUnit::UpdatePosition() {
 	pos = rcb->GetUnitPos(unitID);
 	dir = (vel != ZeroVector)? (vel / vel.Length()): ZeroVector;
 	spd = (idleTime == 0)? (vel.Length() * GAME_SPEED): 0.0f;
+	health = rcb->GetUnitHealth(unitID);
 }
 
 void AIUnit::UpdateCommand() {
@@ -100,7 +90,7 @@ void AIUnit::UpdateWait() {
 
 
 // check if this unit's CQ is non-empty
-cBool AIUnit::HasCommand() const {
+bool AIUnit::HasCommand() const {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
@@ -110,7 +100,7 @@ cBool AIUnit::HasCommand() const {
 	return (uc != NULL);
 }
 
-cBool AIUnit::CanGiveCommand(int cmdID) const {
+bool AIUnit::CanGiveCommand(int cmdID) const {
 	if (cmdID < 0) {
 		// build order
 		return (unitDef->HaveBuildOptionDefID(-cmdID));
@@ -136,14 +126,14 @@ cBool AIUnit::CanGiveCommand(int cmdID) const {
 	}
 }
 
-cInt AIUnit::GiveCommand(pCommand c) const {
+int AIUnit::GiveCommand(pCommand c) const {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
 	return (rcb->GiveOrder(unitID, c));
 }
 
-cInt AIUnit::TryGiveCommand(pCommand c) const {
+int AIUnit::TryGiveCommand(pCommand c) const {
 	if (CanGiveCommand(c->id)) {
 		return (GiveCommand(c));
 	}
@@ -151,12 +141,14 @@ cInt AIUnit::TryGiveCommand(pCommand c) const {
 	return -100;
 }
 
-cInt AIUnit::GetCommandQueueSize() const {
+int AIUnit::GetCommandQueueSize() const {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
 	return (rcb->GetCurrentUnitCommands(unitID)->size());
 }
+
+
 
 void AIUnit::Stop() {
 	Command c;
@@ -166,7 +158,7 @@ void AIUnit::Stop() {
 	idleTime = 0;
 }
 
-void AIUnit::Wait(cBool w) {
+void AIUnit::Wait(bool w) {
 	Command c;
 		c.id = CMD_WAIT;
 	GiveCommand(&c);
@@ -186,16 +178,32 @@ void AIUnit::Move(rcFloat3 goal) {
 	}
 }
 
+void AIUnit::SetActiveState(cBool wantActive) {
+	if (CanGiveCommand(CMD_ONOFF))
+	{
+		if (active != wantActive) {
+			active = !active;
+
+			Command c;
+				c.id = CMD_ONOFF;
+				c.params.push_back(wantActive);
+			GiveCommand(&c);
+		}
+	}
+}
+
+
+
 std::ostream& operator<<(std::ostream &out, rcAIUnit unit) {
 	out << "Unit{name:";
 	out << unit.unitDef->GetName();
-	out << ", id:";
+	out << ", unitID:";
 	out << unit.unitID;
-	out << ", builderid:";
+	out << ", builderID:";
 	out << unit.builderID;
-	out << ", age:";
-	out << unit.age;
-	out << ", idle:";
+	out << ", lifeTime:";
+	out << unit.lifeTime;
+	out << ", idleTime:";
 	out << unit.idleTime;
 	out << "}";
 

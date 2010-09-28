@@ -7,6 +7,7 @@
 #include "../globals/EcoState.hpp"
 #include "../globals/GameMap.hpp"
 #include "../units/AIUnitHandler.hpp"
+#include "../units/AIUnit.hpp"
 #include "../utils/Debugger.hpp"
 
 LuaModule* LuaCallOutHandler::activeModule = NULL;
@@ -104,10 +105,12 @@ int LuaCallOutHandler::SimStateCallOuts::GetInitSimFrame(lua_State* L) {
 	lua_pushnumber(L, AIHelper::GetActiveInstance()->GetInitFrame());
 	return 1;
 }
+
 int LuaCallOutHandler::SimStateCallOuts::GetCurrSimFrame(lua_State* L) {
 	lua_pushnumber(L, AIHelper::GetActiveInstance()->GetCurrFrame());
 	return 1;
 }
+
 int LuaCallOutHandler::SimStateCallOuts::IsPaused(lua_State* L) {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
@@ -118,6 +121,8 @@ int LuaCallOutHandler::SimStateCallOuts::IsPaused(lua_State* L) {
 	lua_pushboolean(L, isPaused);
 	return 1;
 }
+
+
 
 
 int LuaCallOutHandler::UnitStateCallOuts::GetUnitPos(lua_State* L) {
@@ -131,13 +136,21 @@ int LuaCallOutHandler::UnitStateCallOuts::GetUnitPos(lua_State* L) {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
-	const float3& pos = rcb->GetUnitPos(lua_tointeger(L, 1));
+	pAIUnitHandler uh = aih->GetAIUnitHandler();
+	pAIUnit unit = uh->GetUnit(lua_tointeger(L, 1));
+
+	if (unit == NULL) {
+		return 0;
+	}
+
+	const float3& pos = unit->GetPos();
 
 	lua_pushnumber(L, pos.x);
 	lua_pushnumber(L, pos.y);
 	lua_pushnumber(L, pos.z);
 	return 3;
 }
+
 int LuaCallOutHandler::UnitStateCallOuts::GetUnitVel(lua_State* L) {
 	MAI_ASSERT(lua_gettop(L) >= 1);
 
@@ -149,13 +162,21 @@ int LuaCallOutHandler::UnitStateCallOuts::GetUnitVel(lua_State* L) {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
-	const float3& vel = rcb->GetUnitVel(lua_tointeger(L, 1));
+	pAIUnitHandler uh = aih->GetAIUnitHandler();
+	pAIUnit unit = uh->GetUnit(lua_tointeger(L, 1));
+
+	if (unit == NULL) {
+		return 0;
+	}
+
+	const float3& vel = unit->GetVel();
 
 	lua_pushnumber(L, vel.x);
 	lua_pushnumber(L, vel.y);
 	lua_pushnumber(L, vel.z);
 	return 3;
 }
+
 int LuaCallOutHandler::UnitStateCallOuts::GetUnitHealth(lua_State* L) {
 	MAI_ASSERT(lua_gettop(L) >= 1);
 
@@ -167,19 +188,31 @@ int LuaCallOutHandler::UnitStateCallOuts::GetUnitHealth(lua_State* L) {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
-	lua_pushnumber(L, rcb->GetUnitHealth(lua_tointeger(L, 1)));
+	pAIUnitHandler uh = aih->GetAIUnitHandler();
+	pAIUnit unit = uh->GetUnit(lua_tointeger(L, 1));
+
+	if (unit == NULL) {
+		return 0;
+	}
+
+	lua_pushnumber(L, unit->GetHealth());
 	return 1;
 }
+
+
 
 
 int LuaCallOutHandler::EcoStateCallOuts::IsStallingMetal(lua_State* L) {
 	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetEcoState()->IsStallingMetal());
 	return 1;
 }
+
 int LuaCallOutHandler::EcoStateCallOuts::IsStallingEnergy(lua_State* L) {
 	lua_pushboolean(L, AIHelper::GetActiveInstance()->GetEcoState()->IsStallingEnergy());
 	return 1;
 }
+
+
 
 
 int LuaCallOutHandler::GameMapCallOuts::GetAmountOfLand(lua_State* L) {
@@ -191,6 +224,8 @@ int LuaCallOutHandler::GameMapCallOuts::GetAmountOfWater(lua_State* L) {
 	lua_pushnumber(L, AIHelper::GetActiveInstance()->GetGameMap()->GetAmountOfWater());
 	return 1;
 }
+
+
 
 
 int LuaCallOutHandler::CommandCallOuts::GiveCommand(lua_State* L) {

@@ -36,41 +36,47 @@ public:
 	rcFloat3 GetVel() const { return vel; }
 	rcFloat3 GetDir() const { return dir; }
 
-	cInt GetID() const { return unitID; }
-	cInt GetCurrCmdID() const { return currCmdID; }
-	cUint32 GetAge() const { return age; }
-	cInt GetBuilderID() const { return builderID; }
+	float GetSpeed() const { return spd; }
+	float GetHealth() const { return health; }
 
-	cBool HasCommand() const;
-	cBool CanGiveCommand(int) const;
-	cInt GiveCommand(pCommand) const;
-	cInt TryGiveCommand(pCommand) const;
-	cInt GetCommandQueueSize() const;
+	Uint32 GetID() const { return unitID; }
+	Uint32 GetBuilderID() const { return builderID; }
+	Uint32 GetLifeTime() const { return lifeTime; }
+	Uint32 GetIdleTime() const { return idleTime; }
+
+	bool HasCommand() const;
+	bool CanGiveCommand(int) const;
+	int GiveCommand(pCommand) const;
+	int TryGiveCommand(pCommand) const;
+	int GetCommandQueueSize() const;
+	int GetCurrCmdID() const { return currCmdID; }
 
 	void Move(rcFloat3);
 	void Stop();
-	void Wait(cBool);
+	void Wait(bool);
 
 	friend std::ostream& operator<<(std::ostream&, rcAIUnit);
 
 private:
-	void UpdatePosition();
+	void UpdateState();
 	void UpdateCommand();
 	void UpdateWait();
 
-	int unitID;    // the unit's runtie id
-	int builderID; // the unit's builder/creator
+	Uint32 unitID;    // the unit's runtie id
+	Uint32 builderID; // the unit's builder/creator
+
 	int currCmdID;
 
 	float3 pos;
 	float3 vel;
 	float3 dir;
-	float spd; // length of vel
+	float spd;    // length of vel
+	float health; // current amount of hit-points
 
 	bool active;
 	bool waiting;
 
-	Uint32 age;
+	Uint32 lifeTime;
 	Uint32 idleTime;
 
 	pcAIUnitDef unitDef;
