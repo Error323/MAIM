@@ -24,6 +24,7 @@ private:
 
 		static int GetUnitPos(lua_State*);
 		static int GetUnitVel(lua_State*);
+		static int GetUnitSpeed(lua_State*);
 		static int GetUnitHealth(lua_State*);
 	};
 	struct EcoStateCallOuts {

@@ -177,6 +177,28 @@ int LuaCallOutHandler::UnitStateCallOuts::GetUnitVel(lua_State* L) {
 	return 3;
 }
 
+int LuaCallOutHandler::UnitStateCallOuts::GetUnitSpeed(lua_State* L) {
+	MAI_ASSERT(lua_gettop(L) >= 1);
+
+	// unitID
+	if (!lua_isnumber(L, 1)) {
+		return 0;
+	}
+
+	pAIHelper aih = AIHelper::GetActiveInstance();
+	pIAICallback rcb = aih->GetCallbackHandler();
+
+	pAIUnitHandler uh = aih->GetAIUnitHandler();
+	pAIUnit unit = uh->GetUnit(lua_tointeger(L, 1));
+
+	if (unit == NULL) {
+		return 0;
+	}
+
+	lua_pushnumber(L, unit->GetSpeed());
+	return 1;
+}
+
 int LuaCallOutHandler::UnitStateCallOuts::GetUnitHealth(lua_State* L) {
 	MAI_ASSERT(lua_gettop(L) >= 1);
 
