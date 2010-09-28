@@ -11,12 +11,20 @@ public:
 
 	static void RegisterFunctions(lua_State*);
 
+private:
 	struct SimStateCallOuts {
 		static void RegisterFunctions(lua_State*);
 
 		static int GetInitSimFrame(lua_State*);
 		static int GetCurrSimFrame(lua_State*);
 		static int IsPaused(lua_State*);
+	};
+	struct UnitStateCallOuts {
+		static void RegisterFunctions(lua_State*);
+
+		static int GetUnitPos(lua_State*);
+		static int GetUnitVel(lua_State*);
+		static int GetUnitHealth(lua_State*);
 	};
 	struct EcoStateCallOuts {
 		static void RegisterFunctions(lua_State*);
@@ -36,7 +44,6 @@ public:
 		static int GiveCommand(lua_State*);
 	};
 
-private:
 	static LuaModule* activeModule;
 };
 
