@@ -43,6 +43,9 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 
 		LOG_BASIC("\tnumber of loaded module states: " << luaModuleStates.size() << "\n");
 
+		// sort all matching modules by ascending order of #one-bits
+		std::map<AIUnitDef::AIUnitDefClass, lua_State*> matchingStates;
+
 		for (LuaStateMapIt it = luaModuleStates.begin(); it != luaModuleStates.end(); ++it) {
 			const AIUnitDef::AIUnitDefClass& lmc = it->first;
 			const std::vector<lua_State*>& lmsv = it->second;
@@ -60,12 +63,16 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 			}
 
 			// NOTE:
-			//     what if multiple module-classes match?
-			//
 			//     this ASSUMES each module presents _exactly_
 			//     the same class-mask for each priority-level
-			moduleState = lmsv[priority];
-			break;
+			matchingStates[lmc] = lmsv[priority];
+		}
+
+		if (!matchingStates.empty()) {
+			// pick the matching class with the fewest total
+			// amount of one-bits set (ie. the most specific
+			// mask); FIXME does not make much more sense
+			moduleState = (matchingStates.begin())->second;
 		}
 
 		// do NOT cache LuaModule*'s, each AIGroup* must have a unique instance
