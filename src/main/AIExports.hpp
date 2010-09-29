@@ -22,15 +22,10 @@ struct SSkirmishAICallback;
 // for a list of the functions that have to be exported,
 // see struct SSkirmishAILibrary in "ExternalAI/Interface/SSkirmishAILibrary.h"
 
-// team instance functions
-EXPORT(int) init(int teamId, const struct SSkirmishAICallback* callback);
-EXPORT(int) release(int teamId);
-EXPORT(int) handleEvent(int teamId, int topic, const void* data);
+EXPORT(int) init(int skirmishAIId, const SSkirmishAICallback* callback);
+EXPORT(int) release(int skirmishAIId);
+EXPORT(int) handleEvent(int skirmishAIId, int topic, const void* data);
 
-// methods from here on are for AI internal use only
-const char* aiexport_getVersion(int teamId);
-// const char* aiexport_getMyInfo(const char* key);
-// const char* aiexport_getDataDir(bool absoluteAndWriteable);
-// const char* aiexport_getMyOption(int teamId, const char* key);
+const char* aiexport_getVersion();
 
 #endif
