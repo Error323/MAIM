@@ -149,7 +149,7 @@ public:
 	// a CTeam::SlowUpdate() occurs every 32 simulation
 	// frames ie. every (32 / GAME_SPEED) seconds
 	float GetBuildTimeTicks(float buildSpeed) const { return float(GetDef()->buildTime / buildSpeed); }
-	float GetBuildTimeFrames(float buildSpeed) const { return float(GetBuildTimeTicks(buildSpeed) * TEAM_SU_INT_F); }
+	float GetBuildTimeFrames(float buildSpeed) const { return float(GetBuildTimeTicks(buildSpeed) * TEAM_SLOWUPDATE_RATE); }
 	float GetBuildTimeSeconds(float buildSpeed) const { return float(GetBuildTimeFrames(buildSpeed) / GAME_SPEED); }
 
 	// per-frame costs of building a unit

@@ -3,46 +3,44 @@
 // AI interface headers
 #include "ExternalAI/Interface/SSkirmishAILibrary.h"
 #include "ExternalAI/Interface/SSkirmishAICallback.h"
-#include "../Wrappers/LegacyCpp/AIGlobalAI.h"
-#include "../Wrappers/CUtils/Util.h"
+#include "../Wrappers/LegacyCpp/AIAI.h"
 
 // MAI headers
 #include "./AIExports.hpp"
 #include "./AIMain.hpp"
 
-static std::map<int, CAIGlobalAI*> aiInstances;
-static std::map<int, const struct SSkirmishAICallback*> teamCallbacks;
+static std::map<int, CAIAI*> aiInstances;
+static std::map<int, const SSkirmishAICallback*> aiCallbacks;
 
 
 
-EXPORT(int) init(int teamId, const struct SSkirmishAICallback* callback) {
-	if (aiInstances.find(teamId) != aiInstances.end()) {
+EXPORT(int) init(int skirmishAIId, const SSkirmishAICallback* callback) {
+	if (aiInstances.find(skirmishAIId) != aiInstances.end()) {
 		return -1;
 	}
 
-	teamCallbacks[teamId] = callback;
+	aiCallbacks[skirmishAIId] = callback;
 
-	// CAIGlobalAI is the Legacy C++ wrapper
-	aiInstances[teamId] = new CAIGlobalAI(teamId, new AIMain());
+	// CAIAI is the Legacy C++ wrapper
+	aiInstances[skirmishAIId] = new CAIAI(new AIMain());
+	return 0;
+}
+
+EXPORT(int) release(int skirmishAIId) {
+	if (aiInstances.find(skirmishAIId) == aiInstances.end()) {
+		return -1;
+	}
+
+	delete aiInstances[skirmishAIId];
+	aiInstances[skirmishAIId] = NULL;
+	aiInstances.erase(skirmishAIId);
 
 	return 0;
 }
 
-EXPORT(int) release(int teamId) {
-	if (aiInstances.find(teamId) == aiInstances.end()) {
-		return -1;
-	}
-
-	delete aiInstances[teamId];
-	aiInstances[teamId] = NULL;
-	aiInstances.erase(teamId);
-
-	return 0;
-}
-
-EXPORT(int) handleEvent(int teamId, int topic, const void* data) {
-	if (teamId >= 0 && aiInstances.find(teamId) != aiInstances.end()) {
-		return aiInstances[teamId]->handleEvent(topic, data);
+EXPORT(int) handleEvent(int skirmishAIId, int topic, const void* data) {
+	if (aiInstances.find(skirmishAIId) != aiInstances.end()) {
+		return aiInstances[skirmishAIId]->handleEvent(topic, data);
 	}
 
 	// no AI for that team, so return error.
@@ -54,8 +52,12 @@ EXPORT(int) handleEvent(int teamId, int topic, const void* data) {
 ///////////////////////////////////////////////////////
 // methods from here on are for AI internal use only //
 ///////////////////////////////////////////////////////
-const char* aiexport_getVersion(int teamId) {
-	return teamCallbacks[teamId]->Clb_SkirmishAI_Info_getValueByKey(teamId, SKIRMISH_AI_PROPERTY_VERSION);
+const char* aiexport_getVersion() {
+	const int skirmishAIId = aiCallbacks.begin()->first;
+	const SSkirmishAICallback* cb = aiCallbacks[skirmishAIId];
+	const char* version = cb->SkirmishAI_Info_getValueByKey(skirmishAIId, SKIRMISH_AI_PROPERTY_VERSION);
+
+	return version;
 }
 
 /*
@@ -84,6 +86,6 @@ const char* aiexport_getDataDir(bool absoluteAndWriteable) {
 }
 
 const char* aiexport_getMyOption(int teamId, const char* key) {
-	return teamCallbacks[teamId]->Clb_SkirmishAI_OptionValues_getValueByKey(teamId, key);
+	return aiCallbacks[teamId]->Clb_SkirmishAI_OptionValues_getValueByKey(teamId, key);
 }
 */

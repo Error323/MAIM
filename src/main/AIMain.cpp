@@ -68,10 +68,12 @@ void AIMain::UnitCreated(int unitID, int builderUnitID) {
 
 	AIHelper::SetActiveInstance(aih);
 
-	pAIUnit unit = ObjectFactory<AIUnit>::Instance();
+	AI_BEG_EXCEPTION
+		pAIUnit unit = ObjectFactory<AIUnit>::Instance();
 
-	unit->Init(unitID, builderUnitID);
-	aih->GetAIUnitHandler()->UnitCreated(unit);
+		unit->Init(unitID, builderUnitID);
+		aih->GetAIUnitHandler()->UnitCreated(unit);
+	AI_END_EXCEPTION("[AIMain::UnitCreated]")
 }
 
 void AIMain::UnitFinished(int unitID) {
@@ -81,9 +83,10 @@ void AIMain::UnitFinished(int unitID) {
 
 	AIHelper::SetActiveInstance(aih);
 
-	pAIUnit unit = aih->GetAIUnitHandler()->GetUnit(unitID);
-
-	aih->GetAIGroupHandler()->UnitFinished(unit);
+	AI_BEG_EXCEPTION
+		pAIUnit unit = aih->GetAIUnitHandler()->GetUnit(unitID);
+		aih->GetAIGroupHandler()->UnitFinished(unit);
+	AI_END_EXCEPTION("[AIMain::UnitFinished]")
 }
 
 void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
@@ -93,9 +96,11 @@ void AIMain::UnitDestroyed(int unitID, int attackerUnitID) {
 
 	AIHelper::SetActiveInstance(aih);
 
-	// this reaches the unit-handler indirectly
-	pAIUnit unit = aih->GetAIUnitHandler()->GetUnit(unitID);
-	unit->NotifyUnitDestroyedObservers();
+	AI_BEG_EXCEPTION
+		// this reaches the unit-handler indirectly
+		pAIUnit unit = aih->GetAIUnitHandler()->GetUnit(unitID);
+		unit->NotifyUnitDestroyedObservers();
+	AI_END_EXCEPTION("[AIMain::UnitDestroyed]")
 }
 
 void AIMain::UnitIdle(int unitID) {
@@ -104,6 +109,9 @@ void AIMain::UnitIdle(int unitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::UnitIdle]")
 }
 
 void AIMain::UnitDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
@@ -112,6 +120,9 @@ void AIMain::UnitDamaged(int damagedUnitID, int attackerUnitID, float damage, fl
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::UnitDamaged]")
 }
 
 void AIMain::EnemyDamaged(int damagedUnitID, int attackerUnitID, float damage, float3 dir) {
@@ -120,6 +131,9 @@ void AIMain::EnemyDamaged(int damagedUnitID, int attackerUnitID, float damage, f
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::EnemyDamaged]")
 }
 
 void AIMain::UnitMoveFailed(int unitID) {
@@ -128,6 +142,9 @@ void AIMain::UnitMoveFailed(int unitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::UnitMoveFailed]")
 }
 
 
@@ -137,6 +154,9 @@ void AIMain::EnemyEnterLOS(int enemyUnitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::EnemyEnterLOS]")
 }
 
 void AIMain::EnemyLeaveLOS(int enemyUnitID) {
@@ -145,6 +165,9 @@ void AIMain::EnemyLeaveLOS(int enemyUnitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::EnemyLeaveLOS]")
 }
 
 void AIMain::EnemyEnterRadar(int enemyUnitID) {
@@ -153,6 +176,9 @@ void AIMain::EnemyEnterRadar(int enemyUnitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::EnemyEnterRadar]")
 }
 
 void AIMain::EnemyLeaveRadar(int enemyUnitID) {
@@ -161,6 +187,9 @@ void AIMain::EnemyLeaveRadar(int enemyUnitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::EnemyLeaveRadar]")
 }
 
 void AIMain::EnemyDestroyed(int enemyUnitID, int attackerUnitID) {
@@ -169,6 +198,9 @@ void AIMain::EnemyDestroyed(int enemyUnitID, int attackerUnitID) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::EnemyDestroyed]")
 }
 
 
@@ -178,6 +210,9 @@ void AIMain::GotChatMsg(const char* msg, int playerNum) {
 	}
 
 	AIHelper::SetActiveInstance(aih);
+
+	AI_BEG_EXCEPTION
+	AI_END_EXCEPTION("[AIMain::GotChatMsg][" << msg << "]")
 }
 
 int AIMain::HandleEvent(int msgID, const void* msgData) {
@@ -187,20 +222,22 @@ int AIMain::HandleEvent(int msgID, const void* msgData) {
 
 	AIHelper::SetActiveInstance(aih);
 
-	switch (msgID)
-	{
-		case AI_EVENT_UNITGIVEN:
+	AI_BEG_EXCEPTION
+		switch (msgID)
 		{
-			const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
-			UnitCreated(cte->unit, -1);
-			UnitFinished(cte->unit);
-		} break;
-		case AI_EVENT_UNITCAPTURED:
-		{
-			const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
-			UnitDestroyed(cte->unit, -1);
-		} break;
-	}
+			case AI_EVENT_UNITGIVEN:
+			{
+				const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
+				UnitCreated(cte->unit, -1);
+				UnitFinished(cte->unit);
+			} break;
+			case AI_EVENT_UNITCAPTURED:
+			{
+				const ChangeTeamEvent* cte = (const ChangeTeamEvent*) msgData;
+				UnitDestroyed(cte->unit, -1);
+			} break;
+		}
+	AI_END_EXCEPTION("[AIMain::HandleEvent][" << msgID << "]")
 
 	return 0;
 }
@@ -213,18 +250,21 @@ void AIMain::Update() {
 
 	AIHelper::SetActiveInstance(aih);
 
-	// first Update event is at frame 1, not 0
-	aih->SetCurrFrame(aih->GetCurrFrame() + 1);
+	AI_BEG_EXCEPTION
+		// first Update event is at frame 1, not 0
+		aih->SetCurrFrame(aih->GetCurrFrame() + 1);
 
-	switch (aih->GetCurrFrame() % 2)
-	{
-		case 0: // update economic state
+		switch (aih->GetCurrFrame() % 2)
 		{
-			aih->GetEcoState()->Update();
-		} break;
-		case 1: // update aiGroups, calls lua modules
-		{
-			aih->GetAIGroupHandler()->Update();
-		} break;
-	}
+			case 0: // update economic state
+			{
+				aih->GetEcoState()->Update();
+			} break;
+			case 1: // update aiGroups, calls lua modules
+			{
+				aih->GetAIGroupHandler()->Update();
+			} break;
+		}
+
+	AI_END_EXCEPTION("[AIMain::Update]")
 }
