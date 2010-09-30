@@ -94,6 +94,121 @@ LuaModule* LuaModuleLoader::GetModule(const AIUnitDef* def, unsigned int priorit
 	return module;
 }
 
+void LuaModuleLoader::PushConstantsSubTable(lua_State* L, unsigned int constType) {
+	static const char* tableNames[7] = {
+		"TypeMasksTbl",
+		"TerrainMasksTbl",
+		"WeaponMasksTbl",
+		"RoleMasksTbl",
+		"$DUMMY$",
+		"TypesTbl",
+		"OptionsTbl",
+	};
+
+	lua_pushstring(L, tableNames[constType]);
+	lua_newtable(L);
+	MAI_ASSERT(lua_istable(L, -3));
+	MAI_ASSERT(lua_istable(L, -1));
+		PushConstants(L, constType);
+	lua_settable(L, -3);
+	MAI_ASSERT(lua_gettop(L) == 1);
+}
+
+void LuaModuleLoader::PushConstants(lua_State* L, unsigned int constType) {
+	#define PUSH_LUA_MASK_CONSTANT(L, c) \
+		lua_pushstring(L, #c);           \
+		lua_pushnumber(L, AIUnitDef::c); \
+		lua_rawset(L, -3);
+	#define PUSH_LUA_PRIORITY_CONSTANT(L, c) \
+		lua_pushstring(L, #c);               \
+		lua_pushnumber(L, LuaModule::c);     \
+		lua_rawset(L, -3);
+	#define PUSH_LUA_COMMAND_CONSTANT(L, c) \
+		lua_pushstring(L, #c);              \
+		lua_pushnumber(L, c);               \
+		lua_rawset(L, -3);
+
+	switch (constType) {
+		case SUBTABLE_UNITDEF_TYPEMASK_CONSTS: {
+			PUSH_LUA_MASK_CONSTANT(L, MASK_BUILDER_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_BUILDER_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ASSISTER_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ASSISTER_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_E_PRODUCER_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_E_PRODUCER_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_M_PRODUCER_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_M_PRODUCER_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_E_STORAGE_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_E_STORAGE_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_M_STORAGE_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_M_STORAGE_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_DEFENSE_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_DEFENSE_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_OFFENSE_STATIC);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_OFFENSE_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_INTEL_MOBILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_INTEL_STATIC);
+		} break;
+		case SUBTABLE_UNITDEF_TERRMASK_CONSTS: {
+			PUSH_LUA_MASK_CONSTANT(L, MASK_LAND);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_WATER_SURFACE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_WATER_SUBMERGED);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_AIR);
+		} break;
+		case SUBTABLE_UNITDEF_WEAPMASK_CONSTS: {
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ARMED);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_NUKE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ANTINUKE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_SHIELD);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_STOCKPILE);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_MANUALFIRE);
+		} break;
+		case SUBTABLE_UNITDEF_ROLEMASK_CONSTS: {
+			PUSH_LUA_MASK_CONSTANT(L, MASK_SCOUT);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_RAIDER);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ASSAULT);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ARTILLERY);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_ANTIAIR);
+			PUSH_LUA_MASK_CONSTANT(L, MASK_STRIKER);
+		} break;
+
+		case SUBTABLE_MODULE_PRIORITY_CONSTS: {
+			PUSH_LUA_PRIORITY_CONSTANT(L, LUAMODULE_PRIORITY_EMERGENCY);
+			PUSH_LUA_PRIORITY_CONSTANT(L, LUAMODULE_PRIORITY_REACTIVE);
+			PUSH_LUA_PRIORITY_CONSTANT(L, LUAMODULE_PRIORITY_PROACTIVE);
+		} break;
+
+		case SUBTABLE_COMMAND_TYPE_CONSTS: {
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_STOP);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_WAIT);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_MOVE);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_ATTACK);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_GUARD);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_REPAIR);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_RECLAIM);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_CLOAK);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_DGUN);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_RESURRECT);
+			PUSH_LUA_COMMAND_CONSTANT(L, CMD_CAPTURE);
+		} break;
+
+		case SUBTABLE_COMMAND_OPTION_CONSTS: {
+			PUSH_LUA_COMMAND_CONSTANT(L, META_KEY);
+			PUSH_LUA_COMMAND_CONSTANT(L, DONT_REPEAT);
+			PUSH_LUA_COMMAND_CONSTANT(L, RIGHT_MOUSE_KEY);
+			PUSH_LUA_COMMAND_CONSTANT(L, SHIFT_KEY);
+			PUSH_LUA_COMMAND_CONSTANT(L, CONTROL_KEY);
+			PUSH_LUA_COMMAND_CONSTANT(L, ALT_KEY);
+		} break;
+	}
+
+	#undef PUSH_LUA_MASK_CONSTANT
+	#undef PUSH_LUA_PRIORITY_CONSTANT
+	#undef PUSH_LUA_COMMAND_CONSTANT
+}
+
+
+
 lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript, std::string* loadError) {
 	lua_State* luaState = lua_open();
 	luaL_openlibs(luaState);
@@ -119,128 +234,24 @@ lua_State* LuaModuleLoader::LoadLuaModule(const std::string& luaScript, std::str
 		lua_setglobal(luaState, "AICallOutsTbl");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
 
-		#define PUSH_LUA_MASK_CONSTANT(L, c) \
-			lua_pushstring(L, #c);           \
-			lua_pushnumber(L, AIUnitDef::c); \
-			lua_rawset(L, -3);
-		#define PUSH_LUA_PRIORITY_CONSTANT(L, c) \
-			lua_pushstring(L, #c);               \
-			lua_pushnumber(L, LuaModule::c);     \
-			lua_rawset(L, -3);
-		#define PUSH_LUA_COMMAND_CONSTANT(L, c) \
-			lua_pushstring(L, #c);              \
-			lua_pushnumber(L, c);               \
-			lua_rawset(L, -3);
-
 		lua_newtable(luaState);
-			lua_pushstring(luaState, "TypeMasksTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_BUILDER_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_BUILDER_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ASSISTER_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ASSISTER_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_E_PRODUCER_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_E_PRODUCER_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_M_PRODUCER_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_M_PRODUCER_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_E_STORAGE_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_E_STORAGE_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_M_STORAGE_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_M_STORAGE_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_DEFENSE_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_DEFENSE_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_OFFENSE_STATIC);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_OFFENSE_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_INTEL_MOBILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_INTEL_STATIC);
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			lua_pushstring(luaState, "TerrainMasksTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_LAND);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_WATER_SURFACE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_WATER_SUBMERGED);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_AIR);
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			lua_pushstring(luaState, "WeaponMasksTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ARMED);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_NUKE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ANTINUKE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_SHIELD);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_STOCKPILE);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_MANUALFIRE);
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			lua_pushstring(luaState, "RoleMasksTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_SCOUT);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_RAIDER);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ASSAULT);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ARTILLERY);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_ANTIAIR);
-				PUSH_LUA_MASK_CONSTANT(luaState, MASK_STRIKER);
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
+			PushConstantsSubTable(luaState, SUBTABLE_UNITDEF_TYPEMASK_CONSTS);
+			PushConstantsSubTable(luaState, SUBTABLE_UNITDEF_TERRMASK_CONSTS);
+			PushConstantsSubTable(luaState, SUBTABLE_UNITDEF_WEAPMASK_CONSTS);
+			PushConstantsSubTable(luaState, SUBTABLE_UNITDEF_ROLEMASK_CONSTS);
 		lua_setglobal(luaState, "AIModuleClassConstsTbl");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
 
 		lua_newtable(luaState);
-			PUSH_LUA_PRIORITY_CONSTANT(luaState, LUAMODULE_PRIORITY_EMERGENCY);
-			PUSH_LUA_PRIORITY_CONSTANT(luaState, LUAMODULE_PRIORITY_REACTIVE);
-			PUSH_LUA_PRIORITY_CONSTANT(luaState, LUAMODULE_PRIORITY_PROACTIVE);
+			PushConstants(luaState, SUBTABLE_MODULE_PRIORITY_CONSTS);
 		lua_setglobal(luaState, "AIModulePriorityConstsTbl");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
 
 		lua_newtable(luaState);
-			lua_pushstring(luaState, "TypesTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_STOP);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_WAIT);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_MOVE);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_ATTACK);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_GUARD);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_REPAIR);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_RECLAIM);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_CLOAK);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_DGUN);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_RESURRECT);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CMD_CAPTURE);
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
-
-			lua_pushstring(luaState, "OptionsTbl");
-			lua_newtable(luaState);
-			MAI_ASSERT(lua_istable(luaState, -3));
-			MAI_ASSERT(lua_istable(luaState, -1));
-				PUSH_LUA_COMMAND_CONSTANT(luaState, META_KEY);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, DONT_REPEAT);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, RIGHT_MOUSE_KEY);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, SHIFT_KEY);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, CONTROL_KEY);
-				PUSH_LUA_COMMAND_CONSTANT(luaState, ALT_KEY);
-			lua_settable(luaState, -3);
-			MAI_ASSERT(lua_gettop(luaState) == 1);
+			PushConstantsSubTable(luaState, SUBTABLE_COMMAND_TYPE_CONSTS);
+			PushConstantsSubTable(luaState, SUBTABLE_COMMAND_OPTION_CONSTS);
 		lua_setglobal(luaState, "AICommandConstsTbl");
 		MAI_ASSERT(lua_gettop(luaState) == 0);
-
-		#undef PUSH_LUA_MASK_CONSTANT
-		#undef PUSH_LUA_PRIORITY_CONSTANT
-		#undef PUSH_LUA_COMMAND_CONSTANT
 
 		// lua_register(L, name, func) is short-hand macro for
 		// lua_pushcfunction(L, func) + lua_setglobal(L, name)
