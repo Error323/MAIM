@@ -81,20 +81,20 @@ void GameMap::CalcMetalSpots() {
 	pAIHelper aih = AIHelper::GetActiveInstance();
 	pIAICallback rcb = aih->GetCallbackHandler();
 
+	// height-map dimensions
 	cUint32 HMX = rcb->GetMapWidth();
 	cUint32 HMZ = rcb->GetMapHeight();
-	// scale the height-map down by a factor *four*
-	// (the metal-map does NOT have this resolution)
-	cUint32 HHX = MAP_HEIGHT_2_METAL(HMX) >> 1;
-	cUint32 HHZ = MAP_HEIGHT_2_METAL(HMZ) >> 1;
+	// half-scaled (!) metal-map dimensions
+	cUint32 HMMX = MAP_HEIGHT_2_METAL(HMX) >> 1;
+	cUint32 HMMZ = MAP_HEIGHT_2_METAL(HMZ) >> 1;
 	// also convert the extractor radius from
-	// world-resolution to our scaled-down space
+	// world-resolution to our scaled MM space
 	int R = MAP_WORLD_2_METAL(Uint32(rcb->GetExtractorRadius())) >> 1;
 
 	cFloat minSum = 10.0f * M_PI * R * R;
 
 	pcUint8 metalMapRaw = rcb->GetMetalMap();
-	vUint8 metalMapCpy(HHX * HHZ, 0);
+	vUint8 metalMapCpy(HMMX * HMMZ, 0);
 	vUint32 spotCoors;
 
 	// Calculate circular stamp
@@ -114,41 +114,34 @@ void GameMap::CalcMetalSpots() {
 		}
 	}
 
-	avgMetal = 0;
-	minMetal = std::numeric_limits<int>::max();
-	maxMetal = std::numeric_limits<int>::min();
 
 	// Copy metalmap to mutable metalmap
 	// (ignore the <R> cells near edges)
-	for (Uint32 z = R; z < (HHZ - R); z++) {
-		for (Uint32 x = R; x < (HHX - R); x++) {
+	for (Uint32 hhz = 1; hhz < (HMMZ - 1); hhz++) {
+		for (Uint32 hhx = 1; hhx < (HMMX - 1); hhx++) {
 			Uint8 mmax = 0;
 
-			// find the maximum within the 3x3 area around <x, z>
+			// find the maximum metal-producing square
+			// (within the 3x3 area around <hhx, hhz>)
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
-					cUint32 idx = ((z << 1) + i) * HMX + ((x << 1) + j);
+					cUint32 mmx = (hhx << 1) + j;
+					cUint32 mmz = (hhz << 1) + i;
+					cUint32 idx = mmz * (HMX >> 1) + mmx;
+
 					mmax = std::max<int>(metalMapRaw[idx], mmax);
 				}
 			}
 
 			if (mmax > 1) {
 				// save the spot
-				metalCount++;
-				minMetal = std::min<int>(minMetal, mmax);
-				maxMetal = std::max<int>(maxMetal, mmax);
-				spotCoors.push_back(z);
-				spotCoors.push_back(x);
-			} else {
-				nonMetalCount++;
+				spotCoors.push_back(hhz);
+				spotCoors.push_back(hhx);
 			}
 
-			metalMapCpy[z * HHX + x] = mmax;
-			avgMetal += mmax;
+			metalMapCpy[hhz * HMMX + hhx] = mmax;
 		}
 	}
-
-	avgMetal /= (metalCount + nonMetalCount);
 
 
 	/*
@@ -156,16 +149,16 @@ void GameMap::CalcMetalSpots() {
 	{
 		cInt step = std::max(R + R, 4);
 
-		for (Uint32 z = R; z < (HHZ - R); z += step) {
-			for (Uint32 x = R; x < (HHX - R); x += step) {
-				if (metalMapCpy[z * HHX + x] > 1) 
+		for (Uint32 z = R; z < (HMMZ - R); z += step) {
+			for (Uint32 x = R; x < (HMMX - R); x += step) {
+				if (metalMapCpy[z * HMMX + x] > 1) 
 				{
 					cUint32 wx = MAP_METAL_2_WORLD(x) << 1;
 					cUint32 wz = MAP_METAL_2_WORLD(z) << 1;
 					cFloat wy = rcb->GetElevation(wx, wz);
 					const float3 metalspot(wx, wy, wz);
 
-					GameMap::metalspots.push_back(metalspot);
+					metalspots.push_back(metalspot);
 
 					#ifdef GAMEMAP_DEBUG
 					rcb->DrawUnit("armmex", metalspot, 0.0f, 10000, 0, false, false, 0);
@@ -192,7 +185,7 @@ void GameMap::CalcMetalSpots() {
 				cUint32 z = spotCoors[i    ];
 				cUint32 x = spotCoors[i + 1];
 
-				if (metalMapCpy[z * HHX + x] == 0) {
+				if (metalMapCpy[z * HMMX + x] == 0) {
 					// no metal or already erased
 					continue;
 				}
@@ -201,7 +194,7 @@ void GameMap::CalcMetalSpots() {
 				float sum = 0.0f;
 
 				for (size_t c = 0; c < circle.size(); c += 2) {
-					cUint32 idx = (z + circle[c]) * HHX + (x + circle[c + 1]);
+					cUint32 idx = (z + circle[c]) * HMMX + (x + circle[c + 1]);
 					rcUint8 m = metalMapCpy[idx];
 
 					saturation += (m * (R - sqrtCircle[c >> 1]));
@@ -228,7 +221,7 @@ void GameMap::CalcMetalSpots() {
 			for (Uint32 c = 0; c < circle.size(); c += 2) {
 				cUint32 x = bestSpotX + circle[c + 1];
 				cUint32 z = bestSpotZ + circle[c    ];
-				cUint32 idx = z * HHX + x;
+				cUint32 idx = z * HMMX + x;
 				metalMapCpy[idx] = 0;
 			}
 

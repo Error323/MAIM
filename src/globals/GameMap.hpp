@@ -53,12 +53,6 @@ class GameMap {
 		float heightVariance;
 		float waterAmount;
 
-		int avgMetal;
-		int minMetal;
-		int maxMetal;
-		int metalCount;
-		int nonMetalCount;
-
 		static std::list<float3> geospots;
 		static std::list<float3> metalfeatures;
 		static std::list<float3> energyfeatures;
