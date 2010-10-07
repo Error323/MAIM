@@ -11,7 +11,7 @@
 #include "./Logger.hpp"
 #include "./Util.hpp"
 
-std::string Logger::GetLogName() const {
+std::string AILogger::GetLogName() const {
 	if (init) {
 		return name;
 	}
@@ -47,7 +47,7 @@ std::string Logger::GetLogName() const {
 	return absName;
 }
 
-std::string Logger::GetInGameTime() {
+std::string AILogger::GetInGameTime() {
 	const int simFrame = AIHelper::GetActiveInstance()->GetCurrFrame();
 	const int sec      = (simFrame / 30) % 60;
 	const int min      = ((simFrame / 30) - sec) / 60;

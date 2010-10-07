@@ -1,5 +1,5 @@
-#ifndef TIMER
-#define TIMER
+#ifndef AI_TIMER_HDR
+#define AI_TIMER_HDR
 
 #include <string>
 #include <fstream>
@@ -9,13 +9,13 @@
 #include "./ILogger.hpp"
 
 
-struct Timer;
-struct ScopedTimer {
+struct AITimer;
+struct AIScopedTimer {
 public:
-	ScopedTimer(const std::string&, Timer*);
-	~ScopedTimer();
+	AIScopedTimer(const std::string&, AITimer*);
+	~AIScopedTimer();
 
-	struct TimingDatum {
+	struct AITimingDatum {
 		std::string task;
 		unsigned int t1;
 		unsigned int t2;
@@ -25,13 +25,13 @@ public:
 	};
 
 private:
-	Timer* t;
-	TimingDatum td;
+	AITimer* t;
+	AITimingDatum td;
 };
 
-struct Timer: public ILogger {
+struct AITimer: public ILogger {
 public:
-	Timer(): timerDepth(0), timerTotalTime(0), timerTotalCalls(0) {
+	AITimer(): timerDepth(0), timerTotalTime(0), timerTotalCalls(0) {
 		vtimings.reserve(30 * 60 * 60);
 	}
 
@@ -40,7 +40,7 @@ public:
 
 	std::map<std::string, unsigned int> mtimings;
 	std::map<std::string, unsigned int> mcounts;
-	std::vector<ScopedTimer::TimingDatum> vtimings;
+	std::vector<AIScopedTimer::AITimingDatum> vtimings;
 
 	unsigned int timerDepth;      // depth of the most recent ScopedTimer
 	unsigned int timerTotalTime;  // total time taken by all timed tasks

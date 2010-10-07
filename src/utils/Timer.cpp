@@ -6,7 +6,7 @@
 
 #include "./Timer.hpp"
 
-ScopedTimer::ScopedTimer(const std::string& task, Timer* timer): t(timer) {
+AIScopedTimer::AIScopedTimer(const std::string& task, AITimer* timer): t(timer) {
 	t->timerDepth += 1;
 
 	td.task = task;
@@ -16,10 +16,11 @@ ScopedTimer::ScopedTimer(const std::string& task, Timer* timer): t(timer) {
 	td.d    = t->timerDepth - 1;
 	td.i    = t->vtimings.size();
 
+	// copy the datum
 	t->vtimings.push_back(td);
 }
 
-ScopedTimer::~ScopedTimer() {
+AIScopedTimer::~AIScopedTimer() {
 	td.t2 = SDL_GetTicks();
 	td.t3 = td.t2 - td.t1;
 
@@ -46,18 +47,18 @@ ScopedTimer::~ScopedTimer() {
 
 
 
-unsigned int Timer::GetTaskTime(const std::string& t) {
+unsigned int AITimer::GetTaskTime(const std::string& t) {
 	if (mtimings.find(t) != mtimings.end()) {
 		return mtimings[t];
 	}
 	return 0;
 }
 
-void Timer::WriteLog() {
+void AITimer::WriteLog() {
 	/*
 	// too much output
-	for (std::vector<ScopedTimer::STimingDatum>::const_iterator it = vtimings.begin(); it != vtimings.end(); it++) {
-		const ScopedTimer::STimingDatum& td = *it;
+	for (std::vector<AIScopedTimer::AITimingDatum>::const_iterator it = vtimings.begin(); it != vtimings.end(); it++) {
+		const AIScopedTimer::AITimingDatum& td = *it;
 
 		for (unsigned int n = 0; n < td.d; n++) {
 			log << "  ";

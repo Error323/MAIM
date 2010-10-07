@@ -7,8 +7,8 @@ DECLARE_CLASS(IGlobalAICallback)
 DECLARE_CLASS(IAICallback)
 DECLARE_CLASS(IAICheats)
 
-DECLARE_CLASS(Logger)
-DECLARE_CLASS(Timer)
+DECLARE_CLASS(AILogger)
+DECLARE_CLASS(AITimer)
 
 DECLARE_CLASS(LuaModuleLoader)
 DECLARE_CLASS(AIUnitDefHandler)
@@ -25,8 +25,8 @@ public:
 		rcb = 0;
 		ccb = 0;
 
-		logger = 0;
-		timer = 0;
+		aiLogger = 0;
+		aiTimer = 0;
 
 		luaModuleLoader = 0;
 
@@ -53,8 +53,8 @@ public:
 	pIAICallback GetCallbackHandler() { return rcb; }
 	pIAICheats GetCCallbackHandler() { return ccb; }
 
-	pLogger GetLogger() { return logger; }
-	pTimer GetTimer() { return timer; }
+	pAILogger GetLogger() { return aiLogger; }
+	pAITimer GetTimer() { return aiTimer; }
 
 	pLuaModuleLoader GetLuaModuleLoader() { return luaModuleLoader; }
 	pAIUnitDefHandler GetAIUnitDefHandler() { return aiUnitDefHandler; }
@@ -73,8 +73,8 @@ private:
 	pIAICallback      rcb;   // regular callback handler
 	pIAICheats        ccb;   // cheat callback handler
 
-	pLogger           logger;
-	pTimer            timer;
+	pAILogger         aiLogger;
+	pAITimer          aiTimer;
 
 	pLuaModuleLoader  luaModuleLoader;
 

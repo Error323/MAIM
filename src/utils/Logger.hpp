@@ -1,5 +1,5 @@
-#ifndef LOGGER_HDR
-#define LOGGER_HDR
+#ifndef AI_LOGGER_HDR
+#define AI_LOGGER_HDR
 
 #include <string>
 #include <fstream>
@@ -14,19 +14,19 @@ enum LogLevel {
 	LOG_ERROR = 2,
 };
 
-class Logger: public ILogger {
+class AILogger: public ILogger {
 public:
-	Logger(): init(false) {
+	AILogger(): init(false) {
 		name = GetLogName();
 		init = true;
 	}
-	~Logger() {
+	~AILogger() {
 	}
 
 	std::string GetLogName() const;
 	std::string GetInGameTime();
 
-	template<typename T> Logger& Log(const T& t, LogLevel lvl = LOG_BASIC) {
+	template<typename T> AILogger& Log(const T& t, LogLevel lvl = LOG_BASIC) {
 		log << GetInGameTime() << " ";
 
 		switch (lvl) {
